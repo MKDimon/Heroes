@@ -4,6 +4,5 @@ public enum ActionTypes {
     CLOSE_COMBAT,
     RANGE_COMBAT,
     HEALING,
-    AREA_DAMAGE,
-    DEFENSE;
+    AREA_DAMAGE
 }
