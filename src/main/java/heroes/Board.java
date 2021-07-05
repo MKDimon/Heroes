@@ -1,5 +1,7 @@
 package heroes;
 
+import heroes.mathutils.Pair;
+
 public class Board {
     /*
      *          ---> X
@@ -10,7 +12,7 @@ public class Board {
 
     private int curNumRound;
 
-    //TODO (@MKDimon) : int -> UNITS
+    //TODO (@MKDimon) : int -> UNITS, String -> Action
     private int[][] fieldPlayerOne;
     private int[][] fieldPlayerTwo;
 
@@ -26,13 +28,41 @@ public class Board {
         this.generalPlayerTwo = generalPlayerTwo;
     }
 
-    private int getUnitByCoordinate(int x, int y, boolean field) { //TODO: Validation
+    private int getUnitByCoordinate(Pair<Integer, Integer> pair, boolean field) { //TODO: Validation
         if (!field) {
-            return fieldPlayerOne[x][y];
+            return fieldPlayerOne[pair.getX()][pair.getY()];
         }
         else {
-            return fieldPlayerTwo[x][y];
+            return fieldPlayerTwo[pair.getX()][pair.getY()];
         }
+    }
+
+    private boolean actionValidate(Pair<Integer, Integer> attacker, Pair<Integer, Integer> defender, String act) { //TODO: Validation?
+
+        // TODO: Check Exception Hierarchy
+        try {
+            // TODO
+            Validator.checkNullPointer(attacker, defender, act);
+
+        }
+        catch (NullPointerException exception) {
+            // TODO: место под логер
+            return false;
+        }
+
+        return true;
+    }
+
+    private void doAction(Pair<Integer, Integer> attacker, Pair<Integer, Integer> defender, String act) { //TODO: exception?
+
+    }
+
+    public boolean action(Pair<Integer, Integer> attacker, Pair<Integer, Integer> defender, boolean field, String act) {
+        if (actionValidate(attacker, defender, act)) {
+            doAction(attacker, defender, act);
+            return true;
+        }
+        return false;
     }
 
 }
