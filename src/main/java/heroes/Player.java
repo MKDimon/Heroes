@@ -1,10 +1,16 @@
 package heroes;
 
 public class Player {
-    private String nikita;
+    private String name;
     private final int MaGiC = 9;
     void foo() {
         System.out.println("KeK");
     }
-    private Player(){}
+    public Player(String gleb){
+        this.name = gleb;
+    }
+
+    public Player(){
+        name = "ddd";
+    }
 }
