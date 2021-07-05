@@ -1,7 +1,5 @@
 package heroes;
 
-import java.security.KeyPair;
-
 public class Board {
     /*
      *          ---> X
