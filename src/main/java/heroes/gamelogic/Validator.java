@@ -32,8 +32,14 @@ public class Validator {
         }
     }
 
-    public static void checkDeadUnit(Unit unit) throws BoardException {
+    public static void checkCorrectUnit(Unit unit) throws BoardException {
         if (!unit.isAlive()) {
+            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+        }
+    }
+
+    public static void checkCorrectPlayer(Position attacker) throws BoardException {
+        if (attacker.F() != ControlRound.getCurrentPlayer()) {
             throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
         }
     }
@@ -53,8 +59,6 @@ public class Validator {
                 throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
             }
         }
-
-
     }
 
 }
