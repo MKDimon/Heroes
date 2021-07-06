@@ -1,12 +1,16 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;
 import heroes.units.General;
+import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.units.UnitTypes;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Board {
@@ -28,12 +32,34 @@ public class Board {
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
+    public Board() throws UnitException {
+        getUnits = new HashMap<>();
+
+        generalPlayerOne = new General(GeneralTypes.COMMANDER);
+        generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
+
+        fieldPlayerOne = new Unit[2][3];
+        fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
+        fieldPlayerOne[0][1] = generalPlayerOne;              fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
+
+        fieldPlayerTwo = new Unit[2][3];
+        fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
+        fieldPlayerTwo[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = generalPlayerTwo;
+
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+    }
+
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
+
+        getUnits = new HashMap<>();
 
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
@@ -62,6 +88,8 @@ public class Board {
             Validator.checkIndexOutOfBounds(defender);
 
             Validator.checkCorrectAction(getUnitByCoordinate(attacker), act);
+            Validator.checkDeadUnit(getUnitByCoordinate(attacker));
+            Validator.checkDeadUnit(getUnitByCoordinate(defender));
 
             // TODO: упростить код
             int countAlive = 0, x = attacker.X();
@@ -73,7 +101,7 @@ public class Board {
         }
         catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
-            exception.printStackTrace();
+
             return false;
         }
 

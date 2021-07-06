@@ -32,6 +32,12 @@ public class Validator {
         }
     }
 
+    public static void checkDeadUnit(Unit unit) throws BoardException {
+        if (!unit.isAlive()) {
+            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+        }
+    }
+
     public static void checkTargetAction(Position attacker, Position defender, ActionTypes actionType, int countAlive) throws BoardException {
         if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);

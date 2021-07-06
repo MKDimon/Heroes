@@ -1,9 +1,10 @@
 package heroes;
 
-import heroes.boardexception.BoardException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.Board;
+import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
-import heroes.units.auxiliaryclasses.ActionTypes;
-import heroes.units.auxiliaryclasses.UnitException;
+import heroes.auxiliaryclasses.ActionTypes;
 import org.junit.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,7 +14,7 @@ public class TestBoardValidation {
     public void testValid() throws UnitException {
         Board board = new Board();
         assertAll(
-                () -> assertTrue(board.action(new Position(0,0,Fields.PLAYER_ONE),
+                () -> assertTrue(board.action(new Position(0,0, Fields.PLAYER_ONE),
                         new Position(0,2, Fields.PLAYER_TWO), ActionTypes.DEFENSE)),
 
                 () -> assertFalse(board.action(new Position(0,0,Fields.PLAYER_ONE),
