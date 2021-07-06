@@ -8,6 +8,8 @@ import heroes.units.General;
 import heroes.units.Unit;
 import heroes.units.auxiliaryclasses.ActionTypes;
 
+import java.util.Map;
+
 public class Board {
     /*
      *          ---> X
@@ -22,14 +24,20 @@ public class Board {
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
 
+    private Map<Fields,Unit[][]> getUnits;
+
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
-    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo, General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo, Unit generalPlayerOne, Unit generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
+
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
     }
@@ -53,6 +61,15 @@ public class Board {
             Validator.checkIndexOutOfBounds(attacker);
             Validator.checkIndexOutOfBounds(defender);
 
+            Validator.checkCorrectAction(getUnitByCoordinate(attacker), act);
+
+            // TODO: упростить код
+            int countAlive = 0, x = attacker.X();
+            Unit[][] units = getUnits.get(attacker.F());
+            for (int i = 0; i < 3; i++) {
+                if (units[x][i].isAlive()) { countAlive++; }
+            }
+            Validator.checkTargetAction(attacker, defender, act, countAlive);
         }
         catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
