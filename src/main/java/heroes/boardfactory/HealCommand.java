@@ -7,6 +7,7 @@ public class HealCommand extends Command {
         super(att, def);
 
     }
+
     @Override
     public void execute() {
         System.out.println("Healing...");

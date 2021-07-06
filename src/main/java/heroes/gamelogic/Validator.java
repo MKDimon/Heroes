@@ -1,17 +1,18 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
-import heroes.auxiliaryclasses.ActionTypes;
 
 public class Validator {
 
-    private Validator() {}
+    private Validator() {
+    }
 
     public static void checkNullPointer(Object... arr) throws NullPointerException {
-        for (Object item: arr) {
+        for (Object item : arr) {
             if (item == null) {
                 throw new NullPointerException(item.getClass().getName() + ". Exception was executed in actionValidate.");
             }
@@ -20,7 +21,7 @@ public class Validator {
 
     public static void checkIndexOutOfBounds(Position pair) throws BoardException {
         int x = pair.X(),
-            y = pair.Y();
+                y = pair.Y();
         if (x > 1 || x < 0 || y > 2 || y < 0) {
             throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS); //TODO: BoardException
         }
@@ -43,8 +44,8 @@ public class Validator {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
         }
         if (actionType == ActionTypes.CLOSE_COMBAT &&
-            !((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
-            (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
+                !((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
+                        (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
 
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
         }

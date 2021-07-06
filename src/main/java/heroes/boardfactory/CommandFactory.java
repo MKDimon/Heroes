@@ -1,7 +1,7 @@
 package heroes.boardfactory;
 
-import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.units.Unit;
 
 import java.util.HashMap;
 import java.util.Map;

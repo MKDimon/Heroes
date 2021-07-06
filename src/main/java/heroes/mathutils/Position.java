@@ -3,9 +3,9 @@ package heroes.mathutils;
 import heroes.gamelogic.Fields;
 
 public class Position {
-    private int x;
-    private int y;
-    private Fields f;
+    private final int x;
+    private final int y;
+    private final Fields f;
 
     public Position(int x, int y, Fields f) {
         this.x = x;

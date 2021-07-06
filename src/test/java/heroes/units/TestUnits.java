@@ -65,7 +65,7 @@ public class TestUnits {
             assertEquals(UnitExceptionTypes.INCORRECT_POWER.getErrorType() ,e.getMessage());
         }
         try{
-            Unit healer = new Unit(null);
+            Unit healer = new Unit((Unit) null);
         } catch (UnitException e){
             assertEquals(UnitExceptionTypes.NULL_POINTER.getErrorType() ,e.getMessage());
         }

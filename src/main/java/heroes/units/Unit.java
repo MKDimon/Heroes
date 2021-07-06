@@ -1,6 +1,8 @@
 package heroes.units;
 
-import heroes.auxiliaryclasses.*;
+import heroes.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.Deinspiration;
+import heroes.auxiliaryclasses.Inspiration;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
@@ -24,7 +26,7 @@ public class Unit {
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
-        if(unitType == null || unitType.getActionType() == null){
+        if (unitType == null || unitType.getActionType() == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
         maxHP = unitType.getHP();
@@ -36,8 +38,21 @@ public class Unit {
         isActive = true;
     }
 
+    public Unit(Unit unit) throws UnitException {
+        if (unit == null || unit.getActionType() == null) {
+            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
+        }
+        maxHP = unit.getMaxHP();
+        setCurrentHP(maxHP);
+        setPower(unit.getPower());
+        setArmor(unit.getArmor());
+        setAccuracy(unit.getAccuracy());
+        actionType = unit.getActionType();
+        isActive = true;
+    }
+
     public void inspire(Inspiration inspiration) throws UnitException {
-        if(inspiration == null){
+        if (inspiration == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
         inspiration.inspire(this);
@@ -51,7 +66,7 @@ public class Unit {
         return currentHP;
     }
 
-    public int getMaxHP(){
+    public int getMaxHP() {
         return maxHP;
     }
 
@@ -72,35 +87,39 @@ public class Unit {
     }
 
     public void setCurrentHP(int currentHP) throws UnitException {
-        if(currentHP > maxHP){
+        if (currentHP > maxHP) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_HP);
         }
         this.currentHP = currentHP;
     }
 
     public void setPower(int power) throws UnitException {
-        if(power <= 0){
+        if (power <= 0) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_POWER);
         }
         this.power = power;
     }
 
     public void setAccuracy(int accuracy) throws UnitException {
-        if(accuracy < 0 || accuracy > 100){
+        if (accuracy < 0 || accuracy > 100) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_ACCURACY);
         }
         this.accuracy = accuracy;
     }
 
     public void setArmor(int armor) throws UnitException {
-        if(armor < 0){
+        if (armor < 0) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_ARMOR);
         }
         this.armor = armor;
     }
 
-    public boolean isAlive(){
+    public boolean isAlive() {
         return currentHP > 0;
+    }
+
+    public void setActionType(ActionTypes actionType) {
+        this.actionType = actionType;
     }
 
     @Override

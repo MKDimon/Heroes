@@ -1,7 +1,9 @@
 package heroes.auxiliaryclasses.boardexception;
 
-public class BoardException extends Exception{
+public class BoardException extends Exception {
 
-    public BoardException(BoardExceptionTypes error) { super(error.getErrorType()); }
+    public BoardException(BoardExceptionTypes error) {
+        super(error.getErrorType());
+    }
 
 }

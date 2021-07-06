@@ -1,14 +1,13 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;
 import heroes.units.General;
-import heroes.units.GeneralTypes;
 import heroes.units.Unit;
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.units.UnitTypes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,19 +20,19 @@ public class Board {
      *          V Y
      */
 
-    private int curNumRound;
+    private final int curNumRound;
 
     //TODO (@MKDimon) : int -> UNITS, String -> Action
-    private Unit[][] fieldPlayerOne;
-    private Unit[][] fieldPlayerTwo;
+    private final Unit[][] fieldPlayerOne;
+    private final Unit[][] fieldPlayerTwo;
 
-    private Map<Fields,Unit[][]> getUnits;
+    private Map<Fields, Unit[][]> getUnits;
 
-    private General generalPlayerOne;
-    private General generalPlayerTwo;
+    private final General generalPlayerOne;
+    private final General generalPlayerTwo;
 
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                            General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+                 General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
@@ -46,6 +45,33 @@ public class Board {
 
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
+    }
+
+    public Board(Board board) throws BoardException, UnitException {
+        if (board == null) {
+            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
+        curNumRound = 1;
+        fieldPlayerOne = copyArmy(board.fieldPlayerOne);
+        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
+        generalPlayerOne = new General(board.generalPlayerOne);
+        generalPlayerTwo = new General(board.generalPlayerTwo);
+    }
+
+    private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {
+        Unit[][] result = new Unit[2][3];
+        for (int i = 0; i < 2; i++) {
+            if (army == null) {
+                throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+            }
+            for (int j = 0; j < 3; j++) {
+                if (army[i][j] == null) {
+                    throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+                }
+                fieldPlayerOne[i][j] = new Unit(army[i][j]);
+            }
+        }
+        return result;
     }
 
     public void doAction(Position attacker, Position defender, ActionTypes act) { //TODO: exception?
@@ -63,8 +89,7 @@ public class Board {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
-        }
-        catch (NullPointerException exception) {
+        } catch (NullPointerException exception) {
             return null;
         }
     }
@@ -88,5 +113,4 @@ public class Board {
     public General getGeneralPlayerTwo() {
         return generalPlayerTwo;
     }
-
 }
