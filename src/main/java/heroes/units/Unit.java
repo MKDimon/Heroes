@@ -1,30 +1,48 @@
 package heroes.units;
 
-import heroes.units.auxiliaryclasses.ActionTypes;
-import heroes.units.auxiliaryclasses.UnitException;
-import heroes.units.auxiliaryclasses.UnitExceptionTypes;
+import heroes.units.auxiliaryclasses.*;
 
 import java.util.Objects;
 
 public class Unit {
     private ActionTypes actionType;
-    private int HP;
+    private final int maxHP;
+    private int currentHP;
     private int power; //Сила удара или лечения
     private int accuracy;
     private int armor;
-    private boolean isInspired;
+    private boolean isActive;
 
     public Unit(UnitTypes unitType) throws UnitException {
-        setHP(unitType.getHP());
+        if(unitType == null){
+            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
+        }
+        maxHP = unitType.getHP();
+        setCurrentHP(maxHP);
         setPower(unitType.getPower());
         setArmor(unitType.getAccuracy());
         setAccuracy(unitType.getArmor());
         setActionType(actionType);
-        isInspired = true;
+        isActive = true;
     }
 
-    public int getHP() {
-        return HP;
+    public void inspire(Inspiration inspiration) throws UnitException {
+        if(inspiration == null){
+            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
+        }
+        inspiration.inspire(this);
+    }
+
+    public void deinspire(Deinspiration deinspiration) throws UnitException {
+        deinspiration.deinspire(this);
+    }
+
+    public int getCurrentHP() {
+        return currentHP;
+    }
+
+    public int getMaxHP(){
+        return maxHP;
     }
 
     public int getPower() {
@@ -50,11 +68,8 @@ public class Unit {
         this.actionType = actionType;
     }
 
-    public void setHP(int HP) throws UnitException {
-        if(HP <= 0){
-            throw new UnitException(UnitExceptionTypes.INCORRECT_HP);
-        }
-        this.HP = HP;
+    public void setCurrentHP(int currentHP) throws UnitException {
+        this.currentHP = currentHP;
     }
 
     public void setPower(int power) throws UnitException {
@@ -79,7 +94,7 @@ public class Unit {
     }
 
     public boolean isAlive(){
-        return HP > 0;
+        return currentHP > 0;
     }
 
     @Override
@@ -87,11 +102,11 @@ public class Unit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unit unit = (Unit) o;
-        return HP == unit.HP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor;
+        return maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(HP, power, accuracy, armor);
+        return Objects.hash(actionType, maxHP, currentHP, power, accuracy, armor, isActive);
     }
 }

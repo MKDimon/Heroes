@@ -3,6 +3,7 @@ package heroes;
 import heroes.boardexception.BoardException;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
+import heroes.units.General;
 import heroes.units.Unit;
 import heroes.units.auxiliaryclasses.ActionTypes;
 
@@ -20,10 +21,10 @@ public class Board {
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
 
-    private Unit generalPlayerOne;
-    private Unit generalPlayerTwo;
+    private General generalPlayerOne;
+    private General generalPlayerTwo;
 
-    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo, Unit generalPlayerOne, Unit generalPlayerTwo) { //TODO: Validation
+    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo, General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
