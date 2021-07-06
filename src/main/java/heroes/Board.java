@@ -74,4 +74,23 @@ public class Board {
         return false;
     }
 
+    public int getCurNumRound() {
+        return curNumRound;
+    }
+
+    public Unit[][] getFieldPlayerOne() {
+        return fieldPlayerOne;
+    }
+
+    public Unit[][] getFieldPlayerTwo() {
+        return fieldPlayerTwo;
+    }
+
+    public General getGeneralPlayerOne() {
+        return generalPlayerOne;
+    }
+
+    public General getGeneralPlayerTwo() {
+        return generalPlayerTwo;
+    }
 }
