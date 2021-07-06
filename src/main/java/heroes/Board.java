@@ -29,7 +29,8 @@ public class Board {
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
-    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo, Unit generalPlayerOne, Unit generalPlayerTwo) { //TODO: Validation
+    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
+                            General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
@@ -43,7 +44,7 @@ public class Board {
     }
 
     private Unit getUnitByCoordinate(Position pair) { //TODO: Validation
-        if (pair.F() == 1) {
+        if (pair.F() == Fields.PLAYER_ONE) {
             return fieldPlayerOne[pair.X()][pair.Y()];
         }
         else {
