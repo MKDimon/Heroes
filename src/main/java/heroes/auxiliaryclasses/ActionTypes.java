@@ -1,4 +1,4 @@
-package heroes.units.auxiliaryclasses;
+package heroes.auxiliaryclasses;
 
 public enum ActionTypes {
     CLOSE_COMBAT,

@@ -1,4 +1,4 @@
-package heroes.boardexception;
+package heroes.auxiliaryclasses.boardexception;
 
 public enum BoardExceptionTypes {
     INDEX_OUT_OF_BOUNDS("Index out of bounds"),

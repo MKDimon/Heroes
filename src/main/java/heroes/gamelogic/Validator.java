@@ -1,10 +1,10 @@
-package heroes;
+package heroes.gamelogic;
 
-import heroes.boardexception.BoardException;
-import heroes.boardexception.BoardExceptionTypes;
+import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
-import heroes.units.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.ActionTypes;
 
 public class Validator {
 

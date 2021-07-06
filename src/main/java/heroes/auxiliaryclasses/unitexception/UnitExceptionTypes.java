@@ -1,4 +1,4 @@
-package heroes.units.auxiliaryclasses;
+package heroes.auxiliaryclasses.unitexception;
 
 public enum UnitExceptionTypes {
     NULL_POINTER("Null pointer"),

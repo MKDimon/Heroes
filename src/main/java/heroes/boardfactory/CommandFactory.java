@@ -1,10 +1,9 @@
 package heroes.boardfactory;
 
 import heroes.units.Unit;
-import heroes.units.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.ActionTypes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CommandFactory {
