@@ -33,6 +33,8 @@ public enum GeneralTypes {
         return inspiration;
     }
 
-
+    public Deinspiration getDeinspiration(){
+        return deinspiration;
+    }
 
 }
