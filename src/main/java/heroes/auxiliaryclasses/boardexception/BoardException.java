@@ -1,4 +1,4 @@
-package heroes.boardexception;
+package heroes.auxiliaryclasses.boardexception;
 
 public class BoardException extends Exception{
 

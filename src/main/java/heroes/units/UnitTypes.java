@@ -1,6 +1,6 @@
 package heroes.units;
 
-import heroes.units.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.ActionTypes;
 
 public enum UnitTypes {
     SWORDSMAN(100, 30, 85, 30, ActionTypes.CLOSE_COMBAT),

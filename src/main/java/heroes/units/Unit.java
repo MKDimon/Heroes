@@ -1,6 +1,8 @@
 package heroes.units;
 
-import heroes.units.auxiliaryclasses.*;
+import heroes.auxiliaryclasses.*;
+import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
 import java.util.Objects;
 
@@ -14,15 +16,15 @@ public class Unit {
     private boolean isActive;
 
     public Unit(UnitTypes unitType) throws UnitException {
-        if(unitType == null){
+        if(unitType == null || unitType.getActionType() == null){
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
         maxHP = unitType.getHP();
         setCurrentHP(maxHP);
         setPower(unitType.getPower());
-        setArmor(unitType.getAccuracy());
-        setAccuracy(unitType.getArmor());
-        setActionType(actionType);
+        setArmor(unitType.getArmor());
+        setAccuracy(unitType.getAccuracy());
+        actionType = unitType.getActionType();
         isActive = true;
     }
 
@@ -61,14 +63,10 @@ public class Unit {
         return actionType;
     }
 
-    public void setActionType(ActionTypes actionType) throws UnitException {
-        if (actionType == null) {
-            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
-        }
-        this.actionType = actionType;
-    }
-
     public void setCurrentHP(int currentHP) throws UnitException {
+        if(currentHP > maxHP){
+            throw new UnitException(UnitExceptionTypes.INCORRECT_HP);
+        }
         this.currentHP = currentHP;
     }
 

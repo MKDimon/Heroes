@@ -1,7 +1,6 @@
 package heroes.boardfactory;
 
 import heroes.units.Unit;
-import heroes.units.auxiliaryclasses.ActionTypes;
 
 public abstract class Command {
     private Unit att;

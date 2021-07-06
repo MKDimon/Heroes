@@ -1,6 +1,6 @@
 package heroes.mathutils;
 
-import heroes.Fields;
+import heroes.gamelogic.Fields;
 
 public class Position {
     private int x;

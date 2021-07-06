@@ -1,9 +1,9 @@
 package heroes.units;
 
-import heroes.units.auxiliaryclasses.Deinspiration;
-import heroes.units.auxiliaryclasses.Inspiration;
-import heroes.units.auxiliaryclasses.UnitException;
-import heroes.units.auxiliaryclasses.UnitExceptionTypes;
+import heroes.auxiliaryclasses.Deinspiration;
+import heroes.auxiliaryclasses.Inspiration;
+import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
 public class General extends Unit {
     private Inspiration inspiration;

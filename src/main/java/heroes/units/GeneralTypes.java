@@ -1,7 +1,7 @@
 package heroes.units;
 
-import heroes.units.auxiliaryclasses.Deinspiration;
-import heroes.units.auxiliaryclasses.Inspiration;
+import heroes.auxiliaryclasses.Deinspiration;
+import heroes.auxiliaryclasses.Inspiration;
 
 public enum GeneralTypes {
     ARCHMAGE(UnitTypes.MAGE, u -> u.setPower(u.getPower() + 10), u -> u.setPower(u.getPower() - 10)),

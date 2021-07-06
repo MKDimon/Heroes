@@ -1,12 +1,11 @@
-package heroes;
+package heroes.gamelogic;
 
-import heroes.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.boardfactory.CommandFactory;
-import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
-import heroes.units.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.ActionTypes;
 
 import java.util.Map;
 

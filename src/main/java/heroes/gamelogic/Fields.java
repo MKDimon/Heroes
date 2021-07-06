@@ -1,4 +1,4 @@
-package heroes;
+package heroes.gamelogic;
 
 public enum Fields {
     PLAYER_ONE,
