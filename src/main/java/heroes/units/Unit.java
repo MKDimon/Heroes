@@ -15,6 +15,14 @@ public class Unit {
     private int armor;
     private boolean isActive;
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public Unit(UnitTypes unitType) throws UnitException {
         if(unitType == null || unitType.getActionType() == null){
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);

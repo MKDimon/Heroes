@@ -32,26 +32,6 @@ public class Board {
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
-    public Board() throws UnitException {
-        getUnits = new HashMap<>();
-
-        generalPlayerOne = new General(GeneralTypes.COMMANDER);
-        generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
-
-        fieldPlayerOne = new Unit[2][3];
-        fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerOne[0][1] = generalPlayerOne;              fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
-        fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
-
-        fieldPlayerTwo = new Unit[2][3];
-        fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerTwo[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
-        fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = generalPlayerTwo;
-
-        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
-        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
-    }
-
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
@@ -68,59 +48,25 @@ public class Board {
         this.generalPlayerTwo = generalPlayerTwo;
     }
 
-    private Unit getUnitByCoordinate(Position pair) { //TODO: Validation
-        if (pair.F() == Fields.PLAYER_ONE) {
-            return fieldPlayerOne[pair.X()][pair.Y()];
-        }
-        else {
-            return fieldPlayerTwo[pair.X()][pair.Y()];
-        }
-    }
-
-    private boolean actionValidate(Position attacker, Position defender, ActionTypes act) { //TODO: Validation?
-
-        // TODO: Check Exception Hierarchy
-        try {
-            // TODO
-            Validator.checkNullPointer(attacker, defender, act);
-            Validator.checkNullPointer(attacker.X(), attacker.Y(), defender.Y(), defender.X());
-            Validator.checkIndexOutOfBounds(attacker);
-            Validator.checkIndexOutOfBounds(defender);
-
-            Validator.checkCorrectAction(getUnitByCoordinate(attacker), act);
-            Validator.checkDeadUnit(getUnitByCoordinate(attacker));
-            Validator.checkDeadUnit(getUnitByCoordinate(defender));
-
-            // TODO: упростить код
-            int countAlive = 0, x = attacker.X();
-            Unit[][] units = getUnits.get(attacker.F());
-            for (int i = 0; i < 3; i++) {
-                if (units[x][i].isAlive()) { countAlive++; }
-            }
-            Validator.checkTargetAction(attacker, defender, act, countAlive);
-        }
-        catch (NullPointerException | BoardException exception) {
-            // TODO: место под логер
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private void doAction(Position attacker, Position defender, ActionTypes act) { //TODO: exception?
+    public void doAction(Position attacker, Position defender, ActionTypes act) { //TODO: exception?
         Unit att = getUnitByCoordinate(attacker);
         Unit def = getUnitByCoordinate(defender);
         CommandFactory cf = new CommandFactory();
         cf.getCommand(att, def, act).execute();
     }
 
-    public boolean action(Position attacker, Position defender, ActionTypes act) {
-        if (actionValidate(attacker, defender, act)) {
-            doAction(attacker, defender, act);
-            return true;
+    public Unit[][] getArmy(Fields fields) {
+        return getUnits.get(fields);
+    }
+
+    public Unit getUnitByCoordinate(Position pair) { //TODO: Validation
+        try {
+            Validator.checkNullPointer(pair);
+            return getUnits.get(pair.F())[pair.X()][pair.Y()];
         }
-        return false;
+        catch (NullPointerException exception) {
+            return null;
+        }
     }
 
     public int getCurNumRound() {
@@ -142,4 +88,5 @@ public class Board {
     public General getGeneralPlayerTwo() {
         return generalPlayerTwo;
     }
+
 }
