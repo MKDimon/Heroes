@@ -1,6 +1,11 @@
 package heroes;
 
+import heroes.boardexception.BoardException;
+import heroes.boardexception.BoardExceptionTypes;
 import heroes.mathutils.Pair;
+import heroes.mathutils.Position;
+import heroes.units.Unit;
+import heroes.units.auxiliaryclasses.ActionTypes;
 
 public class Validator {
 
@@ -14,12 +19,22 @@ public class Validator {
         }
     }
 
-    public static void checkIndexOutOfBounds(Pair<Integer, Integer> pair) throws IllegalArgumentException {
-        int x = pair.getX(),
-            y = pair.getY();
+    public static void checkIndexOutOfBounds(Position pair) throws BoardException {
+        int x = pair.X(),
+            y = pair.Y();
         if (x > 1 || x < 0 || y > 2 || y < 0) {
-            throw new IllegalArgumentException("?????"); //TODO: BoardException
+            throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS); //TODO: BoardException
         }
+    }
+
+    public static void checkCorrectAction(Unit unit, ActionTypes actionType) throws BoardException {
+        if (unit.getActionType() != actionType && actionType != ActionTypes.DEFENSE) {
+            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+        }
+    }
+
+    public static void checkTargetAction() {
+
     }
 
 }
