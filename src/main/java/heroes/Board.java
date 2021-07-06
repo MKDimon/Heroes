@@ -1,6 +1,7 @@
 package heroes;
 
 import heroes.boardexception.BoardException;
+import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
@@ -62,10 +63,13 @@ public class Board {
     }
 
     private void doAction(Position attacker, Position defender, ActionTypes act) { //TODO: exception?
-
+        Unit att = getUnitByCoordinate(attacker);
+        Unit def = getUnitByCoordinate(defender);
+        CommandFactory cf = new CommandFactory();
+        cf.getCommand(att, def, act).execute();
     }
 
-    public boolean action(Position attacker, Position defender, boolean field, ActionTypes act) {
+    public boolean action(Position attacker, Position defender, ActionTypes act) {
         if (actionValidate(attacker, defender, act)) {
             doAction(attacker, defender, act);
             return true;
