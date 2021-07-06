@@ -1,11 +1,13 @@
 package heroes.mathutils;
 
+import heroes.Fields;
+
 public class Position {
     private int x;
     private int y;
-    private int f;
+    private Fields f;
 
-    public Position(int x, int y, int f) {
+    public Position(int x, int y, Fields f) {
         this.x = x;
         this.y = y;
         this.f = f;
@@ -19,7 +21,7 @@ public class Position {
         return y;
     }
 
-    public int F() {
+    public Fields F() {
         return f;
     }
 }
