@@ -3,11 +3,15 @@ package heroes.units;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
+import heroes.boardfactory.DamageCommand;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestUnits {
+    Logger logger = LoggerFactory.getLogger(TestUnits.class);
 
     @Test
     void testUnits1() throws UnitException {
@@ -19,6 +23,7 @@ public class TestUnits {
                 () -> assertEquals(30, swordsman.getArmor()),
                 () -> assertEquals(ActionTypes.CLOSE_COMBAT, swordsman.getActionType())
         );
+        logger.warn("KEEEEEK");
         swordsman.inspire(new General(GeneralTypes.COMMANDER).getInspiration());
         assertEquals(40, swordsman.getArmor());
         swordsman.deinspire(new General(GeneralTypes.COMMANDER).getDeinspiration());
