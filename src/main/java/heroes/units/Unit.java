@@ -53,15 +53,20 @@ public class Unit {
         isActive = true;
     }
 
-    public void inspire(Inspiration inspiration) throws UnitException {
-        if (inspiration == null) {
-            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
+    public void inspire(Inspiration inspiration) {
+        try {
+            inspiration.inspire(this);
+        } catch (UnitException e){
+            e.printStackTrace();
         }
-        inspiration.inspire(this);
     }
 
-    public void deinspire(Deinspiration deinspiration) throws UnitException {
-        deinspiration.deinspire(this);
+    public void deinspire(Deinspiration deinspiration) {
+        try {
+            deinspiration.deinspire(this);
+        } catch (UnitException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getCurrentHP() {

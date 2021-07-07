@@ -9,6 +9,8 @@ import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
 
+import java.util.Arrays;
+
 public class GameLogic {
 
     private Board board;
@@ -38,6 +40,8 @@ public class GameLogic {
 
             board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
             gameBegun = true;
+            Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
+            Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
             return true;
         }
         catch (NullPointerException | GameLogicException exception) {
