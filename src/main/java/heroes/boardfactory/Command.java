@@ -3,8 +3,8 @@ package heroes.boardfactory;
 import heroes.units.Unit;
 
 public abstract class Command {
-    private Unit att;
-    private Unit def;
+    private final Unit att;
+    private final Unit def;
 
     public Unit getAtt() {
         return att;

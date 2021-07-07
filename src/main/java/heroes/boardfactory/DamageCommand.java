@@ -11,6 +11,7 @@ public class DamageCommand extends Command {
         super(att, def);
 
     }
+
     @Override
     public void execute() {
         logger.info("Dealing damage");

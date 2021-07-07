@@ -8,32 +8,33 @@ public enum GeneralTypes {
     COMMANDER(UnitTypes.SWORDSMAN, u -> u.setArmor(u.getArmor() + 10), u -> u.setArmor(u.getArmor() - 10)),
     SNIPER(UnitTypes.BOWMAN,
             u -> {
-        int buffedAccuracy = u.getAccuracy() + 10;
-        u.setAccuracy(buffedAccuracy - buffedAccuracy % 100);
-    },
+                int buffedAccuracy = u.getAccuracy() + 10;
+                u.setAccuracy(buffedAccuracy - buffedAccuracy % 100);
+            },
             u -> {
                 int debuffedAccuracy = u.getAccuracy() - 10;
                 u.setAccuracy(debuffedAccuracy - debuffedAccuracy % 100);
             });
 
-    private UnitTypes unitType;
-    private Inspiration inspiration;
-    private Deinspiration deinspiration;
-    GeneralTypes(UnitTypes unitType, Inspiration inspiration, Deinspiration deinspiration){
+    private final UnitTypes unitType;
+    private final Inspiration inspiration;
+    private final Deinspiration deinspiration;
+
+    GeneralTypes(UnitTypes unitType, Inspiration inspiration, Deinspiration deinspiration) {
         this.unitType = unitType;
         this.inspiration = inspiration;
         this.deinspiration = deinspiration;
     }
 
-    public UnitTypes getUnitType(){
+    public UnitTypes getUnitType() {
         return unitType;
     }
 
-    public Inspiration getInspiration(){
+    public Inspiration getInspiration() {
         return inspiration;
     }
 
-    public Deinspiration getDeinspiration(){
+    public Deinspiration getDeinspiration() {
         return deinspiration;
     }
 
