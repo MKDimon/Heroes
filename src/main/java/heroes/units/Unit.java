@@ -9,6 +9,7 @@ import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 import java.util.Objects;
 
 public class Unit {
+    private int bonusArmor = 0;
     private ActionTypes actionType;
     private final int maxHP;
     private int currentHP;
@@ -16,6 +17,7 @@ public class Unit {
     private int accuracy;
     private int armor;
     private boolean isActive;
+
 
     public boolean isActive() {
         return isActive;
@@ -79,7 +81,11 @@ public class Unit {
     }
 
     public int getArmor() {
-        return armor;
+        return armor + bonusArmor;
+    }
+
+    public int getBonusArmor(){
+        return bonusArmor;
     }
 
     public ActionTypes getActionType() {
@@ -114,12 +120,21 @@ public class Unit {
         this.armor = armor;
     }
 
+    public void setBonusArmor(int bonusArmor){
+        this.bonusArmor = bonusArmor;
+    }
+
     public boolean isAlive() {
         return currentHP > 0;
     }
 
     public void setActionType(ActionTypes actionType) {
         this.actionType = actionType;
+    }
+
+    public void defense() throws UnitException {
+        bonusArmor = 20;
+        isActive = false;
     }
 
     @Override

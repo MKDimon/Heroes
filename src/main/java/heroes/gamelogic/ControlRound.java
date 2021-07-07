@@ -15,8 +15,7 @@ public class ControlRound {
     public static void nextPlayer(Board board) {
         if (board.getCurrentPlayer() == Fields.PLAYER_TWO && activeCount(board.getFieldPlayerOne()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_ONE);
-        }
-        else if (activeCount(board.getFieldPlayerTwo()) != 0) {
+        } else if (activeCount(board.getFieldPlayerTwo()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_TWO);
         }
     }
@@ -33,9 +32,13 @@ public class ControlRound {
     }
 
     private static boolean newRound(Board board) {
-        if (board.getCurNumRound() == maxRound) { return false; }
+        if (board.getCurNumRound() == maxRound) {
+            return false;
+        }
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
+        Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
+        Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
         board.setCurNumRound(board.getCurNumRound() + 1);
 
         // TODO: флаги активности

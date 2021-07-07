@@ -1,6 +1,7 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;
@@ -53,7 +54,7 @@ public class Board {
         if (board == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
-        curNumRound = 1;
+        curNumRound = board.curNumRound;
         fieldPlayerOne = copyArmy(board.fieldPlayerOne);
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
