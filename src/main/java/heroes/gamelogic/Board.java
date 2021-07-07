@@ -94,6 +94,10 @@ public class Board {
         }
     }
 
+    public void setCurNumRound(int curNumRound) {
+        this.curNumRound = curNumRound;
+    }
+
     public int getCurNumRound() {
         return curNumRound;
     }

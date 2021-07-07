@@ -43,9 +43,10 @@ public class GameLogic {
             Validator.checkIndexOutOfBounds(attacker);
             Validator.checkIndexOutOfBounds(defender);
 
+            Validator.checkCorrectPlayer(attacker);
             Validator.checkCorrectAction(board.getUnitByCoordinate(attacker), act);
-            Validator.checkDeadUnit(board.getUnitByCoordinate(attacker));
-            Validator.checkDeadUnit(board.getUnitByCoordinate(defender));
+            Validator.checkCorrectUnit(board.getUnitByCoordinate(attacker));
+            Validator.checkCorrectUnit(board.getUnitByCoordinate(defender));
 
             // TODO: упростить код
             int countAlive = 0, x = attacker.X();
@@ -68,6 +69,7 @@ public class GameLogic {
     public boolean action(Position attacker, Position defender, ActionTypes act) {
         if (actionValidate(attacker, defender, act)) {
             board.doAction(attacker, defender, act);
+            gameBegun = ControlRound.checkRound(board);
             return true;
         }
         return false;
