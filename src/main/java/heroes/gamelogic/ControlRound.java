@@ -21,7 +21,7 @@ public class ControlRound {
         }
     }
 
-    public static boolean checkRound(Board board) {
+    public static boolean checkStep(Board board) {
         // Количество активных юнитов
         long active = activeCount(board.getFieldPlayerOne());
         active += activeCount(board.getFieldPlayerTwo());
@@ -37,8 +37,8 @@ public class ControlRound {
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         board.setCurNumRound(board.getCurNumRound() + 1);
-
         // TODO: флаги активности
+
         return true;
     }
 }
