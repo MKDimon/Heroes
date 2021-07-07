@@ -92,9 +92,9 @@ public class Unit {
         return actionType;
     }
 
-    public void setCurrentHP(int currentHP) throws UnitException {
+    public void setCurrentHP(int currentHP) {
         if (currentHP > maxHP) {
-            throw new UnitException(UnitExceptionTypes.INCORRECT_HP);
+            currentHP = maxHP;
         }
         this.currentHP = currentHP;
     }
@@ -132,7 +132,7 @@ public class Unit {
         this.actionType = actionType;
     }
 
-    public void defense() throws UnitException {
+    public void defense() {
         bonusArmor = 20;
         isActive = false;
     }

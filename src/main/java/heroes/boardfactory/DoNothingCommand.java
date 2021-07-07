@@ -10,6 +10,6 @@ public class DoNothingCommand extends Command {
 
     @Override
     public void execute() {
-        System.out.println("Doing nothing...");
+
     }
 }

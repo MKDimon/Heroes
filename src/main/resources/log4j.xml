@@ -26,7 +26,7 @@
         </layout>
     </appender>
     <category name="heroes">
-        <priority value="warn"/>
+        <priority value="warn, info"/>
         <appender-ref ref="CONSOLE_LOG"/>
     </category>
     <category name="deeplay.debug_pack">
