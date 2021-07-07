@@ -33,17 +33,14 @@ public class Board {
     private General generalPlayerTwo;
 
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                            General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+                            General generalPlayerOne, General generalPlayerTwo) {
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
-
         getUnits = new HashMap<>();
-
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
-
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
         inspireArmy(fieldPlayerOne, generalPlayerOne);
@@ -56,12 +53,10 @@ public class Board {
         }
         currentPlayer = board.currentPlayer;
         curNumRound = board.curNumRound;
-        fieldPlayerOne = copyArmy(board.fieldPlayerOne);
-        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
+        fieldPlayerOne = copyArmy(board.fieldPlayerOne, board.generalPlayerOne);
+        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo, board.generalPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
-        generalPlayerTwo = new General(board.generalPlayerTwo); //Возможно, нужно добавить баф командира
-        inspireArmy(fieldPlayerOne, generalPlayerOne);
-        inspireArmy(fieldPlayerTwo, generalPlayerTwo);
+        generalPlayerTwo = new General(board.generalPlayerTwo);
         getUnits = new HashMap<>();
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
@@ -71,7 +66,7 @@ public class Board {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
-    private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {
+    private Unit[][] copyArmy(Unit[][] army, General general) throws BoardException, UnitException {
         Unit[][] result = new Unit[2][3];
         for (int i = 0; i < 2; i++) {
             if (army == null) {
@@ -81,7 +76,11 @@ public class Board {
                 if (army[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
-                result[i][j] = new Unit(army[i][j]);
+                if(army[i][j] == general){
+                    result[i][j] = new General(general);
+                } else {
+                    result[i][j] = new Unit(army[i][j]);
+                }
             }
         }
         return result;
@@ -138,21 +137,5 @@ public class Board {
 
     public Fields getCurrentPlayer() {
         return currentPlayer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Board board = (Board) o;
-        return curNumRound == board.curNumRound && currentPlayer == board.currentPlayer && Arrays.equals(fieldPlayerOne, board.fieldPlayerOne) && Arrays.equals(fieldPlayerTwo, board.fieldPlayerTwo) && Objects.equals(getUnits, board.getUnits) && Objects.equals(generalPlayerOne, board.generalPlayerOne) && Objects.equals(generalPlayerTwo, board.generalPlayerTwo);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(curNumRound, currentPlayer, getUnits, generalPlayerOne, generalPlayerTwo);
-        result = 31 * result + Arrays.hashCode(fieldPlayerOne);
-        result = 31 * result + Arrays.hashCode(fieldPlayerTwo);
-        return result;
     }
 }
