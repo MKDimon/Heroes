@@ -22,20 +22,23 @@ public class GameLogic {
     }
 
     public void gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                          General generalPlayerOne, General generalPlayerTwo) { //TODO: VALIDATOR
+                     General generalPlayerOne, General generalPlayerTwo) {
         try {
             Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+
+            Validator.checkNullPointerInArmy(fieldPlayerOne);
+            Validator.checkNullPointerInArmy(fieldPlayerTwo);
+
             board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
             gameBegun = true;
-        } catch (NullPointerException exception) {
+        }
+        catch (NullPointerException exception) {
             //TODO: место под логи
         }
     }
 
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
-        if (!gameBegun) {
-            return false;
-        }
+        if (!gameBegun) { return false; }
         try {
             // TODO
             Validator.checkNullPointer(attacker, defender, act);
@@ -52,12 +55,11 @@ public class GameLogic {
             int countAlive = 0, x = attacker.X();
             Unit[][] units = board.getArmy(attacker.F());
             for (int i = 0; i < 3; i++) {
-                if (units[x][i].isAlive()) {
-                    countAlive++;
-                }
+                if (units[x][i].isAlive()) { countAlive++; }
             }
             Validator.checkTargetAction(attacker, defender, act, countAlive);
-        } catch (NullPointerException | BoardException exception) {
+        }
+        catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
 
             return false;
@@ -69,7 +71,7 @@ public class GameLogic {
     public boolean action(Position attacker, Position defender, ActionTypes act) {
         if (actionValidate(attacker, defender, act)) {
             board.doAction(attacker, defender, act);
-            gameBegun = ControlRound.checkRound(board);
+            gameBegun = ControlRound.checkStep(board);
             return true;
         }
         return false;
