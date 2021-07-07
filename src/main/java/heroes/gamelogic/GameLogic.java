@@ -9,7 +9,9 @@ import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class GameLogic {
 
@@ -83,9 +85,22 @@ public class GameLogic {
         return true;
     }
 
+    private List<Unit> actionGetList(Position def, ActionTypes act) {
+        List<Unit> result = new ArrayList<>();
+        Unit[][] army = board.getArmy(def.F());
+        if (act.isMassEffect()) {
+            result.addAll(Arrays.asList((board.getFieldPlayerOne()[0])));
+            result.addAll(Arrays.asList((board.getFieldPlayerOne()[0])));
+        }
+        else {
+            result.add(board.getUnitByCoordinate(def));
+        }
+        return result;
+    }
+
     public boolean action(Position attacker, Position defender, ActionTypes act) {
         if (actionValidate(attacker, defender, act)) {
-            board.doAction(attacker, defender, act);
+            board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;
         }

@@ -11,10 +11,7 @@ import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.UnitTypes;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Board {
     /*
@@ -90,11 +87,11 @@ public class Board {
         return result;
     }
 
-    public void doAction(Position attacker, Position defender, ActionTypes act) { //TODO: exception?
-        Unit att = getUnitByCoordinate(attacker);
+    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) { //TODO: exception?
+        /*Unit att = getUnitByCoordinate(attacker);
         Unit def = getUnitByCoordinate(defender);
         CommandFactory cf = new CommandFactory();
-        cf.getCommand(att, def, act).execute();
+        cf.getCommand(att, def, act).execute();*/
     }
 
     public Unit[][] getArmy(Fields fields) {
