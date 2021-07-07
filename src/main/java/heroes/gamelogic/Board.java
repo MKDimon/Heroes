@@ -1,6 +1,7 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;

@@ -22,9 +22,13 @@ public class GameLogic {
     }
 
     public void gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                     General generalPlayerOne, General generalPlayerTwo) { //TODO: VALIDATOR
+                     General generalPlayerOne, General generalPlayerTwo) {
         try {
             Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+
+            Validator.checkNullPointerInArmy(fieldPlayerOne);
+            Validator.checkNullPointerInArmy(fieldPlayerTwo);
+
             board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
             gameBegun = true;
         }
@@ -36,7 +40,6 @@ public class GameLogic {
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
         if (!gameBegun) { return false; }
         try {
-            // TODO
             Validator.checkNullPointer(attacker, defender, act);
             Validator.checkNullPointer(attacker.X(), attacker.Y(), defender.Y(), defender.X());
             Validator.checkIndexOutOfBounds(attacker);
