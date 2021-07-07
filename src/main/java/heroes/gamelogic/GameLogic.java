@@ -1,6 +1,8 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
@@ -16,14 +18,19 @@ public class GameLogic {
         gameBegun = false;
     }
 
-    public GameLogic(Board board) throws UnitException { // TODO: конструктор копирования доски и Validate на доску
-        this.board = board;
+    public GameLogic(Board board) throws UnitException, BoardException { // TODO: конструктор копирования доски и Validate на доску
+        this.board = new Board(board);
         gameBegun = true;
     }
 
-    public void gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
+    public boolean gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                      General generalPlayerOne, General generalPlayerTwo) {
         try {
+            if (fieldPlayerOne == fieldPlayerTwo ||
+                    generalPlayerOne == generalPlayerTwo) {
+                throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+            }
+
             Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
 
             Validator.checkNullPointerInArmy(fieldPlayerOne);
@@ -31,9 +38,12 @@ public class GameLogic {
 
             board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
             gameBegun = true;
+            return true;
         }
-        catch (NullPointerException exception) {
+        catch (NullPointerException | GameLogicException exception) {
             //TODO: место под логи
+            System.out.println(exception.getMessage()); // TODO: в логер
+            return false;
         }
     }
 
@@ -52,6 +62,7 @@ public class GameLogic {
             Validator.checkCorrectUnit(board.getUnitByCoordinate(defender));
 
             // TODO: упростить код
+            // можно через лямбду
             int countAlive = 0, x = attacker.X();
             Unit[][] units = board.getArmy(attacker.F());
             for (int i = 0; i < 3; i++) {
@@ -61,7 +72,7 @@ public class GameLogic {
         }
         catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
-
+            System.out.println(exception.getMessage()); // TODO: в логер
             return false;
         }
 

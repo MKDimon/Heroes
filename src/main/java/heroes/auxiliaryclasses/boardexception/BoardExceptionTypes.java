@@ -5,7 +5,8 @@ public enum BoardExceptionTypes {
     ACTION_INCORRECT("Action is incorrect"),
     INCORRECT_TARGET("Incorrect target"),
     NULL_UNIT_IN_ARMY("Unit in army is null"),
-    NULL_POINTER("Null pointer");
+    NULL_POINTER("Null pointer"),
+    INCORRECT_PLAYER("Incorrect player");
 
     private final String errorType;
 

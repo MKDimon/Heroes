@@ -37,6 +37,7 @@ public class Board {
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
+        currentPlayer = Fields.PLAYER_ONE;
 
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
@@ -54,6 +55,7 @@ public class Board {
         if (board == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
+        currentPlayer = board.currentPlayer;
         curNumRound = board.curNumRound;
         fieldPlayerOne = copyArmy(board.fieldPlayerOne);
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
@@ -71,7 +73,7 @@ public class Board {
                 if (army[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
-                fieldPlayerOne[i][j] = new Unit(army[i][j]);
+                result[i][j] = new Unit(army[i][j]);
             }
         }
         return result;
