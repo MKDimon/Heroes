@@ -11,6 +11,7 @@ import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.UnitTypes;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,8 @@ public class Board {
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
-
+        currentPlayer = Fields.PLAYER_ONE;
+        currentPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
 
@@ -48,17 +50,21 @@ public class Board {
 
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
+
+        Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
+        Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
     }
 
     public Board(Board board) throws BoardException, UnitException {
         if (board == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
+        currentPlayer = board.currentPlayer;
         curNumRound = board.curNumRound;
         fieldPlayerOne = copyArmy(board.fieldPlayerOne);
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
-        generalPlayerTwo = new General(board.generalPlayerTwo);
+        generalPlayerTwo = new General(board.generalPlayerTwo); //Возможно, нужно добавить баф командира
     }
 
     private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {
@@ -71,7 +77,7 @@ public class Board {
                 if (army[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
-                fieldPlayerOne[i][j] = new Unit(army[i][j]);
+                result[i][j] = new Unit(army[i][j]);
             }
         }
         return result;

@@ -6,6 +6,9 @@ import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Validator {
 
     private Validator() {
@@ -14,8 +17,14 @@ public class Validator {
     public static void checkNullPointer(Object... arr) throws NullPointerException {
         for (Object item : arr) {
             if (item == null) {
-                throw new NullPointerException(item.getClass().getName() + ". Exception was executed in actionValidate.");
+                throw new NullPointerException(BoardExceptionTypes.NULL_POINTER.getErrorType());
             }
+        }
+    }
+
+    public static void checkNullPointerInArmy(Object[][] obj) {
+        if (Arrays.stream(obj).anyMatch(x -> Arrays.stream(x).anyMatch(Objects::isNull))) {
+            throw new NullPointerException(BoardExceptionTypes.NULL_UNIT_IN_ARMY.getErrorType());
         }
     }
 
@@ -41,7 +50,7 @@ public class Validator {
 
     public static void checkCorrectPlayer(Board board, Position attacker) throws BoardException {
         if (attacker.F() != board.getCurrentPlayer()) {
-            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+            throw new BoardException(BoardExceptionTypes.INCORRECT_PLAYER);
         }
     }
 
