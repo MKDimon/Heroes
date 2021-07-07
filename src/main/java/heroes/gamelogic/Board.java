@@ -1,13 +1,14 @@
 package heroes.gamelogic;
 
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;
 import heroes.units.General;
+import heroes.units.GeneralTypes;
 import heroes.units.Unit;
+import heroes.auxiliaryclasses.ActionTypes;
+import heroes.units.UnitTypes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,19 +21,20 @@ public class Board {
      *          V Y
      */
 
-    private final int curNumRound;
+    private int curNumRound;
+    private Fields currentPlayer;
 
     //TODO (@MKDimon) : int -> UNITS, String -> Action
-    private final Unit[][] fieldPlayerOne;
-    private final Unit[][] fieldPlayerTwo;
+    private Unit[][] fieldPlayerOne;
+    private Unit[][] fieldPlayerTwo;
 
-    private Map<Fields, Unit[][]> getUnits;
+    private Map<Fields,Unit[][]> getUnits;
 
-    private final General generalPlayerOne;
-    private final General generalPlayerTwo;
+    private General generalPlayerOne;
+    private General generalPlayerTwo;
 
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                 General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+                            General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
 
         this.fieldPlayerOne = fieldPlayerOne;
@@ -89,7 +91,8 @@ public class Board {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
-        } catch (NullPointerException exception) {
+        }
+        catch (NullPointerException exception) {
             return null;
         }
     }
@@ -117,4 +120,13 @@ public class Board {
     public General getGeneralPlayerTwo() {
         return generalPlayerTwo;
     }
+
+    public void setCurrentPlayer(Fields currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Fields getCurrentPlayer() {
+        return currentPlayer;
+    }
+
 }

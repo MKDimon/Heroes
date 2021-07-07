@@ -39,8 +39,8 @@ public class Validator {
         }
     }
 
-    public static void checkCorrectPlayer(Position attacker) throws BoardException {
-        if (attacker.F() != ControlRound.getCurrentPlayer()) {
+    public static void checkCorrectPlayer(Board board, Position attacker) throws BoardException {
+        if (attacker.F() != board.getCurrentPlayer()) {
             throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
         }
     }
