@@ -24,7 +24,7 @@ public class Unit {
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        isActive = active && isAlive();
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
@@ -44,24 +44,30 @@ public class Unit {
         if (unit == null || unit.getActionType() == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
-        maxHP = unit.getMaxHP();
-        setCurrentHP(maxHP);
-        setPower(unit.getPower());
-        setArmor(unit.getArmor());
-        setAccuracy(unit.getAccuracy());
-        actionType = unit.getActionType();
-        isActive = true;
+        maxHP = unit.maxHP;
+        setCurrentHP(unit.currentHP);
+        setPower(unit.power);
+        setArmor(unit.armor);
+        setAccuracy(unit.accuracy);
+        actionType = unit.actionType;
+        isActive = unit.isActive;
+        bonusArmor = unit.bonusArmor;
     }
 
-    public void inspire(Inspiration inspiration) throws UnitException {
-        if (inspiration == null) {
-            throw new UnitException(UnitExceptionTypes.NULL_POINTER);
+    public void inspire(Inspiration inspiration) {
+        try {
+            inspiration.inspire(this);
+        } catch (UnitException e){
+            e.printStackTrace();
         }
-        inspiration.inspire(this);
     }
 
-    public void deinspire(Deinspiration deinspiration) throws UnitException {
-        deinspiration.deinspire(this);
+    public void deinspire(Deinspiration deinspiration) {
+        try {
+            deinspiration.deinspire(this);
+        } catch (UnitException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getCurrentHP() {
@@ -95,6 +101,9 @@ public class Unit {
     public void setCurrentHP(int currentHP) {
         if (currentHP > maxHP) {
             currentHP = maxHP;
+        }
+        if(currentHP <= 0){
+            isActive = false;
         }
         this.currentHP = currentHP;
     }
@@ -142,11 +151,11 @@ public class Unit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unit unit = (Unit) o;
-        return maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
+        return bonusArmor == unit.bonusArmor && maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionType, maxHP, currentHP, power, accuracy, armor, isActive);
+        return Objects.hash(bonusArmor, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
     }
 }

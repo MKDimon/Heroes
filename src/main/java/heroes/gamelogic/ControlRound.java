@@ -22,6 +22,12 @@ public class ControlRound {
 
     public static boolean checkStep(Board board) {
         // Количество активных юнитов
+        if(!board.getGeneralPlayerOne().isAlive()){
+            Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
+        }
+        if(!board.getGeneralPlayerTwo().isAlive()){
+            Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
+        }
         long active = activeCount(board.getFieldPlayerOne());
         active += activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);

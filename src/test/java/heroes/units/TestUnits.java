@@ -74,12 +74,6 @@ public class TestUnits {
         } catch (UnitException e){
             assertEquals(UnitExceptionTypes.NULL_POINTER.getErrorType() ,e.getMessage());
         }
-        try{
-            Unit healer = new Unit(UnitTypes.HEALER);
-            healer.inspire(null);
-        } catch (UnitException e){
-            assertEquals(UnitExceptionTypes.NULL_POINTER.getErrorType() ,e.getMessage());
-        }
     }
 
     @Test
