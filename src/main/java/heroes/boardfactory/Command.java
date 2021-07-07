@@ -2,19 +2,21 @@ package heroes.boardfactory;
 
 import heroes.units.Unit;
 
+import java.util.List;
+
 public abstract class Command {
     private final Unit att;
-    private final Unit def;
+    private final List<Unit> def;
 
     public Unit getAtt() {
         return att;
     }
 
-    public Unit getDef() {
+    public List<Unit> getDef() {
         return def;
     }
 
-    public Command(Unit att, Unit def) {
+    public Command(Unit att, List<Unit> def) {
         this.att = att;
         this.def = def;
     }

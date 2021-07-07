@@ -4,13 +4,14 @@ import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Random;
 
 
 public class DamageCommand extends Command {
     Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
-    public DamageCommand(Unit att, Unit def) {
+    public DamageCommand(Unit att, List<Unit> def) {
         super(att, def);
 
     }
@@ -36,13 +37,16 @@ public class DamageCommand extends Command {
     public void execute() {
 
         if (getHitChance(super.getAtt().getAccuracy())) {
-            super.getDef().setCurrentHP(super.getDef().getCurrentHP() -
-                        reducedDamage(super.getAtt().getPower(), super.getDef().getArmor()));
-            logger.info("Unit hit! Dealing damage.");
-            logger.info("Attacker power: {}. Reduced by armor damage = {}", super.getAtt().getPower(),
-                    reducedDamage(super.getAtt().getPower(), super.getDef().getArmor()));
-            logger.info("Defender current hp: {}.", super.getDef().getCurrentHP());
-            logger.info("Defender max hp: {}.", super.getDef().getMaxHP());
+            for (Unit elem : super.getDef()) {
+                elem.setCurrentHP(elem.getCurrentHP() -
+                        reducedDamage(super.getAtt().getPower(), elem.getArmor()));
+                logger.info("Unit hit! Dealing damage.");
+                logger.info("Attacker power: {}. Reduced by armor damage = {}", super.getAtt().getPower(),
+                        reducedDamage(super.getAtt().getPower(), elem.getArmor()));
+                logger.info("Defender current hp: {}.", elem.getCurrentHP());
+                logger.info("Defender max hp: {}.", elem.getMaxHP());
+            }
+
         } else {
             logger.info("Unit missed");
         }

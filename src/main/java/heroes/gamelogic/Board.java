@@ -11,7 +11,11 @@ import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.UnitTypes;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.List;
 
 public class Board {
     /*
@@ -38,9 +42,12 @@ public class Board {
         currentPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
+
         getUnits = new HashMap<>();
+
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
         inspireArmy(fieldPlayerOne, generalPlayerOne);
@@ -87,10 +94,8 @@ public class Board {
     }
 
     public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) { //TODO: exception?
-        /*Unit att = getUnitByCoordinate(attacker);
-        Unit def = getUnitByCoordinate(defender);
         CommandFactory cf = new CommandFactory();
-        cf.getCommand(att, def, act).execute();*/
+        cf.getCommand(attacker, defender, act).execute();
     }
 
     public Unit[][] getArmy(Fields fields) {

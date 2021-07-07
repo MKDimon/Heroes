@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.Unit;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CommandFactory {
@@ -14,7 +15,7 @@ public class CommandFactory {
         commands = new HashMap<>();
     }
 
-    private void initializeMap(Unit att, Unit def) {
+    private void initializeMap(Unit att, List<Unit> def) {
         commands.put(ActionTypes.HEALING, new HealCommand(att, def));
         commands.put(ActionTypes.DEFENSE, new DefenseCommand(att, def));
         commands.put(ActionTypes.CLOSE_COMBAT, new DamageCommand(att, def));
@@ -22,7 +23,7 @@ public class CommandFactory {
         commands.put(ActionTypes.AREA_DAMAGE, new DamageCommand(att, def));
     }
 
-    public Command getCommand(Unit att, Unit def, ActionTypes key) {
+    public Command getCommand(Unit att, List<Unit> def, ActionTypes key) {
         initializeMap(att, def);
         return commands.getOrDefault(key, new DoNothingCommand(att, def));
     }
