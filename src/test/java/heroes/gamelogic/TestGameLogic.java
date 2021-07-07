@@ -2,8 +2,6 @@ package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
 import heroes.mathutils.Position;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.General;

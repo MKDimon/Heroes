@@ -1,11 +1,8 @@
-package gamelogic;
+package heroes.gamelogic;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.ControlRound;
-import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.GeneralTypes;

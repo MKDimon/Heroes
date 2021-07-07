@@ -14,6 +14,7 @@ import heroes.units.UnitTypes;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Board {
     /*
@@ -26,7 +27,6 @@ public class Board {
     private int curNumRound;
     private Fields currentPlayer;
 
-    //TODO (@MKDimon) : int -> UNITS, String -> Action
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
 
@@ -49,9 +49,8 @@ public class Board {
 
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
-
-        Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
-        Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
+        inspireArmy(fieldPlayerOne, generalPlayerOne);
+        inspireArmy(fieldPlayerTwo, generalPlayerTwo);
     }
 
     public Board(Board board) throws BoardException, UnitException {
@@ -64,6 +63,15 @@ public class Board {
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
         generalPlayerTwo = new General(board.generalPlayerTwo); //Возможно, нужно добавить баф командира
+        inspireArmy(fieldPlayerOne, generalPlayerOne);
+        inspireArmy(fieldPlayerTwo, generalPlayerTwo);
+        getUnits = new HashMap<>();
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+    }
+
+    public void inspireArmy(Unit[][] army, General general){
+        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
     private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {
@@ -135,4 +143,19 @@ public class Board {
         return currentPlayer;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Board board = (Board) o;
+        return curNumRound == board.curNumRound && currentPlayer == board.currentPlayer && Arrays.equals(fieldPlayerOne, board.fieldPlayerOne) && Arrays.equals(fieldPlayerTwo, board.fieldPlayerTwo) && Objects.equals(getUnits, board.getUnits) && Objects.equals(generalPlayerOne, board.generalPlayerOne) && Objects.equals(generalPlayerTwo, board.generalPlayerTwo);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(curNumRound, currentPlayer, getUnits, generalPlayerOne, generalPlayerTwo);
+        result = 31 * result + Arrays.hashCode(fieldPlayerOne);
+        result = 31 * result + Arrays.hashCode(fieldPlayerTwo);
+        return result;
+    }
 }
