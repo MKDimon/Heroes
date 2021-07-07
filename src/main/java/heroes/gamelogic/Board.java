@@ -88,10 +88,8 @@ public class Board {
     }
 
     public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) { //TODO: exception?
-        /*Unit att = getUnitByCoordinate(attacker);
-        Unit def = getUnitByCoordinate(defender);
         CommandFactory cf = new CommandFactory();
-        cf.getCommand(att, def, act).execute();*/
+        cf.getCommand(attacker, defender, act).execute();
     }
 
     public Unit[][] getArmy(Fields fields) {
