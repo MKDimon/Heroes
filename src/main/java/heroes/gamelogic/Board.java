@@ -11,6 +11,7 @@ import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.UnitTypes;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class Board {
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
-
+        currentPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
 
@@ -49,6 +50,9 @@ public class Board {
 
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
+
+        Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
+        Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
     }
 
     public Board(Board board) throws BoardException, UnitException {
@@ -60,7 +64,7 @@ public class Board {
         fieldPlayerOne = copyArmy(board.fieldPlayerOne);
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
-        generalPlayerTwo = new General(board.generalPlayerTwo);
+        generalPlayerTwo = new General(board.generalPlayerTwo); //Возможно, нужно добавить баф командира
     }
 
     private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {

@@ -24,7 +24,7 @@ public class Unit {
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        isActive = active && isAlive();
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
@@ -44,13 +44,14 @@ public class Unit {
         if (unit == null || unit.getActionType() == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
-        maxHP = unit.getMaxHP();
-        setCurrentHP(maxHP);
-        setPower(unit.getPower());
-        setArmor(unit.getArmor());
-        setAccuracy(unit.getAccuracy());
-        actionType = unit.getActionType();
-        isActive = true;
+        maxHP = unit.maxHP;
+        setCurrentHP(unit.currentHP);
+        setPower(unit.power);
+        setArmor(unit.armor);
+        setAccuracy(unit.accuracy);
+        actionType = unit.actionType;
+        isActive = unit.isActive;
+        bonusArmor = unit.bonusArmor;
     }
 
     public void inspire(Inspiration inspiration) {
@@ -97,9 +98,12 @@ public class Unit {
         return actionType;
     }
 
-    public void setCurrentHP(int currentHP) throws UnitException {
+    public void setCurrentHP(int currentHP) {
         if (currentHP > maxHP) {
-            throw new UnitException(UnitExceptionTypes.INCORRECT_HP);
+            currentHP = maxHP;
+        }
+        if(currentHP <= 0){
+            isActive = false;
         }
         this.currentHP = currentHP;
     }
@@ -137,7 +141,7 @@ public class Unit {
         this.actionType = actionType;
     }
 
-    public void defense() throws UnitException {
+    public void defense() {
         bonusArmor = 20;
         isActive = false;
     }
@@ -147,11 +151,11 @@ public class Unit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unit unit = (Unit) o;
-        return maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
+        return bonusArmor == unit.bonusArmor && maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(actionType, maxHP, currentHP, power, accuracy, armor, isActive);
+        return Objects.hash(bonusArmor, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
     }
 }
