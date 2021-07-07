@@ -39,7 +39,6 @@ public class Board {
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
-        currentPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
 
