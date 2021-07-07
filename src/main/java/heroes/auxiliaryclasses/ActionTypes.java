@@ -1,8 +1,9 @@
-package heroes.units.auxiliaryclasses;
+package heroes.auxiliaryclasses;
 
 public enum ActionTypes {
     CLOSE_COMBAT,
     RANGE_COMBAT,
     HEALING,
-    AREA_DAMAGE
+    AREA_DAMAGE,
+    DEFENSE
 }

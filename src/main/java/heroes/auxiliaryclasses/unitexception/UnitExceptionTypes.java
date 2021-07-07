@@ -1,4 +1,4 @@
-package heroes.units.auxiliaryclasses;
+package heroes.auxiliaryclasses.unitexception;
 
 public enum UnitExceptionTypes {
     NULL_POINTER("Null pointer"),
@@ -7,12 +7,13 @@ public enum UnitExceptionTypes {
     INCORRECT_POWER("Incorrect power"),
     INCORRECT_ACCURACY("Incorrect accuracy");
 
-    private String errorType;
-    UnitExceptionTypes(String errorType){
+    private final String errorType;
+
+    UnitExceptionTypes(String errorType) {
         this.errorType = errorType;
     }
 
-    public String getErrorType(){
+    public String getErrorType() {
         return errorType;
     }
 }
