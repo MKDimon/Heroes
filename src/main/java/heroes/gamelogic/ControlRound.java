@@ -12,6 +12,18 @@ public class ControlRound {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
     }
 
+    private static long aliveCount(Unit[] units) {
+        return Arrays.stream(units).filter(Unit::isAlive).count();
+    }
+
+    private static void checkAliveLine(Unit[][] army) {
+        if (aliveCount(army[0]) == 0 && aliveCount(army[1]) != 0) {
+            Unit[] temp = army[0];
+            army[0] = army[1];
+            army[1] = temp;
+        }
+    }
+
     public static void nextPlayer(Board board) {
         if (board.getCurrentPlayer() == Fields.PLAYER_TWO && activeCount(board.getFieldPlayerOne()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_ONE);
@@ -28,6 +40,10 @@ public class ControlRound {
         if(!board.getGeneralPlayerTwo().isAlive()){
             Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
         }
+
+        checkAliveLine(board.getFieldPlayerOne());
+        checkAliveLine(board.getFieldPlayerTwo());
+
         long active = activeCount(board.getFieldPlayerOne());
         active += activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
