@@ -22,6 +22,7 @@ public class Board {
      */
 
     private int curNumRound;
+    private Fields currentPlayer;
 
     //TODO (@MKDimon) : int -> UNITS, String -> Action
     private Unit[][] fieldPlayerOne;
@@ -91,6 +92,14 @@ public class Board {
 
     public General getGeneralPlayerTwo() {
         return generalPlayerTwo;
+    }
+
+    public void setCurrentPlayer(Fields currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public Fields getCurrentPlayer() {
+        return currentPlayer;
     }
 
 }

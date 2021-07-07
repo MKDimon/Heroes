@@ -42,7 +42,7 @@ public class GameLogic {
             Validator.checkIndexOutOfBounds(attacker);
             Validator.checkIndexOutOfBounds(defender);
 
-            Validator.checkCorrectPlayer(attacker);
+            Validator.checkCorrectPlayer(board, attacker);
             Validator.checkCorrectAction(board.getUnitByCoordinate(attacker), act);
             Validator.checkCorrectUnit(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectUnit(board.getUnitByCoordinate(defender));

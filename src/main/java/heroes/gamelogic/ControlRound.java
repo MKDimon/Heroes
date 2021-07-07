@@ -7,22 +7,17 @@ import java.util.Arrays;
 public class ControlRound {
 
     private static final int maxRound = 10;
-    private static Fields currentPlayer;
 
-    public static Fields getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    private static long activeCount(Unit[][] units) {
+    private static long activeCount(Unit[][] units) { // Количество активных юнитов
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
     }
 
     public static void nextPlayer(Board board) {
-        if (ControlRound.currentPlayer == Fields.PLAYER_TWO && activeCount(board.getFieldPlayerOne()) != 0) {
-            currentPlayer = Fields.PLAYER_ONE;
+        if (board.getCurrentPlayer() == Fields.PLAYER_TWO && activeCount(board.getFieldPlayerOne()) != 0) {
+            board.setCurrentPlayer(Fields.PLAYER_ONE);
         }
         else if (activeCount(board.getFieldPlayerTwo()) != 0) {
-            currentPlayer = Fields.PLAYER_TWO;
+            board.setCurrentPlayer(Fields.PLAYER_TWO);
         }
     }
 
