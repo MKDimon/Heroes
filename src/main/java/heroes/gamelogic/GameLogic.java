@@ -1,5 +1,6 @@
 package heroes.gamelogic;
 
+import heroes.SelfPlay;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
@@ -8,12 +9,15 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
+    Logger logger = LoggerFactory.getLogger(GameLogic.class);
 
     private Board board;
     private boolean gameBegun;
@@ -110,6 +114,7 @@ public class GameLogic {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;
+
         }
         return false;
     }
