@@ -38,11 +38,13 @@ public class ControlRound {
 
     public static boolean checkStep(Board board) {
         // Количество активных юнитов
-        if(!board.getGeneralPlayerOne().isAlive()){
+        if(!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()){
             Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
+            board.setArmyOneInspired(false);
         }
-        if(!board.getGeneralPlayerTwo().isAlive()){
+        if(!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()){
             Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
+            board.setArmyTwoInspired(false);
         }
 
         checkAliveLine(board.getFieldPlayerOne());

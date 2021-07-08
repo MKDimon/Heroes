@@ -38,6 +38,8 @@ public class Board {
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
+    private boolean isArmyOneInspired;
+    private boolean isArmyTwoInspired;
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
@@ -54,7 +56,9 @@ public class Board {
         this.generalPlayerOne = generalPlayerOne;
         this.generalPlayerTwo = generalPlayerTwo;
         inspireArmy(fieldPlayerOne, generalPlayerOne);
+        isArmyOneInspired = true;
         inspireArmy(fieldPlayerTwo, generalPlayerTwo);
+        isArmyTwoInspired = true;
     }
 
     public Board(Board board) throws BoardException, UnitException {
@@ -71,6 +75,8 @@ public class Board {
         getUnits = new HashMap<>();
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+        isArmyOneInspired = board.isArmyOneInspired;
+        isArmyTwoInspired = board.isArmyTwoInspired;
     }
 
     public void inspireArmy(Unit[][] army, General general){
@@ -154,5 +160,21 @@ public class Board {
 
     public void setRoundPlayer(Fields roundPlayer) {
         this.roundPlayer = roundPlayer;
+    }
+
+    public boolean isArmyOneInspired() {
+        return isArmyOneInspired;
+    }
+
+    public void setArmyOneInspired(boolean armyOneInspired) {
+        isArmyOneInspired = armyOneInspired;
+    }
+
+    public boolean isArmyTwoInspired() {
+        return isArmyTwoInspired;
+    }
+
+    public void setArmyTwoInspired(boolean armyTwoInspired) {
+        isArmyTwoInspired = armyTwoInspired;
     }
 }
