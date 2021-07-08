@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class ControlRound {
 
-    private static final int maxRound = 10;
+    private static final int maxRound = 2;
 
     private static long activeCount(Unit[][] units) { // Количество активных юнитов
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
@@ -60,10 +60,11 @@ public class ControlRound {
     }
 
     private static boolean newRound(Board board) {
-        if (board.getCurNumRound() == maxRound
-                || aliveCountInArmy(board.getFieldPlayerOne()) +
-                   aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+        if (board.getCurNumRound() >= maxRound
+                || aliveCountInArmy(board.getFieldPlayerOne()) == 0
+                || aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
             //TODO: место под логи
+            System.out.println("КОНЕЦ");
             return false;
         }
 

@@ -33,5 +33,6 @@ public class SelfPlay {
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
         }
 
+
     }
 }

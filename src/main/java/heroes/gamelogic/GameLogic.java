@@ -63,8 +63,8 @@ public class GameLogic {
 
             Validator.checkCorrectPlayer(board, attacker);
             Validator.checkCorrectAction(board.getUnitByCoordinate(attacker), act);
-            Validator.checkCorrectUnit(board.getUnitByCoordinate(attacker));
-            Validator.checkCorrectUnit(board.getUnitByCoordinate(defender));
+            Validator.checkCorrectAttacker(board.getUnitByCoordinate(attacker));
+            Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
             // можно через лямбду
             int countAlive = 0, x = attacker.X();

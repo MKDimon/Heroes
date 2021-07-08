@@ -106,6 +106,7 @@ public class Board {
     public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
+        attacker.setActive(false);
     }
 
     public Unit[][] getArmy(Fields fields) {
