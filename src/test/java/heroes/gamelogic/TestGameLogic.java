@@ -29,7 +29,8 @@ public class TestGameLogic {
         fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
-        GameLogic gl = new GameLogic(); gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+        GameLogic gl = new GameLogic();
+        gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
         GameLogic newGL = new GameLogic(gl.getBoard());
 
@@ -53,11 +54,13 @@ public class TestGameLogic {
 
         GameLogic gl = new GameLogic();
 
-        assertFalse(gl.gameStart(fieldPlayerOne, fieldPlayerOne, generalPlayerOne, generalPlayerOne));
+        assertFalse(
+                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerOne, generalPlayerOne)));
 
         fieldPlayerOne[0][2] = null;
 
-        assertFalse(gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo));
+        assertFalse(
+                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo)));
     }
 
     @Test
@@ -79,7 +82,7 @@ public class TestGameLogic {
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
         GameLogic gl = new GameLogic();
-        gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+        gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
 
         assertAll(

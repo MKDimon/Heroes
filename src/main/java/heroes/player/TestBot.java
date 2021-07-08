@@ -3,6 +3,7 @@ package heroes.player;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
@@ -20,54 +21,43 @@ import java.util.Random;
 public class TestBot implements IPlayer {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
-    Unit[][] army;
-    General general;
     Fields field;
 
-    public TestBot(final Fields f, final int TEST_PARAMETER) {
+    public TestBot(final Fields f) {
         field = f;
-        createArmyAndGeneral(TEST_PARAMETER);
     }
 
     @Override
-    public boolean createArmyAndGeneral(int TEST_PARAMETER) {
+    public Army getArmy() {
         try {
-            if (TEST_PARAMETER == 1) {
-                general = new General(GeneralTypes.COMMANDER);
-                army = new Unit[2][3];
+            if (field == Fields.PLAYER_ONE) {
+                General general = new General(GeneralTypes.COMMANDER);
+                Unit[][] army = new Unit[2][3];
                 army[0][0] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][0] = new Unit(UnitTypes.HEALER);
                 army[0][1] = general;
                 army[1][1] = new Unit(UnitTypes.MAGE);
                 army[0][2] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][2] = new Unit(UnitTypes.MAGE);
-                return true;
+
+                return new Army(army, general);
             } else {
-                general = new General(GeneralTypes.ARCHMAGE);
-                army = new Unit[2][3];
+                General general = new General(GeneralTypes.ARCHMAGE);
+                Unit[][] army = new Unit[2][3];
                 army[0][0] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][0] = new Unit(UnitTypes.HEALER);
                 army[0][1] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][1] = general;
                 army[0][2] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][2] = new Unit(UnitTypes.HEALER);
-                return true;
+
+                return new Army(army, general);
             }
 
         } catch (UnitException e) {
             logger.error("Error creating unit in TestBot", e);
-            return false;
+            return null;
         }
-    }
-
-    @Override
-    public Unit[][] getArmy() {
-        return army;
-    }
-
-    @Override
-    public General getGeneral() {
-        return general;
     }
 
     @Override

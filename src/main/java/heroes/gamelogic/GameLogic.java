@@ -31,23 +31,28 @@ public class GameLogic {
         gameBegun = true;
     }
 
-    public boolean gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                             General generalPlayerOne, General generalPlayerTwo) {
+    public boolean gameStart(Army fieldPlayerOne, Army fieldPlayerTwo) {
         try {
-            if (fieldPlayerOne == fieldPlayerTwo ||
-                    generalPlayerOne == generalPlayerTwo) {
+            if (fieldPlayerOne == fieldPlayerTwo
+            || fieldPlayerOne.getPlayerUnits() == fieldPlayerTwo.getPlayerUnits()
+            || fieldPlayerOne.getGeneral() == fieldPlayerTwo.getGeneral()) {
                 throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
             }
 
-            Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+            Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo,
+                    fieldPlayerOne.getGeneral(), fieldPlayerTwo.getGeneral());
 
-            Validator.checkNullPointerInArmy(fieldPlayerOne);
-            Validator.checkNullPointerInArmy(fieldPlayerTwo);
+            Validator.checkNullPointerInArmy(fieldPlayerOne.getPlayerUnits());
+            Validator.checkNullPointerInArmy(fieldPlayerTwo.getPlayerUnits());
 
-            board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+            board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
-            Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
-            Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
+            Arrays.stream(fieldPlayerOne.getPlayerUnits()).forEach
+                    (x -> Arrays.stream(x).forEach(u -> u.inspire
+                            (fieldPlayerOne.getGeneral().getInspiration())));
+            Arrays.stream(fieldPlayerTwo.getPlayerUnits()).forEach
+                    (x -> Arrays.stream(x).forEach(u -> u.inspire
+                            (fieldPlayerTwo.getGeneral().getInspiration())));
             return true;
         } catch (NullPointerException | GameLogicException exception) {
             logger.error(" Game Start failed ",exception);

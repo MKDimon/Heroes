@@ -61,13 +61,11 @@ public class ControlRound {
         ControlRound.nextPlayer(board);
 
         if (aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-
-            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
+            logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             return false;
         }
         if (aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
-            System.out.println("Конец на раунде: " + board.getCurNumRound());
-            System.out.println("\nПобедил PlayerOne\n");
+            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
 

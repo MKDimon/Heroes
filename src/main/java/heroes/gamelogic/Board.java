@@ -30,19 +30,15 @@ public class Board {
 
     private Fields roundPlayer;
 
-    private Unit[][] fieldPlayerOne;
-    private Unit[][] fieldPlayerTwo;
+    private final Army fieldPlayerOne;
+    private final Army fieldPlayerTwo;
 
     private Map<Fields, Unit[][]> getUnits;
-
-    private General generalPlayerOne;
-    private General generalPlayerTwo;
 
     private boolean isArmyOneInspired;
     private boolean isArmyTwoInspired;
 
-    public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                 General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+    public Board(Army fieldPlayerOne, Army fieldPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
         roundPlayer = Fields.PLAYER_ONE;
@@ -51,14 +47,12 @@ public class Board {
 
         getUnits = new HashMap<>();
 
-        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
-        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
 
-        this.generalPlayerOne = generalPlayerOne;
-        this.generalPlayerTwo = generalPlayerTwo;
-        inspireArmy(fieldPlayerOne, generalPlayerOne);
+        inspireArmy(fieldPlayerOne.getPlayerUnits(), fieldPlayerOne.getGeneral());
         isArmyOneInspired = true;
-        inspireArmy(fieldPlayerTwo, generalPlayerTwo);
+        inspireArmy(fieldPlayerTwo.getPlayerUnits(), fieldPlayerTwo.getGeneral());
         isArmyTwoInspired = true;
     }
 
@@ -69,13 +63,11 @@ public class Board {
         currentPlayer = board.currentPlayer;
         roundPlayer = board.roundPlayer;
         curNumRound = board.curNumRound;
-        fieldPlayerOne = copyArmy(board.fieldPlayerOne, board.generalPlayerOne);
-        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo, board.generalPlayerTwo);
-        generalPlayerOne = new General(board.generalPlayerOne);
-        generalPlayerTwo = new General(board.generalPlayerTwo);
+        fieldPlayerOne = new Army(board.fieldPlayerOne);
+        fieldPlayerTwo = new Army(board.fieldPlayerTwo);
         getUnits = new HashMap<>();
-        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
-        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
         isArmyOneInspired = board.isArmyOneInspired;
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
@@ -84,25 +76,7 @@ public class Board {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
-    private Unit[][] copyArmy(Unit[][] army, General general) throws BoardException, UnitException {
-        Unit[][] result = new Unit[2][3];
-        for (int i = 0; i < 2; i++) {
-            if (army == null) {
-                throw new BoardException(BoardExceptionTypes.NULL_POINTER);
-            }
-            for (int j = 0; j < 3; j++) {
-                if (army[i][j] == null) {
-                    throw new BoardException(BoardExceptionTypes.NULL_POINTER);
-                }
-                if (army[i][j] == general) {
-                    result[i][j] = new General(general);
-                } else {
-                    result[i][j] = new Unit(army[i][j]);
-                }
-            }
-        }
-        return result;
-    }
+
 
     public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
         CommandFactory cf = new CommandFactory();
@@ -132,19 +106,19 @@ public class Board {
     }
 
     public Unit[][] getFieldPlayerOne() {
-        return fieldPlayerOne;
+        return fieldPlayerOne.getPlayerUnits();
     }
 
     public Unit[][] getFieldPlayerTwo() {
-        return fieldPlayerTwo;
+        return fieldPlayerTwo.getPlayerUnits();
     }
 
     public General getGeneralPlayerOne() {
-        return generalPlayerOne;
+        return fieldPlayerOne.getGeneral();
     }
 
     public General getGeneralPlayerTwo() {
-        return generalPlayerTwo;
+        return fieldPlayerTwo.getGeneral();
     }
 
     public void setCurrentPlayer(Fields currentPlayer) {

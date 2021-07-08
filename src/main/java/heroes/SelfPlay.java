@@ -25,15 +25,14 @@ public class SelfPlay {
         /*
             Инициализация ботов
          */
-        IPlayer playerOne = new TestBot(Fields.PLAYER_ONE, 1);
-        IPlayer playerTwo = new TestBot(Fields.PLAYER_TWO, 2);
+        IPlayer playerOne = new TestBot(Fields.PLAYER_ONE);
+        IPlayer playerTwo = new TestBot(Fields.PLAYER_TWO);
         Map<Fields, IPlayer> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
 
         GameLogic gl = new GameLogic();
-        gl.gameStart(playerOne.getArmy(), playerTwo.getArmy(),
-                playerOne.getGeneral(), playerTwo.getGeneral());
+        gl.gameStart(playerOne.getArmy(), playerTwo.getArmy());
         while (gl.isGameBegun()) {
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());

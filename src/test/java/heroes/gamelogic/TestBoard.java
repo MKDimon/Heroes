@@ -25,7 +25,7 @@ public class TestBoard {
                 {new Unit(UnitTypes.MAGE), new Unit(UnitTypes.MAGE), new Unit(UnitTypes.SWORDSMAN)},
                 {new Unit(UnitTypes.BOWMAN), secondGeneral, new Unit(UnitTypes.HEALER)}
         };
-        Board board = new Board(firstArmy, secondArmy, firstGeneral, secondGeneral);
+        Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
         Unit testSwordsman = new Unit(UnitTypes.SWORDSMAN);
         testSwordsman.inspire(GeneralTypes.ARCHMAGE.getInspiration());
         assertAll(
@@ -50,9 +50,9 @@ public class TestBoard {
                 {new Unit(UnitTypes.MAGE), new Unit(UnitTypes.MAGE), new Unit(UnitTypes.SWORDSMAN)},
                 {new Unit(UnitTypes.BOWMAN), secondGeneral, new Unit(UnitTypes.BOWMAN)}
         };
-        Board board1 = new Board(firstArmy, secondArmy, firstGeneral, secondGeneral);
+        Board board1 = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
         Board board2 = new Board(board1);
-        assertTrue(board1 != board2);
+        assertNotSame(board1, board2);
         for(int i = 0; i<2; i++){
             for(int j = 0; j < 3; j++){
                 assertEquals(board1.getArmy(Fields.PLAYER_ONE)[i][j], board2.getArmy(Fields.PLAYER_ONE)[i][j]);
