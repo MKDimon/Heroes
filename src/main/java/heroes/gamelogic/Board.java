@@ -11,7 +11,11 @@ import heroes.units.Unit;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.UnitTypes;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.List;
 
 public class Board {
     /*
@@ -23,6 +27,8 @@ public class Board {
 
     private int curNumRound;
     private Fields currentPlayer;
+
+    private Fields roundPlayer;
 
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
@@ -36,6 +42,7 @@ public class Board {
                             General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
+        roundPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
 
@@ -55,13 +62,12 @@ public class Board {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
         currentPlayer = board.currentPlayer;
+        roundPlayer = board.roundPlayer;
         curNumRound = board.curNumRound;
-        fieldPlayerOne = copyArmy(board.fieldPlayerOne);
-        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo);
+        fieldPlayerOne = copyArmy(board.fieldPlayerOne, board.generalPlayerOne);
+        fieldPlayerTwo = copyArmy(board.fieldPlayerTwo, board.generalPlayerTwo);
         generalPlayerOne = new General(board.generalPlayerOne);
-        generalPlayerTwo = new General(board.generalPlayerTwo); //Возможно, нужно добавить баф командира
-        inspireArmy(fieldPlayerOne, generalPlayerOne);
-        inspireArmy(fieldPlayerTwo, generalPlayerTwo);
+        generalPlayerTwo = new General(board.generalPlayerTwo);
         getUnits = new HashMap<>();
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne);
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo);
@@ -71,7 +77,7 @@ public class Board {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
-    private Unit[][] copyArmy(Unit[][] army) throws BoardException, UnitException {
+    private Unit[][] copyArmy(Unit[][] army, General general) throws BoardException, UnitException {
         Unit[][] result = new Unit[2][3];
         for (int i = 0; i < 2; i++) {
             if (army == null) {
@@ -81,13 +87,17 @@ public class Board {
                 if (army[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
-                result[i][j] = new Unit(army[i][j]);
+                if(army[i][j] == general){
+                    result[i][j] = new General(general);
+                } else {
+                    result[i][j] = new Unit(army[i][j]);
+                }
             }
         }
         return result;
     }
 
-    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) { //TODO: exception?
+    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
     }
@@ -96,7 +106,7 @@ public class Board {
         return getUnits.get(fields);
     }
 
-    public Unit getUnitByCoordinate(Position pair) { //TODO: Validation
+    public Unit getUnitByCoordinate(Position pair) {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
@@ -138,19 +148,11 @@ public class Board {
         return currentPlayer;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Board board = (Board) o;
-        return curNumRound == board.curNumRound && currentPlayer == board.currentPlayer && Arrays.equals(fieldPlayerOne, board.fieldPlayerOne) && Arrays.equals(fieldPlayerTwo, board.fieldPlayerTwo) && Objects.equals(getUnits, board.getUnits) && Objects.equals(generalPlayerOne, board.generalPlayerOne) && Objects.equals(generalPlayerTwo, board.generalPlayerTwo);
+    public Fields getRoundPlayer() {
+        return roundPlayer;
     }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(curNumRound, currentPlayer, getUnits, generalPlayerOne, generalPlayerTwo);
-        result = 31 * result + Arrays.hashCode(fieldPlayerOne);
-        result = 31 * result + Arrays.hashCode(fieldPlayerTwo);
-        return result;
+    public void setRoundPlayer(Fields roundPlayer) {
+        this.roundPlayer = roundPlayer;
     }
 }

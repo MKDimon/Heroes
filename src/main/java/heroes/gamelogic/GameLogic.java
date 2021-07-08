@@ -22,7 +22,7 @@ public class GameLogic {
         gameBegun = false;
     }
 
-    public GameLogic(Board board) throws UnitException, BoardException { // TODO: конструктор копирования доски и Validate на доску
+    public GameLogic(Board board) throws UnitException, BoardException {
         this.board = new Board(board);
         gameBegun = true;
     }
@@ -56,7 +56,6 @@ public class GameLogic {
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
         if (!gameBegun) { return false; }
         try {
-            // TODO
             Validator.checkNullPointer(attacker, defender, act);
             Validator.checkNullPointer(attacker.X(), attacker.Y(), defender.Y(), defender.X());
             Validator.checkIndexOutOfBounds(attacker);
@@ -67,7 +66,6 @@ public class GameLogic {
             Validator.checkCorrectUnit(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectUnit(board.getUnitByCoordinate(defender));
 
-            // TODO: упростить код
             // можно через лямбду
             int countAlive = 0, x = attacker.X();
             Unit[][] units = board.getArmy(attacker.F());
