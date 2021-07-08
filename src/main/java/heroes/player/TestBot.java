@@ -98,15 +98,18 @@ public class TestBot implements IPlayer {
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
             defField = field;
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, field))) {
+                        posAttack.add(new Position(i, j, field));
+                    }
+                }
+            }
         }
 
-        Position defenderPos = null;
-
-        if (defField == field) {
-            defenderPos = posAttack.get(r.nextInt(posAttack.size()));
-        } else {
-            defenderPos = posDefend.get(r.nextInt(posDefend.size()));
-        }
+        Position defenderPos = (defField == field)?
+                posAttack.get(r.nextInt(posAttack.size())):
+                posDefend.get(r.nextInt(posDefend.size()));
 
         return new Answer(attackerPos, defenderPos, attackType);
     }
