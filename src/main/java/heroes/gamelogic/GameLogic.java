@@ -67,12 +67,15 @@ public class GameLogic {
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
             // можно через лямбду
-            int countAlive = 0, x = attacker.X();
+            int countAliveAtc = 0, x = attacker.X(),
+                countAliveDef = 0, xD = defender.X();
             Unit[][] units = board.getArmy(attacker.F());
+            Unit[][] unitsD = board.getArmy(defender.F());
             for (int i = 0; i < 3; i++) {
-                if (units[x][i].isAlive()) { countAlive++; }
+                if (units[x][i].isAlive()) { countAliveAtc++; }
+                if (unitsD[x][i].isAlive()) { countAliveDef++; }
             }
-            Validator.checkTargetAction(attacker, defender, act, countAlive);
+            Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
         }
         catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
