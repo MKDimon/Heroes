@@ -28,6 +28,8 @@ public class Board {
     private int curNumRound;
     private Fields currentPlayer;
 
+    private Fields roundPlayer;
+
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
 
@@ -40,6 +42,7 @@ public class Board {
                             General generalPlayerOne, General generalPlayerTwo) {
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
+        roundPlayer = Fields.PLAYER_ONE;
         this.fieldPlayerOne = fieldPlayerOne;
         this.fieldPlayerTwo = fieldPlayerTwo;
 
@@ -59,6 +62,7 @@ public class Board {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
         currentPlayer = board.currentPlayer;
+        roundPlayer = board.roundPlayer;
         curNumRound = board.curNumRound;
         fieldPlayerOne = copyArmy(board.fieldPlayerOne, board.generalPlayerOne);
         fieldPlayerTwo = copyArmy(board.fieldPlayerTwo, board.generalPlayerTwo);
@@ -93,7 +97,7 @@ public class Board {
         return result;
     }
 
-    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) { //TODO: exception?
+    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
     }
@@ -102,7 +106,7 @@ public class Board {
         return getUnits.get(fields);
     }
 
-    public Unit getUnitByCoordinate(Position pair) { //TODO: Validation
+    public Unit getUnitByCoordinate(Position pair) {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
@@ -142,5 +146,13 @@ public class Board {
 
     public Fields getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public Fields getRoundPlayer() {
+        return roundPlayer;
+    }
+
+    public void setRoundPlayer(Fields roundPlayer) {
+        this.roundPlayer = roundPlayer;
     }
 }

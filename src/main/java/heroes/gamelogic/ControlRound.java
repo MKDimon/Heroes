@@ -12,12 +12,16 @@ public class ControlRound {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
     }
 
-    private static long aliveCount(Unit[] units) {
+    private static long aliveLineCount(Unit[] units) {
         return Arrays.stream(units).filter(Unit::isAlive).count();
     }
 
+    private static long aliveCountInArmy(Unit[][] units) {
+        return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
+    }
+
     private static void checkAliveLine(Unit[][] army) {
-        if (aliveCount(army[0]) == 0 && aliveCount(army[1]) != 0) {
+        if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
             Unit[] temp = army[0];
             army[0] = army[1];
             army[1] = temp;
@@ -54,15 +58,22 @@ public class ControlRound {
     }
 
     private static boolean newRound(Board board) {
-        if (board.getCurNumRound() == maxRound) {
+        if (board.getCurNumRound() == maxRound
+                || aliveCountInArmy(board.getFieldPlayerOne()) +
+                   aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            //TODO: место под логи
             return false;
         }
+
+        // Смена игрока начинающего раунд
+        board.setCurrentPlayer( (board.getRoundPlayer() == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_TWO );
+        board.setRoundPlayer( board.getCurrentPlayer() );
+
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
         board.setCurNumRound(board.getCurNumRound() + 1);
-        // TODO: флаги активности
 
         return true;
     }
