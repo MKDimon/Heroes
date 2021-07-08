@@ -108,4 +108,8 @@ public class GameLogic {
     public Board getBoard() {
         return board;
     }
+
+    public boolean isGameBegun() {
+        return gameBegun;
+    }
 }

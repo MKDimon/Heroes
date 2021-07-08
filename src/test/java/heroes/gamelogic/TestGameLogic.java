@@ -75,7 +75,7 @@ public class TestGameLogic {
 
         Unit[][] fieldPlayerTwo = new Unit[2][3];
         fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerTwo[0][1] = generalPlayerOne;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
         GameLogic gl = new GameLogic();
