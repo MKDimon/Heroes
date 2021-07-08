@@ -57,7 +57,7 @@ public class Unit {
     public void inspire(Inspiration inspiration) {
         try {
             inspiration.inspire(this);
-        } catch (UnitException e){
+        } catch (UnitException e) {
             e.printStackTrace();
         }
     }
@@ -90,7 +90,7 @@ public class Unit {
         return armor + bonusArmor;
     }
 
-    public int getBonusArmor(){
+    public int getBonusArmor() {
         return bonusArmor;
     }
 
@@ -102,7 +102,7 @@ public class Unit {
         if (currentHP > maxHP) {
             currentHP = maxHP;
         }
-        if(currentHP <= 0){
+        if (currentHP <= 0) {
             isActive = false;
         }
         this.currentHP = currentHP;
@@ -129,7 +129,7 @@ public class Unit {
         this.armor = armor;
     }
 
-    public void setBonusArmor(int bonusArmor){
+    public void setBonusArmor(int bonusArmor) {
         this.bonusArmor = bonusArmor;
     }
 

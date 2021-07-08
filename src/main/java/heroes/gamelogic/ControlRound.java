@@ -42,11 +42,11 @@ public class ControlRound {
 
     public static boolean checkStep(Board board) {
         // Количество активных юнитов
-        if(!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()){
+        if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
             Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
             board.setArmyOneInspired(false);
         }
-        if(!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()){
+        if (!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()) {
             Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
             board.setArmyTwoInspired(false);
         }
@@ -60,9 +60,14 @@ public class ControlRound {
         active += activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-        if (aliveCountInArmy(board.getFieldPlayerOne()) == 0
-                || aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+        if (aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
             System.out.println("Конец на раунде: " + board.getCurNumRound());
+            System.out.println("\nПобедил PlayerTwo\n");
+            return false;
+        }
+        if (aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            System.out.println("Конец на раунде: " + board.getCurNumRound());
+            System.out.println("\nПобедил PlayerOne\n");
             return false;
         }
 
@@ -80,8 +85,8 @@ public class ControlRound {
         }
 
         // Смена игрока начинающего раунд
-        board.setCurrentPlayer( (board.getRoundPlayer() == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_TWO );
-        board.setRoundPlayer( board.getCurrentPlayer() );
+        board.setCurrentPlayer((board.getRoundPlayer() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_TWO);
+        board.setRoundPlayer(board.getCurrentPlayer());
 
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));

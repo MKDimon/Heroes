@@ -17,7 +17,7 @@ public class Answer {
     private ActionTypes actionType;
 
     public Answer(Position attacker, Position defender, ActionTypes actionType) throws GameLogicException {
-        if(attacker == null || defender == null || actionType == null){
+        if (attacker == null || defender == null || actionType == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }
         this.attacker = attacker;

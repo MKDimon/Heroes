@@ -28,7 +28,7 @@ public class SelfPlay {
         GameLogic gl = new GameLogic();
         gl.gameStart(playerOne.getArmy(), playerTwo.getArmy(),
                 playerOne.getGeneral(), playerTwo.getGeneral());
-        while(gl.isGameBegun()) {
+        while (gl.isGameBegun()) {
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
         }

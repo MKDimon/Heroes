@@ -29,8 +29,8 @@ public class DamageCommand extends Command {
     }
 
     int reducedDamage(int pow, int arm) {
-        double double_arm = (double)(arm) / 100.0;
-        return pow - (int)((double)pow * double_arm);
+        double double_arm = (double) (arm) / 100.0;
+        return pow - (int) ((double) pow * double_arm);
     }
 
     @Override

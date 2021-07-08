@@ -33,15 +33,16 @@ public class Board {
     private Unit[][] fieldPlayerOne;
     private Unit[][] fieldPlayerTwo;
 
-    private Map<Fields,Unit[][]> getUnits;
+    private Map<Fields, Unit[][]> getUnits;
 
     private General generalPlayerOne;
     private General generalPlayerTwo;
 
     private boolean isArmyOneInspired;
     private boolean isArmyTwoInspired;
+
     public Board(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                            General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
+                 General generalPlayerOne, General generalPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
         roundPlayer = Fields.PLAYER_ONE;
@@ -79,7 +80,7 @@ public class Board {
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
 
-    public void inspireArmy(Unit[][] army, General general){
+    public void inspireArmy(Unit[][] army, General general) {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
@@ -93,7 +94,7 @@ public class Board {
                 if (army[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
-                if(army[i][j] == general){
+                if (army[i][j] == general) {
                     result[i][j] = new General(general);
                 } else {
                     result[i][j] = new Unit(army[i][j]);
@@ -117,8 +118,7 @@ public class Board {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
-        }
-        catch (NullPointerException exception) {
+        } catch (NullPointerException exception) {
             return null;
         }
     }

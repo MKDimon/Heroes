@@ -28,7 +28,7 @@ public class GameLogic {
     }
 
     public boolean gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                     General generalPlayerOne, General generalPlayerTwo) {
+                             General generalPlayerOne, General generalPlayerTwo) {
         try {
             if (fieldPlayerOne == fieldPlayerTwo ||
                     generalPlayerOne == generalPlayerTwo) {
@@ -45,8 +45,7 @@ public class GameLogic {
             Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
             Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
             return true;
-        }
-        catch (NullPointerException | GameLogicException exception) {
+        } catch (NullPointerException | GameLogicException exception) {
             //TODO: место под логи
             System.out.println(exception.getMessage()); // TODO: в логер
             return false;
@@ -54,7 +53,9 @@ public class GameLogic {
     }
 
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
-        if (!gameBegun) { return false; }
+        if (!gameBegun) {
+            return false;
+        }
         try {
             Validator.checkNullPointer(attacker, defender, act);
             Validator.checkNullPointer(attacker.X(), attacker.Y(), defender.Y(), defender.X());
@@ -68,19 +69,25 @@ public class GameLogic {
 
             // можно через лямбду
             int countAliveAtc = 0, x = attacker.X(),
-                countAliveDef = 0, xD = defender.X();
+                    countAliveDef = 0, xD = defender.X();
             Unit[][] units = board.getArmy(attacker.F());
             Unit[][] unitsD = board.getArmy(defender.F());
             for (int i = 0; i < 3; i++) {
-                if (units[x][i].isAlive()) { countAliveAtc++; }
-                if (unitsD[x][i].isAlive()) { countAliveDef++; }
+                if (units[x][i].isAlive()) {
+                    countAliveAtc++;
+                }
+                if (unitsD[x][i].isAlive()) {
+                    countAliveDef++;
+                }
             }
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
-        }
-        catch (NullPointerException | BoardException exception) {
+        } catch (NullPointerException | BoardException exception) {
             // TODO: место под логер
             System.out.println(exception.getMessage()); // TODO: в логер
             return false;
+        } catch (UnitException exception) {
+            act = ActionTypes.DEFENSE;
+            return true;
         }
 
         return true;
@@ -92,8 +99,7 @@ public class GameLogic {
         if (act.isMassEffect()) {
             result.addAll(Arrays.asList((board.getArmy(def.F())[0])));
             result.addAll(Arrays.asList((board.getArmy(def.F())[1])));
-        }
-        else {
+        } else {
             result.add(board.getUnitByCoordinate(def));
         }
         return result;

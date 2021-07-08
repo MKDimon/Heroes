@@ -8,7 +8,7 @@ public enum BoardExceptionTypes {
     NULL_POINTER("Null pointer"),
     INCORRECT_PLAYER("Incorrect player"),
     UNIT_IS_DEAD("Unit is dead"),
-    UNIT_IS_NOT_ACTIVE("Unit is not active")
+    UNIT_IS_NOT_ACTIVE("Unit is not active"),
     ;
 
     private final String errorType;

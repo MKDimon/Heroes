@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TestBot implements IPlayer  {
+public class TestBot implements IPlayer {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
     Unit[][] army;
@@ -35,16 +35,22 @@ public class TestBot implements IPlayer  {
             if (TEST_PARAMETER == 1) {
                 general = new General(GeneralTypes.COMMANDER);
                 army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.BOWMAN);     army[1][0] = new Unit(UnitTypes.BOWMAN);
-                army[0][1] = general;                           army[1][1] = new Unit(UnitTypes.BOWMAN);
-                army[0][2] = new Unit(UnitTypes.BOWMAN);     army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][0] = new Unit(UnitTypes.HEALER);
+                army[0][1] = general;
+                army[1][1] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][2] = new Unit(UnitTypes.MAGE);
                 return true;
             } else {
                 general = new General(GeneralTypes.ARCHMAGE);
                 army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.MAGE);     army[1][0] = new Unit(UnitTypes.BOWMAN);
-                army[0][1] = new Unit(UnitTypes.MAGE);     army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.MAGE);     army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][0] = new Unit(UnitTypes.HEALER);
+                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][1] = general;
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][2] = new Unit(UnitTypes.HEALER);
                 return true;
             }
 
@@ -69,7 +75,7 @@ public class TestBot implements IPlayer  {
         Random r = new Random();
 
 
-        Fields defField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
+        Fields defField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
         List<Position> posAttack = new ArrayList<>();
         List<Position> posDefend = new ArrayList<>();
@@ -79,21 +85,28 @@ public class TestBot implements IPlayer  {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                if (armyAttack[i][j].isActive()) { posAttack.add(new Position(i, j, field)); }
-                if (armyDefend[i][j].isAlive()) { posDefend.add(new Position(i, j, defField)); }
+                if (armyAttack[i][j].isActive()) {
+                    posAttack.add(new Position(i, j, field));
+                }
+                if (armyDefend[i][j].isAlive()) {
+                    posDefend.add(new Position(i, j, defField));
+                }
             }
         }
 
         Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
-        if(attackType == ActionTypes.HEALING){
+        if (attackType == ActionTypes.HEALING) {
             defField = field;
         }
 
         Position defenderPos = null;
 
-        if (defField == field) { defenderPos = posAttack.get(r.nextInt(posAttack.size())); }
-        else { defenderPos = posDefend.get(r.nextInt(posDefend.size() )); }
+        if (defField == field) {
+            defenderPos = posAttack.get(r.nextInt(posAttack.size()));
+        } else {
+            defenderPos = posDefend.get(r.nextInt(posDefend.size()));
+        }
 
         return new Answer(attackerPos, defenderPos, attackType);
     }

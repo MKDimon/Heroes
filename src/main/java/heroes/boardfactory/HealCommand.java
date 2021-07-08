@@ -8,6 +8,7 @@ import java.util.List;
 
 public class HealCommand extends Command {
     Logger logger = LoggerFactory.getLogger(HealCommand.class);
+
     public HealCommand(Unit att, List<Unit> def) {
         super(att, def);
 

@@ -3,6 +3,8 @@ package heroes.gamelogic;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
+import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 
@@ -61,15 +63,18 @@ public class Validator {
     }
 
     public static void checkTargetAction(Position attacker, Position defender, ActionTypes actionType,
-                                         int countAlive, int countAliveDef) throws BoardException {
+                                         int countAlive, int countAliveDef) throws BoardException, UnitException {
         if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
         }
         if (actionType == ActionTypes.CLOSE_COMBAT &&
                 !((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
                         (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
-            if ( countAliveDef > 1) {
+            if (countAliveDef > 1) {
                 throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
+            }
+            {
+                throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
             }
         }
         if (actionType == ActionTypes.AREA_DAMAGE || actionType == ActionTypes.RANGE_COMBAT) {
