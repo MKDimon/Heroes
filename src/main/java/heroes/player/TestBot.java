@@ -1,14 +1,19 @@
 package heroes.player;
 
+import heroes.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Random;
 
 public class TestBot implements IPlayer  {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
@@ -58,8 +63,15 @@ public class TestBot implements IPlayer  {
     }
 
     @Override
-    public Answer getAnswer(Board board) {
-        return null;
+    public Answer getAnswer(Board board) throws GameLogicException {
+        Random r = new Random();
+        Fields defField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
+        Position attackerPos = new Position(r.nextInt(2), r.nextInt(3), field);
+        ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
+        if(attackType == ActionTypes.HEALING){
+            defField = field;
+        }
+        return new Answer(attackerPos, new Position(r.nextInt(2), r.nextInt(3), defField), attackType);
     }
 
     @Override

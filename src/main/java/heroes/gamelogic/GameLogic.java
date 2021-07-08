@@ -87,8 +87,8 @@ public class GameLogic {
         List<Unit> result = new ArrayList<>();
         Unit[][] army = board.getArmy(def.F());
         if (act.isMassEffect()) {
-            result.addAll(Arrays.asList((board.getFieldPlayerOne()[0])));
-            result.addAll(Arrays.asList((board.getFieldPlayerOne()[0])));
+            result.addAll(Arrays.asList((board.getArmy(def.F())[0])));
+            result.addAll(Arrays.asList((board.getArmy(def.F())[1])));
         }
         else {
             result.add(board.getUnitByCoordinate(def));

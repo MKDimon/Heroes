@@ -4,7 +4,6 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.mathutils.Position;
-import heroes.units.Unit;
 
 import java.util.Objects;
 
