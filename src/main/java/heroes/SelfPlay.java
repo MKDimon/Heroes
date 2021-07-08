@@ -38,7 +38,5 @@ public class SelfPlay {
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
         }
-
-
     }
 }

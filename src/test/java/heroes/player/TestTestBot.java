@@ -1,0 +1,32 @@
+package heroes.player;
+
+import heroes.auxiliaryclasses.GameLogicException;
+import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameLogic;
+import heroes.gamelogic.Validator;
+import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class TestTestBot {
+
+    @Test
+    public void testBotGetAction() throws GameLogicException {
+        IPlayer player = new TestBot(Fields.PLAYER_ONE, 1);
+        IPlayer player1 = new TestBot(Fields.PLAYER_TWO, 2);
+
+        GameLogic gl = new GameLogic();
+        gl.gameStart(player.getArmy(), player1.getArmy(), player.getGeneral(), player1.getGeneral());
+
+        Answer answer = player.getAnswer(gl.getBoard());
+
+        assertAll(
+                () -> assertDoesNotThrow(
+                        () -> Validator.checkNullPointer(answer.getAttacker(),
+                                                         answer.getDefender(),
+                                                         answer.getActionType())),
+                () -> assertEquals(answer.getActionType(),
+                        gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getActionType())
+        );
+    }
+}
