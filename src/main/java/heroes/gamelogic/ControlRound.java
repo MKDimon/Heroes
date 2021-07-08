@@ -1,12 +1,16 @@
 package heroes.gamelogic;
 
+import heroes.boardfactory.DamageCommand;
 import heroes.units.Unit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class ControlRound {
+    static Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
-    private static final int maxRound = 2;
+    private static final int maxRound = 10;
 
     private static long activeCount(Unit[][] units) { // Количество активных юнитов
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
@@ -50,9 +54,18 @@ public class ControlRound {
         checkAliveLine(board.getFieldPlayerOne());
         checkAliveLine(board.getFieldPlayerTwo());
 
+        logger.info("\n[NEW STAP]\n");
+
         long active = activeCount(board.getFieldPlayerOne());
         active += activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
+
+        if (aliveCountInArmy(board.getFieldPlayerOne()) == 0
+                || aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            System.out.println("Конец на раунде: " + board.getCurNumRound());
+            return false;
+        }
+
         if (active == 0) {
             return newRound(board);
         }
@@ -60,9 +73,7 @@ public class ControlRound {
     }
 
     private static boolean newRound(Board board) {
-        if (board.getCurNumRound() >= maxRound
-                || aliveCountInArmy(board.getFieldPlayerOne()) == 0
-                || aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+        if (board.getCurNumRound() >= maxRound) {
             //TODO: место под логи
             System.out.println("КОНЕЦ");
             return false;

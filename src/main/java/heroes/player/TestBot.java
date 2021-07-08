@@ -13,6 +13,8 @@ import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class TestBot implements IPlayer  {
@@ -65,13 +67,35 @@ public class TestBot implements IPlayer  {
     @Override
     public Answer getAnswer(Board board) throws GameLogicException {
         Random r = new Random();
+
+
         Fields defField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
-        Position attackerPos = new Position(r.nextInt(2), r.nextInt(3), field);
+
+        List<Position> posAttack = new ArrayList<>();
+        List<Position> posDefend = new ArrayList<>();
+
+        Unit[][] armyAttack = board.getArmy(field);
+        Unit[][] armyDefend = board.getArmy(field);
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (armyAttack[i][j].isActive()) { posAttack.add(new Position(i, j, field)); }
+                if (armyDefend[i][j].isAlive()) { posDefend.add(new Position(i, j, defField)); }
+            }
+        }
+
+        Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if(attackType == ActionTypes.HEALING){
             defField = field;
         }
-        return new Answer(attackerPos, new Position(r.nextInt(2), r.nextInt(3), defField), attackType);
+
+        Position defenderPos = null;
+
+        if (defField == field) { defenderPos = posAttack.get(r.nextInt(posAttack.size())); }
+        else { defenderPos = posDefend.get(r.nextInt(posDefend.size() )); }
+
+        return new Answer(attackerPos, defenderPos, attackType);
     }
 
     @Override
