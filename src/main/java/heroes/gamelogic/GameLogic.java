@@ -50,8 +50,7 @@ public class GameLogic {
             Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
             return true;
         } catch (NullPointerException | GameLogicException exception) {
-            //TODO: место под логи
-            System.out.println(exception.getMessage()); // TODO: в логер
+            logger.error(" Game Start failed ",exception);
             return false;
         }
     }
@@ -86,8 +85,7 @@ public class GameLogic {
             }
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
         } catch (NullPointerException | BoardException exception) {
-            // TODO: место под логер
-            System.out.println(exception.getMessage()); // TODO: в логер
+            logger.warn(exception.getMessage());
             return false;
         } catch (UnitException exception) {
             act = ActionTypes.DEFENSE;

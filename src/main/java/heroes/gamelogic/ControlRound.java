@@ -61,8 +61,8 @@ public class ControlRound {
         ControlRound.nextPlayer(board);
 
         if (aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-            System.out.println("Конец на раунде: " + board.getCurNumRound());
-            System.out.println("\nПобедил PlayerTwo\n");
+
+            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
         if (aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
@@ -79,8 +79,7 @@ public class ControlRound {
 
     private static boolean newRound(Board board) {
         if (board.getCurNumRound() >= maxRound) {
-            //TODO: место под логи
-            System.out.println("КОНЕЦ");
+            logger.info("Конец игры: НИЧЬЯ");
             return false;
         }
 
