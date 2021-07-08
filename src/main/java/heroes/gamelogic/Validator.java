@@ -44,13 +44,13 @@ public class Validator {
 
     public static void checkCorrectDefender(Unit unit) throws BoardException {
         if (!unit.isAlive()) {
-            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+            throw new BoardException(BoardExceptionTypes.UNIT_IS_DEAD);
         }
     }
 
     public static void checkCorrectAttacker(Unit unit) throws BoardException {
         if (!unit.isActive() || !unit.isAlive()) {
-            throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
+            throw new BoardException(BoardExceptionTypes.UNIT_IS_NOT_ACTIVE);
         }
     }
 

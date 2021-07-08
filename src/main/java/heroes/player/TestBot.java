@@ -35,16 +35,16 @@ public class TestBot implements IPlayer  {
             if (TEST_PARAMETER == 1) {
                 general = new General(GeneralTypes.COMMANDER);
                 army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);     army[1][0] = new Unit(UnitTypes.BOWMAN);
+                army[0][0] = new Unit(UnitTypes.BOWMAN);     army[1][0] = new Unit(UnitTypes.BOWMAN);
                 army[0][1] = general;                           army[1][1] = new Unit(UnitTypes.BOWMAN);
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);     army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.BOWMAN);     army[1][2] = new Unit(UnitTypes.MAGE);
                 return true;
             } else {
                 general = new General(GeneralTypes.ARCHMAGE);
                 army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);     army[1][0] = new Unit(UnitTypes.BOWMAN);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN);     army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);     army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][0] = new Unit(UnitTypes.MAGE);     army[1][0] = new Unit(UnitTypes.BOWMAN);
+                army[0][1] = new Unit(UnitTypes.MAGE);     army[1][1] = general;
+                army[0][2] = new Unit(UnitTypes.MAGE);     army[1][2] = new Unit(UnitTypes.MAGE);
                 return true;
             }
 

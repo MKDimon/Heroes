@@ -20,7 +20,7 @@ public class Unit {
 
 
     public boolean isActive() {
-        return isActive;
+        return isActive && isAlive();
     }
 
     public void setActive(boolean active) {
