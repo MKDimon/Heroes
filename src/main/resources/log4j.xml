@@ -2,7 +2,7 @@
 <log4j:configuration debug="true">
 <appender name="CONSOLE_LOG" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
-        <param name="Threshold" value="WARNING"/>
+        <param name="Threshold" value="INFO"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ABSOLUTE} %-4p [%c] %m%n"/>
         </layout>
@@ -44,11 +44,6 @@
         <appender-ref ref="CONSOLE_LOG"/>
     </category>
 
-    <root>
-        <priority value="error"/>
-        <appender-ref ref="FILE_APPENDER_ERROR"/>
-    </root>
-
     <category name="heroes">
         <priority value="debug"/>
         <appender-ref ref="FILE_APPENDER_DEBUG_ONLY"/>
@@ -58,4 +53,9 @@
         <priority value="debug"/>
         <appender-ref ref="FILE_APPENDER_ALL"/>
     </category>
+
+    <root>
+        <priority value="error"/>
+        <appender-ref ref="FILE_APPENDER_ERROR"/>
+    </root>
 </log4j:configuration>

@@ -6,11 +6,17 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.units.General;
 import heroes.units.Unit;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Army {
     private Unit[][] playerUnits;
     private General general;
 
-    public Army(Unit[][] playerUnits, General general) {
+    public Army(Unit[][] playerUnits, General general) throws BoardException {
+        if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
+            throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
+        }
         this.playerUnits = playerUnits;
         this.general = general;
     }
@@ -41,5 +47,20 @@ public class Army {
 
     public General getGeneral() {
         return general;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Army army = (Army) o;
+        return Arrays.deepEquals(playerUnits, army.playerUnits) && Objects.equals(general, army.general);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(general);
+        result = 31 * result + Arrays.hashCode(playerUnits);
+        return result;
     }
 }

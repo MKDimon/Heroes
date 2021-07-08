@@ -2,6 +2,7 @@ package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
@@ -33,28 +34,22 @@ public class TestBot implements IPlayer {
             if (field == Fields.PLAYER_ONE) {
                 General general = new General(GeneralTypes.COMMANDER);
                 Unit[][] army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][0] = new Unit(UnitTypes.HEALER);
-                army[0][1] = general;
-                army[1][1] = new Unit(UnitTypes.MAGE);
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN); army[1][0] = new Unit(UnitTypes.MAGE);
+                army[0][1] = general;                       army[1][1] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.MAGE);
 
                 return new Army(army, general);
             } else {
                 General general = new General(GeneralTypes.ARCHMAGE);
                 Unit[][] army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][0] = new Unit(UnitTypes.HEALER);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.HEALER);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN); army[1][0] = new Unit(UnitTypes.BOWMAN);
+                army[0][1] = new Unit(UnitTypes.SWORDSMAN); army[1][1] = general;
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.HEALER);
 
                 return new Army(army, general);
             }
 
-        } catch (UnitException e) {
+        } catch (UnitException | BoardException e) {
             logger.error("Error creating unit in TestBot", e);
             return null;
         }

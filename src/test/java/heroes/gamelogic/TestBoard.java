@@ -14,7 +14,7 @@ import org.junit.Test;
 public class TestBoard {
 
     @Test
-    public void boardTest1() throws UnitException {
+    public void boardTest1() throws UnitException, BoardException {
         General firstGeneral = new General(GeneralTypes.ARCHMAGE);
         General secondGeneral = new General(GeneralTypes.COMMANDER);
         Unit[][] firstArmy = new Unit[][]{

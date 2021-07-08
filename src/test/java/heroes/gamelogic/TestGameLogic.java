@@ -21,7 +21,7 @@ public class TestGameLogic {
 
         Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerOne[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
         Unit[][] fieldPlayerTwo = new Unit[2][3];
@@ -38,13 +38,13 @@ public class TestGameLogic {
     }
 
     @Test
-    public void testIncorrectParams() throws UnitException {
+    public void testIncorrectParams() throws UnitException, BoardException {
         General generalPlayerOne = new General(GeneralTypes.COMMANDER);
         General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
 
         Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerOne[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
         Unit[][] fieldPlayerTwo = new Unit[2][3];
@@ -64,7 +64,7 @@ public class TestGameLogic {
     }
 
     @Test
-    public void testActionValidation() throws UnitException {
+    public void testActionValidation() throws UnitException, BoardException {
         /*
          *   Следить за очередью ходов игроков
          */

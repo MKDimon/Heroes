@@ -9,6 +9,7 @@ public enum BoardExceptionTypes {
     INCORRECT_PLAYER("Incorrect player"),
     UNIT_IS_DEAD("Unit is dead"),
     UNIT_IS_NOT_ACTIVE("Unit is not active"),
+    GENERAL_IS_NOT_IN_ARMY("General is not in army"),
     ;
 
     private final String errorType;
