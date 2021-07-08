@@ -4,10 +4,14 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.mathutils.Position;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class Answer {
+    Logger logger = LoggerFactory.getLogger(Answer.class);
+
     private Position attacker;
     private Position defender;
     private ActionTypes actionType;
@@ -19,6 +23,7 @@ public class Answer {
         this.attacker = attacker;
         this.defender = defender;
         this.actionType = actionType;
+        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, actionType);
     }
 
     public Position getAttacker() {
@@ -38,7 +43,8 @@ public class Answer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Answer answer = (Answer) o;
-        return Objects.equals(attacker, answer.attacker) && Objects.equals(defender, answer.defender) && actionType == answer.actionType;
+        return Objects.equals(attacker, answer.attacker) && Objects.equals(defender, answer.defender) &&
+                actionType == answer.actionType;
     }
 
     @Override
