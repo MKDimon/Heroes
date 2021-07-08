@@ -1,7 +1,9 @@
 package heroes.auxiliaryclasses;
 
 public enum GameLogicExceptionType {
-    INCORRECT_PARAMS("Incorrect params for GL");
+    INCORRECT_PARAMS("Incorrect params for GL"),
+    NULL_POINTER("Null pointer")
+    ;
 
     private final String errorType;
 
