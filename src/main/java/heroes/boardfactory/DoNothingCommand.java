@@ -5,7 +5,7 @@ import heroes.units.Unit;
 import java.util.List;
 
 public class DoNothingCommand extends Command {
-    public DoNothingCommand(Unit att, List<Unit> def) {
+    public DoNothingCommand(final Unit att, final List<Unit> def) {
         super(att, def);
 
     }

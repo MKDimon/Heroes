@@ -16,7 +16,7 @@ public class Validator {
     private Validator() {
     }
 
-    public static void checkNullPointer(Object... arr) throws NullPointerException {
+    public static void checkNullPointer(final Object... arr) throws NullPointerException {
         for (Object item : arr) {
             if (item == null) {
                 throw new NullPointerException(BoardExceptionTypes.NULL_POINTER.getErrorType());
@@ -24,13 +24,13 @@ public class Validator {
         }
     }
 
-    public static void checkNullPointerInArmy(Object[][] obj) {
+    public static void checkNullPointerInArmy(final Object[][] obj) {
         if (Arrays.stream(obj).anyMatch(x -> Arrays.stream(x).anyMatch(Objects::isNull))) {
             throw new NullPointerException(BoardExceptionTypes.NULL_UNIT_IN_ARMY.getErrorType());
         }
     }
 
-    public static void checkIndexOutOfBounds(Position pair) throws BoardException {
+    public static void checkIndexOutOfBounds(final Position pair) throws BoardException {
         int x = pair.X(),
                 y = pair.Y();
         if (x > 1 || x < 0 || y > 2 || y < 0) {
@@ -38,31 +38,31 @@ public class Validator {
         }
     }
 
-    public static void checkCorrectAction(Unit unit, ActionTypes actionType) throws BoardException {
+    public static void checkCorrectAction(final Unit unit, final ActionTypes actionType) throws BoardException {
         if (unit.getActionType() != actionType && actionType != ActionTypes.DEFENSE) {
             throw new BoardException(BoardExceptionTypes.ACTION_INCORRECT);
         }
     }
 
-    public static void checkCorrectDefender(Unit unit) throws BoardException {
+    public static void checkCorrectDefender(final Unit unit) throws BoardException {
         if (!unit.isAlive()) {
             throw new BoardException(BoardExceptionTypes.UNIT_IS_DEAD);
         }
     }
 
-    public static void checkCorrectAttacker(Unit unit) throws BoardException {
+    public static void checkCorrectAttacker(final Unit unit) throws BoardException {
         if (!unit.isActive() || !unit.isAlive()) {
             throw new BoardException(BoardExceptionTypes.UNIT_IS_NOT_ACTIVE);
         }
     }
 
-    public static void checkCorrectPlayer(Board board, Position attacker) throws BoardException {
+    public static void checkCorrectPlayer(final Board board, final Position attacker) throws BoardException {
         if (attacker.F() != board.getCurrentPlayer()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_PLAYER);
         }
     }
 
-    public static void checkTargetAction(Position attacker, Position defender, ActionTypes actionType,
+    public static void checkTargetAction(final Position attacker, final Position defender, final ActionTypes actionType,
                                          int countAlive, int countAliveDef) throws BoardException, UnitException {
         if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);

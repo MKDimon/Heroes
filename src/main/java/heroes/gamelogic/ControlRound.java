@@ -11,7 +11,7 @@ public class ControlRound {
 
     private static final int maxRound = 10;
 
-    public static void nextPlayer(Board board) {
+    public static void nextPlayer(final Board board) {
         if (board.getCurrentPlayer() == Fields.PLAYER_TWO && Board.activeCount(board.getFieldPlayerOne()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_ONE);
         } else if (board.getCurrentPlayer() == Fields.PLAYER_ONE && Board.activeCount(board.getFieldPlayerTwo()) != 0) {
@@ -19,7 +19,7 @@ public class ControlRound {
         }
     }
 
-    public static boolean checkStep(Board board) {
+    public static boolean checkStep(final Board board) {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
             Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
@@ -54,7 +54,7 @@ public class ControlRound {
         return true;
     }
 
-    private static boolean newRound(Board board) {
+    private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             logger.info("Конец игры: НИЧЬЯ");
             return false;

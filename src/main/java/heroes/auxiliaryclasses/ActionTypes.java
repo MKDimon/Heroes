@@ -9,7 +9,7 @@ public enum ActionTypes {
 
     private final boolean massEffect;
 
-    ActionTypes(boolean isMassEffect) {
+    ActionTypes(final boolean isMassEffect) {
         this.massEffect = isMassEffect;
     }
 

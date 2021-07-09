@@ -5,5 +5,5 @@ import heroes.units.Unit;
 
 @FunctionalInterface
 public interface Deinspiration {
-    void deinspire(Unit unit) throws UnitException;
+    void deinspire(final Unit unit) throws UnitException;
 }

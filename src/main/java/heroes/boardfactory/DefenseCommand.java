@@ -5,7 +5,7 @@ import heroes.units.Unit;
 import java.util.List;
 
 public class DefenseCommand extends Command {
-    public DefenseCommand(Unit att, List<Unit> def) {
+    public DefenseCommand(final Unit att, final List<Unit> def) {
         super(att, def);
 
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
-<log4j:configuration debug="true">
+<log4j:configuration>
 <appender name="CONSOLE_LOG" class="org.apache.log4j.ConsoleAppender">
         <param name="Target" value="System.out"/>
         <param name="Threshold" value="INFO"/>
@@ -42,15 +42,7 @@
     <category name="heroes">
         <priority value="info"/>
         <appender-ref ref="CONSOLE_LOG"/>
-    </category>
-
-    <category name="heroes">
-        <priority value="debug"/>
         <appender-ref ref="FILE_APPENDER_DEBUG_ONLY"/>
-    </category>
-
-    <category name="heroes">
-        <priority value="debug"/>
         <appender-ref ref="FILE_APPENDER_ALL"/>
     </category>
 

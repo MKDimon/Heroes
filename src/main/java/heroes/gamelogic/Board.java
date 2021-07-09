@@ -33,12 +33,12 @@ public class Board {
     private final Army fieldPlayerOne;
     private final Army fieldPlayerTwo;
 
-    private Map<Fields, Unit[][]> getUnits;
+    private final Map<Fields, Unit[][]> getUnits;
 
     private boolean isArmyOneInspired;
     private boolean isArmyTwoInspired;
 
-    public Board(Army fieldPlayerOne, Army fieldPlayerTwo) { //TODO: Validation
+    public Board(final Army fieldPlayerOne, final Army fieldPlayerTwo) { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
         roundPlayer = Fields.PLAYER_ONE;
@@ -56,7 +56,7 @@ public class Board {
         isArmyTwoInspired = true;
     }
 
-    public Board(Board board) throws BoardException, UnitException {
+    public Board(final Board board) throws BoardException, UnitException {
         if (board == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
@@ -72,21 +72,21 @@ public class Board {
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
 
-    public void inspireArmy(Unit[][] army, General general) {
+    public void inspireArmy(final Unit[][] army, final General general) {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
-    public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
+    public void doAction(final Unit attacker, final List<Unit> defender, final ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
         attacker.setActive(false);
     }
 
-    public Unit[][] getArmy(Fields fields) {
+    public Unit[][] getArmy(final Fields fields) {
         return getUnits.get(fields).clone();
     }
 
-    public Unit getUnitByCoordinate(Position pair) {
+    public Unit getUnitByCoordinate(final Position pair) {
         try {
             Validator.checkNullPointer(pair);
             return getUnits.get(pair.F())[pair.X()][pair.Y()];
@@ -95,19 +95,19 @@ public class Board {
         }
     }
 
-    public static long activeCount(Unit[][] units) { // Количество активных юнитов
+    public static long activeCount(final Unit[][] units) { // Количество активных юнитов
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
     }
 
-    public static long aliveLineCount(Unit[] units) {
+    public static long aliveLineCount(final Unit[] units) {
         return Arrays.stream(units).filter(Unit::isAlive).count();
     }
 
-    public static long aliveCountInArmy(Unit[][] units) {
+    public static long aliveCountInArmy(final Unit[][] units) {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
     }
 
-    public static void checkAliveLine(Unit[][] army) {
+    public static void checkAliveLine(final Unit[][] army) {
         if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
             Unit[] temp = army[0];
             army[0] = army[1];
@@ -115,7 +115,7 @@ public class Board {
         }
     }
 
-    public void setCurNumRound(int curNumRound) {
+    public void setCurNumRound(final int curNumRound) {
         this.curNumRound = curNumRound;
     }
 
@@ -139,7 +139,7 @@ public class Board {
         return fieldPlayerTwo.getGeneral();
     }
 
-    public void setCurrentPlayer(Fields currentPlayer) {
+    public void setCurrentPlayer(final Fields currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
@@ -151,7 +151,7 @@ public class Board {
         return roundPlayer;
     }
 
-    public void setRoundPlayer(Fields roundPlayer) {
+    public void setRoundPlayer(final Fields roundPlayer) {
         this.roundPlayer = roundPlayer;
     }
 
@@ -159,7 +159,7 @@ public class Board {
         return isArmyOneInspired;
     }
 
-    public void setArmyOneInspired(boolean armyOneInspired) {
+    public void setArmyOneInspired(final boolean armyOneInspired) {
         isArmyOneInspired = armyOneInspired;
     }
 
@@ -167,7 +167,7 @@ public class Board {
         return isArmyTwoInspired;
     }
 
-    public void setArmyTwoInspired(boolean armyTwoInspired) {
+    public void setArmyTwoInspired(final boolean armyTwoInspired) {
         isArmyTwoInspired = armyTwoInspired;
     }
 }

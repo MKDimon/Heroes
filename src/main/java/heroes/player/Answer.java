@@ -12,9 +12,9 @@ import java.util.Objects;
 public class Answer {
     Logger logger = LoggerFactory.getLogger(Answer.class);
 
-    private Position attacker;
-    private Position defender;
-    private ActionTypes actionType;
+    private final Position attacker;
+    private final Position defender;
+    private final ActionTypes actionType;
 
     public Answer(Position attacker, Position defender, ActionTypes actionType) throws GameLogicException {
         if (attacker == null || defender == null || actionType == null) {
@@ -39,7 +39,7 @@ public class Answer {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Answer answer = (Answer) o;

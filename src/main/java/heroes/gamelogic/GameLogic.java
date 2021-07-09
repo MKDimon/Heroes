@@ -98,7 +98,7 @@ public class GameLogic {
         return true;
     }
 
-    private List<Unit> actionGetList(Position def, ActionTypes act) {
+    private List<Unit> actionGetList(final Position def, final ActionTypes act) {
         List<Unit> result = new ArrayList<>();
         if (act.isMassEffect()) {
             result.addAll(Arrays.asList((board.getArmy(def.F())[0])));
@@ -109,7 +109,7 @@ public class GameLogic {
         return result;
     }
 
-    public boolean action(Position attacker, Position defender, ActionTypes act) {
+    public boolean action(final Position attacker, final Position defender, final ActionTypes act) {
         if (actionValidate(attacker, defender, act)) {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);

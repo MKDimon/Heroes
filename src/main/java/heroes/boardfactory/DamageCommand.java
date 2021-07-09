@@ -11,25 +11,23 @@ import java.util.Random;
 public class DamageCommand extends Command {
     Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
-    public DamageCommand(Unit att, List<Unit> def) {
+    public DamageCommand(final Unit att, final List<Unit> def) {
         super(att, def);
 
     }
 
-    boolean getHitChance(int accuracy) {
-        int min = 0;
-        int max = 1;
+    boolean getHitChance(final int accuracy) {
         Random r = new Random();
-        double rand = min + (max - min) * r.nextDouble();
-        double acc = accuracy / 100.0;
+        final double rand = r.nextDouble();
+        final double acc = accuracy / 100.0;
         logger.info("Unit accuracy {}", acc);
         logger.info("Randomly generated number {}", rand);
         //TODO: ternary operator
         return rand < acc;
     }
 
-    int reducedDamage(int pow, int arm) {
-        double double_arm = (double) (arm) / 100.0;
+    int reducedDamage(final int pow, final int arm) {
+        final double double_arm = (double) (arm) / 100.0;
         return pow - (int) ((double) pow * double_arm);
     }
 

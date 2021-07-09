@@ -16,7 +16,7 @@ public abstract class Command {
         return def;
     }
 
-    public Command(Unit att, List<Unit> def) {
+    public Command(final Unit att, final List<Unit> def) {
         this.att = att;
         this.def = def;
     }

@@ -56,7 +56,7 @@ public class TestBot implements IPlayer {
     }
 
     @Override
-    public Answer getAnswer(Board board) throws GameLogicException {
+    public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
 
 

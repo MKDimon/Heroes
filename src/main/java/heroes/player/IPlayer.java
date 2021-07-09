@@ -12,6 +12,6 @@ import heroes.units.Unit;
 
 public interface IPlayer {
     Army getArmy();
-    Answer getAnswer(Board board) throws GameLogicException;
+    Answer getAnswer(final Board board) throws GameLogicException;
     Fields getField();
 }
