@@ -1,7 +1,6 @@
 package heroes.gamelogic;
 
 import heroes.boardfactory.DamageCommand;
-import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,30 +11,10 @@ public class ControlRound {
 
     private static final int maxRound = 10;
 
-    private static long activeCount(Unit[][] units) { // Количество активных юнитов
-        return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
-    }
-
-    private static long aliveLineCount(Unit[] units) {
-        return Arrays.stream(units).filter(Unit::isAlive).count();
-    }
-
-    private static long aliveCountInArmy(Unit[][] units) {
-        return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
-    }
-
-    private static void checkAliveLine(Unit[][] army) {
-        if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
-            Unit[] temp = army[0];
-            army[0] = army[1];
-            army[1] = temp;
-        }
-    }
-
     public static void nextPlayer(Board board) {
-        if (board.getCurrentPlayer() == Fields.PLAYER_TWO && activeCount(board.getFieldPlayerOne()) != 0) {
+        if (board.getCurrentPlayer() == Fields.PLAYER_TWO && Board.activeCount(board.getFieldPlayerOne()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_ONE);
-        } else if (activeCount(board.getFieldPlayerTwo()) != 0) {
+        } else if (Board.activeCount(board.getFieldPlayerTwo()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_TWO);
         }
     }
@@ -51,23 +30,21 @@ public class ControlRound {
             board.setArmyTwoInspired(false);
         }
 
-        checkAliveLine(board.getFieldPlayerOne());
-        checkAliveLine(board.getFieldPlayerTwo());
+        Board.checkAliveLine(board.getFieldPlayerOne());
+        Board.checkAliveLine(board.getFieldPlayerTwo());
 
         logger.info("\n[NEW STAP]\n");
 
-        long active = activeCount(board.getFieldPlayerOne());
-        active += activeCount(board.getFieldPlayerTwo());
+        long active = Board.activeCount(board.getFieldPlayerOne());
+        active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-        if (aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-            System.out.println("Конец на раунде: " + board.getCurNumRound());
-            System.out.println("\nПобедил PlayerTwo\n");
+        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+            logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             return false;
         }
-        if (aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
-            System.out.println("Конец на раунде: " + board.getCurNumRound());
-            System.out.println("\nПобедил PlayerOne\n");
+        if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
 
@@ -79,8 +56,7 @@ public class ControlRound {
 
     private static boolean newRound(Board board) {
         if (board.getCurNumRound() >= maxRound) {
-            //TODO: место под логи
-            System.out.println("КОНЕЦ");
+            logger.info("Конец игры: НИЧЬЯ");
             return false;
         }
 

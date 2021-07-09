@@ -23,7 +23,6 @@ public class TestUnits {
                 () -> assertEquals(30, swordsman.getArmor()),
                 () -> assertEquals(ActionTypes.CLOSE_COMBAT, swordsman.getActionType())
         );
-        logger.warn("KEEEEEK");
         swordsman.inspire(new General(GeneralTypes.COMMANDER).getInspiration());
         assertEquals(40, swordsman.getArmor());
         swordsman.deinspire(new General(GeneralTypes.COMMANDER).getDeinspiration());

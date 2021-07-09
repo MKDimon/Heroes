@@ -6,14 +6,16 @@ import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
-import heroes.units.General;
 import heroes.units.Unit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
+    Logger logger = LoggerFactory.getLogger(GameLogic.class);
 
     private Board board;
     private boolean gameBegun;
@@ -27,27 +29,31 @@ public class GameLogic {
         gameBegun = true;
     }
 
-    public boolean gameStart(Unit[][] fieldPlayerOne, Unit[][] fieldPlayerTwo,
-                             General generalPlayerOne, General generalPlayerTwo) {
+    public boolean gameStart(Army fieldPlayerOne, Army fieldPlayerTwo) {
         try {
-            if (fieldPlayerOne == fieldPlayerTwo ||
-                    generalPlayerOne == generalPlayerTwo) {
+            if (fieldPlayerOne == fieldPlayerTwo
+            || fieldPlayerOne.getPlayerUnits() == fieldPlayerTwo.getPlayerUnits()
+            || fieldPlayerOne.getGeneral() == fieldPlayerTwo.getGeneral()) {
                 throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
             }
 
-            Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+            Validator.checkNullPointer(fieldPlayerOne, fieldPlayerTwo,
+                    fieldPlayerOne.getGeneral(), fieldPlayerTwo.getGeneral());
 
-            Validator.checkNullPointerInArmy(fieldPlayerOne);
-            Validator.checkNullPointerInArmy(fieldPlayerTwo);
+            Validator.checkNullPointerInArmy(fieldPlayerOne.getPlayerUnits());
+            Validator.checkNullPointerInArmy(fieldPlayerTwo.getPlayerUnits());
 
-            board = new Board(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+            board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
-            Arrays.stream(fieldPlayerOne).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerOne.getInspiration())));
-            Arrays.stream(fieldPlayerTwo).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(generalPlayerTwo.getInspiration())));
+            Arrays.stream(fieldPlayerOne.getPlayerUnits()).forEach
+                    (x -> Arrays.stream(x).forEach(u -> u.inspire
+                            (fieldPlayerOne.getGeneral().getInspiration())));
+            Arrays.stream(fieldPlayerTwo.getPlayerUnits()).forEach
+                    (x -> Arrays.stream(x).forEach(u -> u.inspire
+                            (fieldPlayerTwo.getGeneral().getInspiration())));
             return true;
         } catch (NullPointerException | GameLogicException exception) {
-            //TODO: место под логи
-            System.out.println(exception.getMessage()); // TODO: в логер
+            logger.error(" Game Start failed ",exception);
             return false;
         }
     }
@@ -82,8 +88,7 @@ public class GameLogic {
             }
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
         } catch (NullPointerException | BoardException exception) {
-            // TODO: место под логер
-            System.out.println(exception.getMessage()); // TODO: в логер
+            logger.warn(exception.getMessage());
             return false;
         } catch (UnitException exception) {
             act = ActionTypes.DEFENSE;
@@ -95,7 +100,6 @@ public class GameLogic {
 
     private List<Unit> actionGetList(Position def, ActionTypes act) {
         List<Unit> result = new ArrayList<>();
-        Unit[][] army = board.getArmy(def.F());
         if (act.isMassEffect()) {
             result.addAll(Arrays.asList((board.getArmy(def.F())[0])));
             result.addAll(Arrays.asList((board.getArmy(def.F())[1])));
@@ -110,6 +114,7 @@ public class GameLogic {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;
+
         }
         return false;
     }

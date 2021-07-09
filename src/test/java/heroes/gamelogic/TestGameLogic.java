@@ -21,7 +21,7 @@ public class TestGameLogic {
 
         Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerOne[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
         Unit[][] fieldPlayerTwo = new Unit[2][3];
@@ -29,7 +29,8 @@ public class TestGameLogic {
         fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
-        GameLogic gl = new GameLogic(); gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+        GameLogic gl = new GameLogic();
+        gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
         GameLogic newGL = new GameLogic(gl.getBoard());
 
@@ -37,13 +38,13 @@ public class TestGameLogic {
     }
 
     @Test
-    public void testIncorrectParams() throws UnitException {
+    public void testIncorrectParams() throws UnitException, BoardException {
         General generalPlayerOne = new General(GeneralTypes.COMMANDER);
         General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
 
         Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
-        fieldPlayerOne[0][1] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
+        fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
         Unit[][] fieldPlayerTwo = new Unit[2][3];
@@ -53,15 +54,17 @@ public class TestGameLogic {
 
         GameLogic gl = new GameLogic();
 
-        assertFalse(gl.gameStart(fieldPlayerOne, fieldPlayerOne, generalPlayerOne, generalPlayerOne));
+        assertFalse(
+                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerOne, generalPlayerOne)));
 
         fieldPlayerOne[0][2] = null;
 
-        assertFalse(gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo));
+        assertFalse(
+                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo)));
     }
 
     @Test
-    public void testActionValidation() throws UnitException {
+    public void testActionValidation() throws UnitException, BoardException {
         /*
          *   Следить за очередью ходов игроков
          */
@@ -79,7 +82,7 @@ public class TestGameLogic {
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
         GameLogic gl = new GameLogic();
-        gl.gameStart(fieldPlayerOne, fieldPlayerTwo, generalPlayerOne, generalPlayerTwo);
+        gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
 
         assertAll(

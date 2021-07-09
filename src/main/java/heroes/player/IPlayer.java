@@ -13,5 +13,6 @@ public interface IPlayer {
     Army getArmy() throws GameLogicException, UnitException;
     General getGeneral() throws UnitException;
     Answer getAnswer(Board board) throws GameLogicException;
+
     Fields getField();
 }

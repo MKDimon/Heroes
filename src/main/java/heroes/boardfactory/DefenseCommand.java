@@ -13,5 +13,6 @@ public class DefenseCommand extends Command {
     @Override
     public void execute() {
         super.getAtt().defense();
+
     }
 }
