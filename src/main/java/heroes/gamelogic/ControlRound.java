@@ -14,7 +14,7 @@ public class ControlRound {
     public static void nextPlayer(Board board) {
         if (board.getCurrentPlayer() == Fields.PLAYER_TWO && Board.activeCount(board.getFieldPlayerOne()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_ONE);
-        } else if (Board.activeCount(board.getFieldPlayerTwo()) != 0) {
+        } else if (board.getCurrentPlayer() == Fields.PLAYER_ONE && Board.activeCount(board.getFieldPlayerTwo()) != 0) {
             board.setCurrentPlayer(Fields.PLAYER_TWO);
         }
     }

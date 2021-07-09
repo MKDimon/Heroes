@@ -22,7 +22,7 @@ import java.util.Random;
 public class TestBot implements IPlayer {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
-    public final Fields field;
+    private final Fields field;
 
     public TestBot(final Fields f) {
         field = f;
@@ -36,7 +36,7 @@ public class TestBot implements IPlayer {
                 Unit[][] army = new Unit[2][3];
                 army[0][0] = new Unit(UnitTypes.SWORDSMAN); army[1][0] = new Unit(UnitTypes.MAGE);
                 army[0][1] = general;                       army[1][1] = new Unit(UnitTypes.MAGE);
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.SWORDSMAN);
 
                 return new Army(army, general);
             } else {

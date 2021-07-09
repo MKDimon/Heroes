@@ -67,16 +67,22 @@ public class Validator {
         if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
         }
-        if (actionType == ActionTypes.CLOSE_COMBAT &&
-                !((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
-                        (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
-            if (countAliveDef > 1) {
-                throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-            }
-            {
+
+        if (actionType == ActionTypes.CLOSE_COMBAT) {
+            if (attacker.X() == 1) {
                 throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
             }
+            if (!((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
+                    (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
+                if (countAliveDef > 1) {
+                    throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
+                }
+                else {
+                    throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
+                }
+            }
         }
+
         if (actionType == ActionTypes.AREA_DAMAGE || actionType == ActionTypes.RANGE_COMBAT) {
             if (attacker.F() == defender.F()) {
                 throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);

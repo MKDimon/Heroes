@@ -14,11 +14,11 @@ public class Army {
     private General general;
 
     public Army(Unit[][] playerUnits, General general) throws BoardException {
-        if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
-            throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
-        }
         if(playerUnits == null || general == null){
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
+        if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
+            throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
         }
         this.playerUnits = playerUnits;
         this.general = general;

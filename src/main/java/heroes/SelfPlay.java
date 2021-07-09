@@ -9,6 +9,7 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.player.Answer;
 import heroes.player.IPlayer;
+import heroes.player.RandomBot;
 import heroes.player.TestBot;
 import heroes.units.Unit;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class SelfPlay {
             Инициализация ботов
          */
         IPlayer playerOne = new TestBot(Fields.PLAYER_ONE);
-        IPlayer playerTwo = new TestBot(Fields.PLAYER_TWO);
+        IPlayer playerTwo = new RandomBot(Fields.PLAYER_TWO);
         Map<Fields, IPlayer> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);

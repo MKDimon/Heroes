@@ -76,8 +76,6 @@ public class Board {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
-
-
     public void doAction(Unit attacker, List<Unit> defender, ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
@@ -85,7 +83,7 @@ public class Board {
     }
 
     public Unit[][] getArmy(Fields fields) {
-        return getUnits.get(fields);
+        return getUnits.get(fields).clone();
     }
 
     public Unit getUnitByCoordinate(Position pair) {
@@ -125,7 +123,9 @@ public class Board {
         return curNumRound;
     }
 
-    public Unit[][] getFieldPlayerOne() { return fieldPlayerOne.getPlayerUnits().clone(); }
+    public Unit[][] getFieldPlayerOne() {
+        return fieldPlayerOne.getPlayerUnits().clone();
+    }
 
     public Unit[][] getFieldPlayerTwo() {
         return fieldPlayerTwo.getPlayerUnits().clone();

@@ -29,29 +29,29 @@ public class RandomBot implements IPlayer{
 
     @Override
     public Army getArmy() {
-        Random r = new Random();
-        Unit[][] armyArr = new Unit[2][3];
-        UnitTypes[] unitTypes = UnitTypes.values();
-        Position genPos = new Position(r.nextInt(2), r.nextInt(3), field);
-        General general = null;
         try {
-            general = getGeneral();
-        } catch (UnitException e) {
-            logger.error("Error creating general in RandomBot", e);
-        }
-        armyArr[genPos.X()][genPos.Y()] = general;
-        try {
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 3; j++) {
-                    if (armyArr[i][j] == null) {
-                        armyArr[i][j] = new Unit(unitTypes[r.nextInt(unitTypes.length)]);
+            Random r = new Random();
+            Unit[][] armyArr = new Unit[2][3];
+            UnitTypes[] unitTypes = UnitTypes.values();
+            General general = null;
+            try {
+                GeneralTypes[] generalTypes = GeneralTypes.values();
+                general = new General(generalTypes[r.nextInt(generalTypes.length)]);
+            } catch (UnitException e) {
+                logger.error("Error creating general in RandomBot", e);
+            }
+            armyArr[r.nextInt(2)][r.nextInt(3)] = general;
+            try {
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        if (armyArr[i][j] == null) {
+                            armyArr[i][j] = new Unit(unitTypes[r.nextInt(unitTypes.length)]);
+                        }
                     }
                 }
+            } catch (UnitException e){
+                logger.error("Error creating unit in RandomBot", e);
             }
-        } catch (UnitException e){
-            logger.error("Error creating unit in RandomBot", e);
-        }
-        try {
             return new Army(armyArr, general);
         } catch (BoardException e) {
             logger.error("Error creating army in RandomBot", e);
@@ -59,18 +59,16 @@ public class RandomBot implements IPlayer{
         }
     }
 
-    private General getGeneral() throws UnitException {
-        Random r = new Random();
-        GeneralTypes[] generalTypes = GeneralTypes.values();
-        return new General(generalTypes[r.nextInt(generalTypes.length)]);
-    }
-
     @Override
     public Answer getAnswer(Board board) throws GameLogicException {
         Random r = new Random();
+
+
         Fields defField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
+
         List<Position> posAttack = new ArrayList<>();
         List<Position> posDefend = new ArrayList<>();
+
         Unit[][] armyAttack = board.getArmy(field);
         Unit[][] armyDefend = board.getArmy(defField);
 

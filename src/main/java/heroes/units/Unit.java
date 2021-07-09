@@ -116,10 +116,7 @@ public class Unit {
     }
 
     public void setAccuracy(int accuracy) throws UnitException {
-        if (accuracy < 0 || accuracy > 100) {
-            throw new UnitException(UnitExceptionTypes.INCORRECT_ACCURACY);
-        }
-        this.accuracy = accuracy;
+        this.accuracy = Math.min(Math.max(accuracy, 0), 100);
     }
 
     public void setArmor(int armor) throws UnitException {

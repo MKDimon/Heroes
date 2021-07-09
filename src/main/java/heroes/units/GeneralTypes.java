@@ -9,11 +9,11 @@ public enum GeneralTypes {
     SNIPER(UnitTypes.BOWMAN,
             u -> {
                 int buffedAccuracy = u.getAccuracy() + 10;
-                u.setAccuracy(buffedAccuracy - buffedAccuracy % 100);
+                u.setAccuracy(buffedAccuracy);
             },
             u -> {
                 int debuffedAccuracy = u.getAccuracy() - 10;
-                u.setAccuracy(debuffedAccuracy - debuffedAccuracy % 100);
+                u.setAccuracy(debuffedAccuracy);
             });
 
     private final UnitTypes unitType;
