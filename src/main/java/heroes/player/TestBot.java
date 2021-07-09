@@ -49,7 +49,7 @@ public class TestBot implements IPlayer {
                 return new Army(army, general);
             }
 
-        } catch (UnitException | GameLogicException e) {
+        } catch (UnitException | BoardException e) {
             logger.error("Error creating unit in TestBot", e);
             return null;
         }

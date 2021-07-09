@@ -1,6 +1,7 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.Validator;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestTestBot {
 
     @Test
-    public void testBotGetAction() throws GameLogicException {
+    public void testBotGetAction() throws GameLogicException, UnitException {
         IPlayer player = new TestBot(Fields.PLAYER_ONE);
         IPlayer player1 = new TestBot(Fields.PLAYER_TWO);
 

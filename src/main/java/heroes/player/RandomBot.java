@@ -2,6 +2,7 @@ package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
@@ -27,21 +28,35 @@ public class RandomBot implements IPlayer{
     }
 
     @Override
-    public Army getArmy() throws GameLogicException, UnitException {
+    public Army getArmy() {
         Random r = new Random();
         Unit[][] armyArr = new Unit[2][3];
         UnitTypes[] unitTypes = UnitTypes.values();
         Position genPos = new Position(r.nextInt(2), r.nextInt(3), field);
-        General general = getGeneral();
+        General general = null;
+        try {
+            general = getGeneral();
+        } catch (UnitException e) {
+            logger.error("Error creating general in RandomBot", e);
+        }
         armyArr[genPos.X()][genPos.Y()] = general;
-        for(int i = 0; i<2; i++){
-            for (int j = 0; j < 3; j++){
-                if(armyArr[i][j] == null){
-                    armyArr[i][j] = new Unit(unitTypes[r.nextInt(unitTypes.length)]);
+        try {
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (armyArr[i][j] == null) {
+                        armyArr[i][j] = new Unit(unitTypes[r.nextInt(unitTypes.length)]);
+                    }
                 }
             }
+        } catch (UnitException e){
+            logger.error("Error creating unit in RandomBot", e);
         }
-        return new Army(armyArr, general);
+        try {
+            return new Army(armyArr, general);
+        } catch (BoardException e) {
+            logger.error("Error creating army in RandomBot", e);
+            return null;
+        }
     }
 
     private General getGeneral() throws UnitException {
