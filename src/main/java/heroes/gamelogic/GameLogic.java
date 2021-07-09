@@ -1,13 +1,11 @@
 package heroes.gamelogic;
 
-import heroes.SelfPlay;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
-import heroes.units.General;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,7 +100,6 @@ public class GameLogic {
 
     private List<Unit> actionGetList(Position def, ActionTypes act) {
         List<Unit> result = new ArrayList<>();
-        Unit[][] army = board.getArmy(def.F());
         if (act.isMassEffect()) {
             result.addAll(Arrays.asList((board.getArmy(def.F())[0])));
             result.addAll(Arrays.asList((board.getArmy(def.F())[1])));

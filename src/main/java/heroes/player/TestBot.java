@@ -22,7 +22,7 @@ import java.util.Random;
 public class TestBot implements IPlayer {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
-    Fields field;
+    public final Fields field;
 
     public TestBot(final Fields f) {
         field = f;

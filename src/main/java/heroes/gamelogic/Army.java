@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Army {
-    private Unit[][] playerUnits;
+    private final Unit[][] playerUnits;
     private General general;
 
     public Army(Unit[][] playerUnits, General general) throws BoardException {
@@ -60,7 +60,7 @@ public class Army {
     @Override
     public int hashCode() {
         int result = Objects.hash(general);
-        result = 31 * result + Arrays.hashCode(playerUnits);
+        result = 31 * result + Arrays.deepHashCode(playerUnits);
         return result;
     }
 }

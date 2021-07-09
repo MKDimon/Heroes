@@ -97,6 +97,26 @@ public class Board {
         }
     }
 
+    public static long activeCount(Unit[][] units) { // Количество активных юнитов
+        return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isActive).count()).sum();
+    }
+
+    public static long aliveLineCount(Unit[] units) {
+        return Arrays.stream(units).filter(Unit::isAlive).count();
+    }
+
+    public static long aliveCountInArmy(Unit[][] units) {
+        return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
+    }
+
+    public static void checkAliveLine(Unit[][] army) {
+        if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
+            Unit[] temp = army[0];
+            army[0] = army[1];
+            army[1] = temp;
+        }
+    }
+
     public void setCurNumRound(int curNumRound) {
         this.curNumRound = curNumRound;
     }
@@ -105,12 +125,10 @@ public class Board {
         return curNumRound;
     }
 
-    public Unit[][] getFieldPlayerOne() {
-        return fieldPlayerOne.getPlayerUnits();
-    }
+    public Unit[][] getFieldPlayerOne() { return fieldPlayerOne.getPlayerUnits().clone(); }
 
     public Unit[][] getFieldPlayerTwo() {
-        return fieldPlayerTwo.getPlayerUnits();
+        return fieldPlayerTwo.getPlayerUnits().clone();
     }
 
     public General getGeneralPlayerOne() {

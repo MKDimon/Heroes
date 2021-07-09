@@ -28,15 +28,15 @@ public class Unit {
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
-        if (unitType == null || unitType.getActionType() == null) {
+        if (unitType == null || unitType.actionType == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
-        maxHP = unitType.getHP();
+        maxHP = unitType.HP;
         setCurrentHP(maxHP);
-        setPower(unitType.getPower());
-        setArmor(unitType.getArmor());
-        setAccuracy(unitType.getAccuracy());
-        actionType = unitType.getActionType();
+        setPower(unitType.power);
+        setArmor(unitType.armor);
+        setAccuracy(unitType.accuracy);
+        actionType = unitType.actionType;
         isActive = true;
     }
 
