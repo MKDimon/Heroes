@@ -22,11 +22,11 @@ public class Army {
     }
 
     public Army(Army army) throws UnitException, BoardException {
+        if (army == null) {
+            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
         playerUnits = new Unit[2][3];
         for (int i = 0; i < 2; i++) {
-            if (army == null) {
-                throw new BoardException(BoardExceptionTypes.NULL_POINTER);
-            }
             for (int j = 0; j < 3; j++) {
                 if (army.playerUnits[i][j] == null) {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
