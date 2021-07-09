@@ -3,29 +3,23 @@ package heroes.gamelogic;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
 
 public class Army {
     private Unit[][] army;
     private General general;
-    private Position generalPosition;
-    private Fields field;
 
-    public Army(Fields field, Unit[][] army, General general, Position generalPosition) throws GameLogicException {
-        if(field == null || army == null || general == null || generalPosition == null){
+    public Army(Unit[][] army, General general) throws GameLogicException {
+        if(army == null || general == null){
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }
-        this.field = field;
         this.general = general;
         this.army = army;
-        this.generalPosition = generalPosition;
     }
 
     public Army(Army army) throws GameLogicException, UnitException {
-            this(army.field, copyArmyArray(army.army, army.general), army.general,
-                    new Position(army.generalPosition.X(), army.generalPosition.Y(), army.field));
+            this(copyArmyArray(army.army, army.general), army.general);
     }
 
     private static Unit[][] copyArmyArray(Unit[][] units, General general) throws UnitException {
@@ -49,14 +43,4 @@ public class Army {
     public General getGeneral() {
         return general;
     }
-
-    public Position getGeneralPosition() {
-        return generalPosition;
-    }
-
-    public Fields getField() {
-        return field;
-    }
-
-
 }

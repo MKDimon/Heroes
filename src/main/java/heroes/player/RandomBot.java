@@ -41,11 +41,10 @@ public class RandomBot implements IPlayer{
                 }
             }
         }
-        return new Army(field, armyArr, general, genPos);
+        return new Army(armyArr, general);
     }
 
-    @Override
-    public General getGeneral() throws UnitException {
+    private General getGeneral() throws UnitException {
         Random r = new Random();
         GeneralTypes[] generalTypes = GeneralTypes.values();
         return new General(generalTypes[r.nextInt(generalTypes.length)]);

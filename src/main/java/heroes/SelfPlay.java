@@ -20,7 +20,7 @@ import java.util.Map;
 public class SelfPlay {
 
 
-    public static void main(String[] args) throws GameLogicException {
+    public static void main(String[] args) throws GameLogicException, UnitException {
         Logger logger = LoggerFactory.getLogger(SelfPlay.class);
         /*
             Инициализация ботов
