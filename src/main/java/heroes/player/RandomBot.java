@@ -18,56 +18,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TestBot implements IPlayer {
-    Logger logger = LoggerFactory.getLogger(TestBot.class);
+public class RandomBot implements IPlayer{
+    Logger logger = LoggerFactory.getLogger(RandomBot.class);
+    private Fields field;
 
-    Army army;
-    General general;
-    Fields field;
-
-    public TestBot(final Fields f, final int TEST_PARAMETER) {
-        field = f;
-        createArmyAndGeneral(TEST_PARAMETER);
+    public RandomBot(Fields field){
+        this.field = field;
     }
 
-    public boolean createArmyAndGeneral(int TEST_PARAMETER) {
-        try {
-            if (TEST_PARAMETER == 1) {
-                general = new General(GeneralTypes.COMMANDER);
-                army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][0] = new Unit(UnitTypes.HEALER);
-                army[0][1] = general;
-                army[1][1] = new Unit(UnitTypes.MAGE);
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.MAGE);
-                return true;
-            } else {
-                general = new General(GeneralTypes.ARCHMAGE);
-                army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][0] = new Unit(UnitTypes.HEALER);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.HEALER);
-                return true;
+    @Override
+    public Army getArmy() throws GameLogicException, UnitException {
+        Random r = new Random();
+        Unit[][] armyArr = new Unit[2][3];
+        UnitTypes[] unitTypes = UnitTypes.values();
+        Position genPos = new Position(r.nextInt(2), r.nextInt(3), field);
+        General general = getGeneral();
+        armyArr[genPos.X()][genPos.Y()] = general;
+        for(int i = 0; i<2; i++){
+            for (int j = 0; j < 3; j++){
+                if(armyArr[i][j] == null){
+                    armyArr[i][j] = new Unit(unitTypes[r.nextInt(unitTypes.length)]);
+                }
             }
-
-        } catch (UnitException e) {
-            logger.error("Error creating unit in TestBot", e);
-            return false;
         }
+        return new Army(field, armyArr, general, genPos);
     }
 
     @Override
-    public Army getArmy() {
-        return army;
-    }
-
-    @Override
-    public General getGeneral() {
-        return general;
+    public General getGeneral() throws UnitException {
+        Random r = new Random();
+        GeneralTypes[] generalTypes = GeneralTypes.values();
+        return new General(generalTypes[r.nextInt(generalTypes.length)]);
     }
 
     @Override
