@@ -1,46 +1,66 @@
 package heroes.gamelogic;
 
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
+import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.units.General;
 import heroes.units.Unit;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class Army {
-    private Unit[][] army;
+    private final Unit[][] playerUnits;
     private General general;
 
-    public Army(Unit[][] army, General general) throws GameLogicException {
-        if(army == null || general == null){
-            throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
+    public Army(Unit[][] playerUnits, General general) throws BoardException {
+        if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
+            throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
         }
+        this.playerUnits = playerUnits;
         this.general = general;
-        this.army = army;
     }
 
-    public Army(Army army) throws GameLogicException, UnitException {
-            this(copyArmyArray(army.army, army.general), army.general);
-    }
-
-    private static Unit[][] copyArmyArray(Unit[][] units, General general) throws UnitException {
-        Unit[][] result = new Unit[2][3];
-        for(int i = 0; i < 2; i++){
-            for(int j = 0; j < 3; j++){
-                if(units[i][j] == general){
-                    result[i][j] = new General(general);
+    public Army(Army army) throws UnitException, BoardException {
+        if (army == null) {
+            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
+        playerUnits = new Unit[2][3];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (army.playerUnits[i][j] == null) {
+                    throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+                }
+                if (army.playerUnits[i][j] == army.general) {
+                    general = new General(army.general);
+                    playerUnits[i][j] = general;
                 } else {
-                    result[i][j] = new Unit(units[i][j]);
+                    playerUnits[i][j] = new Unit(army.playerUnits[i][j]);
                 }
             }
         }
-        return result;
     }
 
-    public Unit[][] getArmy() {
-        return army;
+    public Unit[][] getPlayerUnits() {
+        return playerUnits;
     }
 
     public General getGeneral() {
         return general;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Army army = (Army) o;
+        return Arrays.deepEquals(playerUnits, army.playerUnits) && Objects.equals(general, army.general);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(general);
+        result = 31 * result + Arrays.deepHashCode(playerUnits);
+        return result;
     }
 }
