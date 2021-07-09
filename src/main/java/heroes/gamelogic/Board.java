@@ -1,21 +1,18 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.mathutils.Position;
 import heroes.units.General;
-import heroes.units.GeneralTypes;
 import heroes.units.Unit;
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.units.UnitTypes;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
     /*
