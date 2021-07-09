@@ -121,11 +121,13 @@ public class Board {
     }
 
     public Unit[][] getFieldPlayerOne() {
-        return fieldPlayerOne.getPlayerUnits().clone();
+        return new Unit[][]{fieldPlayerOne.getPlayerUnits()[0].clone(),
+                fieldPlayerOne.getPlayerUnits()[1].clone() };
     }
 
     public Unit[][] getFieldPlayerTwo() {
-        return fieldPlayerTwo.getPlayerUnits().clone();
+        return new Unit[][]{fieldPlayerTwo.getPlayerUnits()[0].clone(),
+                fieldPlayerTwo.getPlayerUnits()[1].clone() };
     }
 
     public General getGeneralPlayerOne() {

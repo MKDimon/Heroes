@@ -16,6 +16,9 @@ public class Test1 {
 
         units[0][0] = unit;
 
-        assertSame(units[0][0], units.clone()[0][0]);
+        Unit[][] unitTest = {units[0].clone()};
+        assertSame(units[0][0], unitTest[0][0]);
+        unitTest[0][0] = new Unit(UnitTypes.MAGE);
+        assertNotSame(units[0][0], unitTest[0][0]);
     }
 }
