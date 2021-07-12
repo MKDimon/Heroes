@@ -2,14 +2,16 @@ package heroes.clientserver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.gamelogic.Fields;
 import heroes.player.IPlayer;
+import heroes.player.RandomBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
 
-public class Client implements Runnable {
+public class Client {
     private static Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final String IP = "127.0.0.1";
@@ -18,12 +20,16 @@ public class Client implements Runnable {
     private final String ip;
     private final int port;
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
-    private final IPlayer player;
+    private IPlayer player;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
     private BufferedWriter out = null; // поток записи в сокет
 
+    public static void main(String[] args) {
+        Client client = new Client(IP, PORT, null);
+        client.startClient();
+    }
 
     private Client(final String ip, final int port, IPlayer player){
         this.ip = ip;
@@ -34,16 +40,12 @@ public class Client implements Runnable {
     private void startClient(){
         try{
             socket = new Socket(ip, port);
-        } catch (IOException e) {
-            logger.error("Error client starting", e);
-        }
-        try{
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         } catch (IOException e){
-            logger.error("Error IO creating", e);
+            logger.error("Error client starting", e);
         }
-
+        start();
     }
 
     //Метод, который вызывает у игрока создание армии
@@ -72,10 +74,10 @@ public class Client implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
-        try {
+    public void start() {
+        try {//Первое сообщение  - поле игрока
             String message = in.readLine();
+            player = new RandomBot(Fields.valueOf(message));
             while (true) {
                 message = in.readLine();
                 if(message.equals(CommonCommands.GET_ARMY)){
@@ -105,5 +107,5 @@ public class Client implements Runnable {
  и отправить сериализованную армию на сервер
 
  Если получен запрос сделать ход, то клиент получает сериализованную доску, десериализует ее и отправляет боту,
-  тот делает ход (Answer) и отправляет его клиенту, сервер отправляет сериализованный ответ на сервер
+  тот делает ход (Answer) и отправляет его клиенту, клиент отправляет сериализованный ответ на сервер
 */
