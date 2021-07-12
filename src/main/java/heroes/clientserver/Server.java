@@ -1,3 +1,5 @@
+package heroes.clientserver;
+
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
@@ -21,24 +23,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Server {
 
     static final int PORT = 8081;
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
-    private static final int COUNT_EVENTS_IN_HISTORY = 20;
 
     private final ConcurrentLinkedQueue<ServerSomething> serverList = new ConcurrentLinkedQueue<>();
-
-    private enum Signal {
-        GET_ARMY("GET_ARMY"),
-        GET_ANSWER("GET_ANSWER"),
-        DRAW("DRAW"),
-        END_GAME("END_GAME")
-        ;
-
-        final String message;
-
-        Signal(String message) {
-            this.message = message;
-        }
-    }
 
     private class ServerSomething extends Thread {
 
@@ -84,22 +70,28 @@ public class Server {
         @Override
         public void run() {
             try {
-                sendAsk(CommonCommands.FIELD_ONE, outPlayerOne);
-                sendAsk(CommonCommands.FIELD_TWO, outPlayerTwo);
+                sendAsk(CommonCommands.FIELD_ONE.command, outPlayerOne);
+                sendAsk(CommonCommands.FIELD_TWO.command, outPlayerTwo);
 
-                Army one = Deserializer.deserializeArmy(sendAsk("GET_ARMY", outPlayerOne));
+                sendAsk(CommonCommands.GET_ARMY.command, outPlayerOne);
+                Army one = Deserializer.deserializeArmy(inPlayerOne.readLine());
                 //sendDraw();
 
-                Army two = Deserializer.deserializeArmy(sendAsk("GET_ARMY", outPlayerTwo));
+                sendAsk(CommonCommands.GET_ARMY.command, outPlayerTwo);
+                Army two = Deserializer.deserializeArmy(inPlayerTwo.readLine());
                 //sendDraw();
 
                 gameLogic.gameStart(one, two);
 
                 // весь игровой процесс
                 while (gameLogic.isGameBegun()) {
-                    sendAsk(CommonCommands.GET_ANSWER);
+                    getOuter.get(gameLogic.getBoard().getCurrentPlayer()).write(
+                            Serializer.serializeBoard(gameLogic.getBoard())
+                    );
+
                     Answer answer = Deserializer.deserializeAnswer(
-                            getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine());
+                            getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine()
+                    );
 
                     gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
@@ -111,7 +103,7 @@ public class Server {
                 // видимо смотреть в логи ;D
 
                 this.downService();
-            } catch (final IOException | BoardException | UnitException e) {
+            } catch (final IOException e) {
                 this.downService();
             }//*/
         }
@@ -120,12 +112,7 @@ public class Server {
          *  Отправляет сериализованное сообщение клиенту
          */
         private void sendAsk(final String message, final BufferedWriter out) throws IOException {
-            if ("GET_ANSWER".equals(message)) {
-                out.write(Serializer.serializeBoard(gameLogic.getBoard()));
-            }
-            else {
-                out.write(message + '\n');
-            }
+            out.write(message + '\n');
             out.flush();
         }
 

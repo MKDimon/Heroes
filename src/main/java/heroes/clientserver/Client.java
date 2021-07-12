@@ -52,7 +52,7 @@ public class Client implements Runnable {
     }
 
     //Метод, который вызывает у игрока ответ
-    private String sendAnswerJson(String jsonBoard) throws GameLogicException, JsonProcessingException {
+    private String sendAnswerJson(String jsonBoard) throws GameLogicException, IOException {
         return Serializer.serializeAnswer(player.getAnswer(Deserializer.deserializeBoard(jsonBoard)));
     }
 
@@ -78,10 +78,10 @@ public class Client implements Runnable {
             String message = in.readLine();
             while (true) {
                 message = in.readLine();
-                if(message.equals(CommonCommands.GET_ARMY)){
+                if(message.equals(CommonCommands.GET_ARMY.command)){
                     out.write(sendArmyJson());
                 }
-                else if(message.equals(CommonCommands.END_GAME)){
+                else if(message.equals(CommonCommands.END_GAME.command)){
                     downService();
                     break;
                 } else {
