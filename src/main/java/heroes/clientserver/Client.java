@@ -15,7 +15,7 @@ public class Client {
     private static Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final String IP = "127.0.0.1";
-    private static final int PORT = 8081;
+    private static final int PORT = Server.PORT;
 
     private final String ip;
     private final int port;
@@ -74,7 +74,7 @@ public class Client {
         }
     }
 
-    public void start() {
+    private void start() {
         try {//Первое сообщение  - поле игрока
             String message = in.readLine();
             if (message.equals(CommonCommands.FIELD_ONE.command)) {
@@ -86,12 +86,14 @@ public class Client {
                 message = in.readLine();
                 if(message.equals(CommonCommands.GET_ARMY.command)){
                     out.write(sendArmyJson());
+                    out.flush();
                 }
                 else if(message.equals(CommonCommands.END_GAME.command)){
                     downService();
                     break;
                 } else {
                     out.write(sendAnswerJson(message));
+                    out.flush();
                 }
             }
         } catch (IOException | GameLogicException e){

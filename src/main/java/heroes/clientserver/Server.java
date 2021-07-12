@@ -1,7 +1,5 @@
 package heroes.clientserver;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
@@ -11,16 +9,10 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-/**
- * Консольный многопользовательский чат.
- * Сервер
- */
 public class Server {
 
     static final int PORT = 8081;
@@ -139,7 +131,7 @@ public class Server {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void startServer() throws IOException {
+    public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
             // serverSocket.setSoTimeout(1000);
