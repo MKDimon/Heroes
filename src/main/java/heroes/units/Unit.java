@@ -18,7 +18,6 @@ public class Unit {
     private int armor;
     private boolean isActive;
 
-
     public boolean isActive() {
         return isActive && isAlive();
     }
