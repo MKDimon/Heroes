@@ -77,7 +77,11 @@ public class Client {
     public void start() {
         try {//Первое сообщение  - поле игрока
             String message = in.readLine();
-            player = new RandomBot(Fields.valueOf(message));
+            if (message.equals(CommonCommands.FIELD_ONE.command)) {
+                player = new RandomBot(Fields.PLAYER_ONE);
+            } else {
+                player = new RandomBot(Fields.PLAYER_TWO);
+            }
             while (true) {
                 message = in.readLine();
                 if(message.equals(CommonCommands.GET_ARMY.command)){

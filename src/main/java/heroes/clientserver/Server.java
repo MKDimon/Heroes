@@ -13,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -52,6 +53,8 @@ public class Server {
             this.server = server;
             this.socketOne = socketOne;
             this.socketTwo = socketTwo;
+            this.getOuter = new HashMap<>();
+            this.getReader = new HashMap<>();
 
             // если потоку ввода/вывода приведут к генерированию искдючения, оно проброситься дальше
             inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
