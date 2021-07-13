@@ -1,6 +1,7 @@
 package heroes;
 
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.player.Answer;
@@ -14,7 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SelfPlay {
-    public static void main(final String[] args) throws GameLogicException {
+
+
+    public static void main(final String[] args) throws GameLogicException, UnitException {
         Logger logger = LoggerFactory.getLogger(SelfPlay.class);
         /*
             Инициализация ботов

@@ -1,16 +1,20 @@
 package heroes.units;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.Deinspiration;
-import heroes.auxiliaryclasses.Inspiration;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
 import java.util.Objects;
 
 public class Unit {
-    private int bonusArmor = 0;
-    private ActionTypes actionType;
+    @JsonProperty
+    private int bonusArmor;
+    private int bonusDamage;
+    private int bonusAccuracy;
+    @JsonProperty
+    private final ActionTypes actionType;
     private final int maxHP;
     private int currentHP;
     private int power; //Сила удара или лечения
@@ -27,17 +31,27 @@ public class Unit {
         isActive = active && isAlive();
     }
 
-    public Unit(UnitTypes unitType) throws UnitException {
-        if (unitType == null || unitType.actionType == null) {
+    @JsonCreator
+    public Unit(int bonusArmor, int bonusDamage, int bonusAccuracy, ActionTypes actionType, int maxHP, int currentHP, int power,
+                int accuracy, int armor, boolean isActive) throws UnitException {
+        if(actionType == null){
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
-        maxHP = unitType.HP;
-        setCurrentHP(maxHP);
-        setPower(unitType.power);
-        setArmor(unitType.armor);
-        setAccuracy(unitType.accuracy);
-        actionType = unitType.actionType;
-        isActive = true;
+        this.bonusArmor = bonusArmor;
+        this.bonusDamage = bonusDamage;
+        this.bonusAccuracy = bonusAccuracy;
+        this.actionType = actionType;
+        this.maxHP = maxHP;
+        setCurrentHP(currentHP);
+        setPower(power);
+        setAccuracy(accuracy);
+        setArmor(armor);
+        setActive(isActive);
+    }
+
+    public Unit(UnitTypes unitType) throws UnitException {
+        this(0,0,0, unitType.actionType,unitType.HP,unitType.HP,unitType.power,
+                unitType.accuracy, unitType.armor, true);
     }
 
     public Unit(Unit unit) throws UnitException {
@@ -52,22 +66,20 @@ public class Unit {
         actionType = unit.actionType;
         isActive = unit.isActive;
         bonusArmor = unit.bonusArmor;
+        bonusAccuracy = unit.bonusAccuracy;
+        bonusDamage = unit.bonusDamage;
     }
 
-    public void inspire(Inspiration inspiration) {
-        try {
-            inspiration.inspire(this);
-        } catch (UnitException e) {
-            e.printStackTrace();
-        }
+    public void inspire(int inspirationArmorBonus, int inspirationDamageBonus, int inspirationAccuracyBonus) {
+        bonusDamage = inspirationDamageBonus;
+        bonusAccuracy = inspirationAccuracyBonus;
+        bonusArmor += inspirationArmorBonus;
     }
 
-    public void deinspire(Deinspiration deinspiration) {
-        try {
-            deinspiration.deinspire(this);
-        } catch (UnitException e) {
-            e.printStackTrace();
-        }
+    public void deinspire(int inspirationBonusArmor) {
+        bonusDamage = 0;
+        bonusAccuracy = 0;
+        bonusArmor -= inspirationBonusArmor;
     }
 
     public int getCurrentHP() {
@@ -79,19 +91,15 @@ public class Unit {
     }
 
     public int getPower() {
-        return power;
+        return power + bonusDamage;
     }
 
     public int getAccuracy() {
-        return accuracy;
+        return accuracy + bonusAccuracy;
     }
 
     public int getArmor() {
         return armor + bonusArmor;
-    }
-
-    public int getBonusArmor() {
-        return bonusArmor;
     }
 
     public ActionTypes getActionType() {
@@ -134,12 +142,8 @@ public class Unit {
         return currentHP > 0;
     }
 
-    public void setActionType(ActionTypes actionType) {
-        this.actionType = actionType;
-    }
-
     public void defense() {
-        bonusArmor = 20;
+        bonusArmor += 20;
         isActive = false;
     }
 
@@ -148,11 +152,11 @@ public class Unit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unit unit = (Unit) o;
-        return bonusArmor == unit.bonusArmor && maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
+        return bonusArmor == unit.bonusArmor && bonusDamage == unit.bonusDamage && bonusAccuracy == unit.bonusAccuracy && maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bonusArmor, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
+        return Objects.hash(bonusArmor, bonusDamage, bonusAccuracy, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
     }
 }

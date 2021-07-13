@@ -1,5 +1,6 @@
 package heroes.clientserver;
 
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
@@ -9,6 +10,8 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -102,7 +105,7 @@ public class Server {
                 // видимо смотреть в логи ;D
 
                 this.downService();
-            } catch (final IOException e) {
+            } catch (final IOException | UnitException e) {
                 this.downService();
             }//*/
         }

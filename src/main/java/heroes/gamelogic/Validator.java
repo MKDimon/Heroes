@@ -62,6 +62,18 @@ public class Validator {
         }
     }
 
+    /**
+     * Проверяет на корректность выбора цели
+     * Если юнит не может ходить - возвращает ошибку UNIT_CANT_STEP
+     *
+     * @param attacker
+     * @param defender
+     * @param actionType
+     * @param countAlive - со стороны атакующего
+     * @param countAliveDef - со стороны цели
+     * @throws BoardException
+     * @throws UnitException
+     */
     public static void checkTargetAction(final Position attacker, final Position defender, final ActionTypes actionType,
                                          int countAlive, int countAliveDef) throws BoardException, UnitException {
         if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
