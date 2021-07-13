@@ -1,6 +1,5 @@
 package heroes.clientserver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.gamelogic.Fields;
 import heroes.player.IPlayer;

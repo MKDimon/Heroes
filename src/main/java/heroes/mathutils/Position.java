@@ -1,12 +1,16 @@
 package heroes.mathutils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.gamelogic.Fields;
 
 import java.util.Objects;
 
 public class Position {
+    @JsonProperty
     private final int x;
+    @JsonProperty
     private final int y;
+    @JsonProperty
     private final Fields f;
 
     public Position(int x, int y, Fields f) {

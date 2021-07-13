@@ -1,6 +1,5 @@
 package heroes.clientserver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
@@ -22,6 +21,7 @@ public class Deserializer {
     }
 
     public static Army deserializeArmy(String jsonArmy) throws IOException {
+        if (jsonArmy == null) throw new NullPointerException("NULL");
         return new ObjectMapper().readValue(jsonArmy, Army.class);
     }
 }

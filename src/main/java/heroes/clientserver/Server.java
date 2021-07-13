@@ -1,7 +1,5 @@
 package heroes.clientserver;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
@@ -11,8 +9,6 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -34,13 +30,13 @@ public class Server {
         private final Socket socketTwo;
 
         private final BufferedReader inPlayerOne; // поток чтения из сокета
-        private final BufferedWriter outPlayerOne; // поток завписи в сокет
+        private final BufferedWriter outPlayerOne; // поток записи в сокет
         private final BufferedReader inPlayerTwo; // поток чтения из сокета
-        private final BufferedWriter outPlayerTwo; // поток завписи в сокет
+        private final BufferedWriter outPlayerTwo; // поток записи в сокет
 
-        private GameLogic gameLogic;
-        private Map<Fields, BufferedWriter> getOuter;
-        private Map<Fields, BufferedReader> getReader;
+        private final GameLogic gameLogic;
+        private final Map<Fields, BufferedWriter> getOuter;
+        private final Map<Fields, BufferedReader> getReader;
 
         /**
          * Для общения с клиентом необходим сокет (адресные данные)
@@ -56,7 +52,7 @@ public class Server {
             this.getOuter = new HashMap<>();
             this.getReader = new HashMap<>();
 
-            // если потоку ввода/вывода приведут к генерированию искдючения, оно проброситься дальше
+            // если потоку ввода/вывода приведут к генерированию исключения, оно проброситься дальше
             inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
             outPlayerOne = new BufferedWriter(new OutputStreamWriter(socketOne.getOutputStream()));
             inPlayerTwo = new BufferedReader(new InputStreamReader(socketTwo.getInputStream()));
@@ -139,7 +135,7 @@ public class Server {
     }
 
     @SuppressWarnings("InfiniteLoopStatement")
-    private void startServer() throws IOException {
+    public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
             // serverSocket.setSoTimeout(1000);
