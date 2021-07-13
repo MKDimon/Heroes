@@ -29,6 +29,14 @@ public class GameLogic {
         gameBegun = true;
     }
 
+    /**
+     * Создает доску и объявляет начало игры
+     * Валидирует данные
+     *
+     * @param fieldPlayerOne - армия игрока 1
+     * @param fieldPlayerTwo - армия игрока 2
+     * @return - успешное начало игры true / ошибка false
+     */
     public boolean gameStart(Army fieldPlayerOne, Army fieldPlayerTwo) {
         try {
             if (fieldPlayerOne == fieldPlayerTwo
@@ -58,6 +66,16 @@ public class GameLogic {
         }
     }
 
+    /**
+     * Валидирует данные
+     * Если при проверке пришла ошибка UnitException (UNIT_CANT_STEP)
+     * меняет act на ActionTypes.DEFENSE
+     *
+     * @param attacker
+     * @param defender
+     * @param act
+     * @return
+     */
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
         if (!gameBegun) {
             return false;
@@ -98,6 +116,13 @@ public class GameLogic {
         return true;
     }
 
+    /**
+     * Возвращает список целей для действия
+     *
+     * @param def - текущая цель (защищающаяся)
+     * @param act - действие над целью
+     * @return list целей
+     */
     private List<Unit> actionGetList(final Position def, final ActionTypes act) {
         List<Unit> result = new ArrayList<>();
         if (act.isMassEffect()) {
@@ -114,7 +139,6 @@ public class GameLogic {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;
-
         }
         return false;
     }

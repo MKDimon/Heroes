@@ -19,6 +19,17 @@ public class ControlRound {
         }
     }
 
+    /**
+     * Проверяет на:
+     *  - смерть генерала
+     *  - живую первую линию
+     *  - конец игры
+     *  - новый раунд
+     * Меняет текущего игрока
+     *
+     * @param board - состояние игры
+     * @return - игра не закончена true / закончена false
+     */
     public static boolean checkStep(final Board board) {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
@@ -54,6 +65,14 @@ public class ControlRound {
         return true;
     }
 
+    /**
+     * - Проверяет на конец игры по числу раундов
+     * - Убирает защиту у всех юнитов перед началом нового раунда
+     * - Меняет ходящего игрока в начале раунда
+     *
+     * @param board - состояние игры
+     * @return - игра не закончена true / закончена false
+     */
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             logger.info("Конец игры: НИЧЬЯ");

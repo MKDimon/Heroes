@@ -69,10 +69,23 @@ public class Board {
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
 
+    /**
+     * Воодушевление на армию
+     *
+     * @param army - армия содержащая генерала
+     * @param general - генерал армии, содержащий воодушевление
+     */
     public void inspireArmy(final Unit[][] army, final General general) {
         Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
     }
 
+    /**
+     * Выполняется действие через фабрику
+     *
+     * @param attacker
+     * @param defender
+     * @param act
+     */
     public void doAction(final Unit attacker, final List<Unit> defender, final ActionTypes act) {
         CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();

@@ -55,6 +55,15 @@ public class TestBot implements IPlayer {
         }
     }
 
+    /**
+     * Из списка активных юнитов своей стороны выбирает атакующего
+     * Из списка живых юнитов противника выбирает цель
+     * Учитывает смену поля при ActionTypes.HEALING
+     *
+     * @param board
+     * @return
+     * @throws GameLogicException
+     */
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
