@@ -1,5 +1,7 @@
 package heroes.gamelogic;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
@@ -10,10 +12,13 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Army {
+    @JsonProperty
     private final Unit[][] playerUnits;
+    @JsonProperty
     private General general;
 
-    public Army(Unit[][] playerUnits, General general) throws BoardException {
+    @JsonCreator
+    public Army(Unit[][] playerUnits, General general) throws BoardException, UnitException {
         if(playerUnits == null || general == null){
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
@@ -21,6 +26,13 @@ public class Army {
             throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
         }
         this.playerUnits = playerUnits;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if(playerUnits[i][j].equals(general)){
+                    playerUnits[i][j] = new General(general);
+                }
+            }
+        }
         this.general = general;
     }
 
@@ -48,8 +60,8 @@ public class Army {
         return playerUnits;
     }
 
-    public General getGeneral() {
-        return general;
+    public General getGeneral() throws UnitException {
+        return new General(general);
     }
 
     @Override

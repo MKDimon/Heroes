@@ -1,5 +1,6 @@
 package heroes.clientserver;
 
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
@@ -98,7 +99,7 @@ public class Server {
                 // видимо смотреть в логи ;D
 
                 this.downService();
-            } catch (final IOException e) {
+            } catch (final IOException | UnitException e) {
                 this.downService();
             }//*/
         }

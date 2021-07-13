@@ -1,5 +1,8 @@
 package heroes.gamelogic;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
@@ -21,21 +24,39 @@ public class Board {
      *          |
      *          V Y
      */
-
+    @JsonProperty
     private int curNumRound;
+    @JsonProperty
     private Fields currentPlayer;
-
+    @JsonProperty
     private Fields roundPlayer;
-
+    @JsonProperty
     private final Army fieldPlayerOne;
+    @JsonProperty
     private final Army fieldPlayerTwo;
-
+    @JsonIgnore
     private final Map<Fields, Unit[][]> getUnits;
-
+    @JsonProperty
     private boolean isArmyOneInspired;
+    @JsonProperty
     private boolean isArmyTwoInspired;
 
-    public Board(final Army fieldPlayerOne, final Army fieldPlayerTwo) { //TODO: Validation
+    @JsonCreator
+    public Board(int curNumRound, Fields currentPlayer, Fields roundPlayer,
+                 Army fieldPlayerOne, Army fieldPlayerTwo, boolean isArmyOneInspired, boolean isArmyTwoInspired) {
+        this.curNumRound = curNumRound;
+        this.currentPlayer = currentPlayer;
+        this.roundPlayer = roundPlayer;
+        this.fieldPlayerOne = fieldPlayerOne;
+        this.fieldPlayerTwo = fieldPlayerTwo;
+        this.isArmyOneInspired = isArmyOneInspired;
+        this.isArmyTwoInspired = isArmyTwoInspired;
+        getUnits = new HashMap<>();
+        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+    }
+
+    public Board(final Army fieldPlayerOne, final Army fieldPlayerTwo) throws UnitException { //TODO: Validation
         curNumRound = 1;
         currentPlayer = Fields.PLAYER_ONE;
         roundPlayer = Fields.PLAYER_ONE;
@@ -69,8 +90,13 @@ public class Board {
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
 
-    public void inspireArmy(final Unit[][] army, final General general) {
-        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.getInspiration())));
+    private void inspireArmy(final Unit[][] army, final General general) {
+        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.inspire(general.inspirationArmorBonus,
+                general.inspirationDamageBonus, general.inspirationAccuracyBonus)));
+    }
+
+    public void deinspireArmy(final Unit[][] army, final General general){
+        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(general.inspirationArmorBonus)));
     }
 
     public void doAction(final Unit attacker, final List<Unit> defender, final ActionTypes act) {
@@ -130,11 +156,11 @@ public class Board {
                 fieldPlayerTwo.getPlayerUnits()[1].clone() };
     }
 
-    public General getGeneralPlayerOne() {
+    public General getGeneralPlayerOne() throws UnitException {
         return fieldPlayerOne.getGeneral();
     }
 
-    public General getGeneralPlayerTwo() {
+    public General getGeneralPlayerTwo() throws UnitException {
         return fieldPlayerTwo.getGeneral();
     }
 

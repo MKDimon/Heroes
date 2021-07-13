@@ -53,7 +53,7 @@ public class RandomBot implements IPlayer{
                 logger.error("Error creating unit in RandomBot", e);
             }
             return new Army(armyArr, general);
-        } catch (BoardException e) {
+        } catch (BoardException | UnitException e) {
             logger.error("Error creating army in RandomBot", e);
             return null;
         }

@@ -1,5 +1,6 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +20,14 @@ public class ControlRound {
         }
     }
 
-    public static boolean checkStep(final Board board) {
+    public static boolean checkStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
-            Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
+            board.deinspireArmy(board.getFieldPlayerOne(), board.getGeneralPlayerOne());
             board.setArmyOneInspired(false);
         }
         if (!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()) {
-            Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
+            board.deinspireArmy(board.getFieldPlayerTwo(), board.getGeneralPlayerTwo());
             board.setArmyTwoInspired(false);
         }
 
@@ -53,6 +54,7 @@ public class ControlRound {
         }
         return true;
     }
+
 
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {

@@ -45,14 +45,8 @@ public class GameLogic {
 
             board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
-            Arrays.stream(fieldPlayerOne.getPlayerUnits()).forEach
-                    (x -> Arrays.stream(x).forEach(u -> u.inspire
-                            (fieldPlayerOne.getGeneral().getInspiration())));
-            Arrays.stream(fieldPlayerTwo.getPlayerUnits()).forEach
-                    (x -> Arrays.stream(x).forEach(u -> u.inspire
-                            (fieldPlayerTwo.getGeneral().getInspiration())));
             return true;
-        } catch (NullPointerException | GameLogicException exception) {
+        } catch (NullPointerException | GameLogicException | UnitException exception) {
             logger.error(" Game Start failed ",exception);
             return false;
         }
@@ -109,7 +103,7 @@ public class GameLogic {
         return result;
     }
 
-    public boolean action(final Position attacker, final Position defender, final ActionTypes act) {
+    public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
         if (actionValidate(attacker, defender, act)) {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);

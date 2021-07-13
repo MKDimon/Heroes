@@ -27,14 +27,16 @@ public class TestBoard {
         };
         Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
         Unit testSwordsman = new Unit(UnitTypes.SWORDSMAN);
-        testSwordsman.inspire(GeneralTypes.ARCHMAGE.getInspiration());
+        testSwordsman.inspire(GeneralTypes.ARCHMAGE.inspirationArmorBonus, GeneralTypes.ARCHMAGE.inspirationDamageBonus,
+                GeneralTypes.ARCHMAGE.inspirationAccuracyBonus);
         assertAll(
                 () -> assertEquals(new General(firstGeneral), board.getFieldPlayerOne()[1][1]),
                 () -> assertEquals(testSwordsman, board.getUnitByCoordinate(new Position(0,1, Fields.PLAYER_ONE)))
         );
         assertTrue(ControlRound.checkStep(board));
         Unit testUnit = new Unit(UnitTypes.HEALER);
-        testUnit.inspire(GeneralTypes.COMMANDER.getInspiration());
+        testUnit.inspire(GeneralTypes.COMMANDER.inspirationArmorBonus, GeneralTypes.COMMANDER.inspirationDamageBonus,
+                GeneralTypes.COMMANDER.inspirationAccuracyBonus);
         assertEquals(testUnit.getArmor() ,board.getUnitByCoordinate(new Position(1,2,Fields.PLAYER_TWO)).getArmor());
     }
 
