@@ -29,7 +29,7 @@ public class SelfPlayClientServer {
         }
     }
 
-    public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
+    public static void main(final String[] args) throws InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
         new PlayClient().start();

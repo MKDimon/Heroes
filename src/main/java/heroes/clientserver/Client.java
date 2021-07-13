@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
-    private static Logger logger = LoggerFactory.getLogger(Client.class);
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final String IP = "127.0.0.1";
     private static final int PORT = Server.PORT;
