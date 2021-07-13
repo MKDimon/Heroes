@@ -151,15 +151,12 @@ public class Server {
                 // Блокируется до возникновения нового соединения
                 // Ждет первого игрока
                 final Socket socketOne = serverSocket.accept();
-                while (true) { // Ждет второго игрока
-                    final Socket socketTwo = serverSocket.accept();
-                    try {
-                        new ServerSomething(this, socketOne, socketTwo).start();
-                        break;
-                    } catch (final IOException e) {
-                        socketTwo.close();
-                        socketOne.close();
-                    }
+                final Socket socketTwo = serverSocket.accept();
+                try {
+                    new ServerSomething(this, socketOne, socketTwo).start();
+                } catch (final IOException e) {
+                    socketTwo.close();
+                    socketOne.close();
                 }
             }
         } catch (final BindException e) {
