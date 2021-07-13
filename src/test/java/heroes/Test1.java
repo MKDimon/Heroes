@@ -3,23 +3,18 @@ package heroes;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heroes.auxiliaryclasses.ActionTypes;
+
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.mathutils.Position;
-import heroes.player.Answer;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 import org.junit.Test;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 public class Test1 {
