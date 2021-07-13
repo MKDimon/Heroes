@@ -5,6 +5,8 @@ import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.player.Answer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.BindException;
@@ -19,6 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Сервер
  */
 public class Server {
+    Logger logger = LoggerFactory.getLogger(Server.class);
 
     static final int PORT = 8081;
 
@@ -53,6 +56,9 @@ public class Server {
             this.getOuter = new HashMap<>();
             this.getReader = new HashMap<>();
 
+            logger.warn(String.valueOf(socketOne));
+            logger.warn(socketTwo.toString());
+
             // если потоку ввода/вывода приведут к генерированию исключения, оно проброситься дальше
             inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
             outPlayerOne = new BufferedWriter(new OutputStreamWriter(socketOne.getOutputStream()));
@@ -69,6 +75,7 @@ public class Server {
 
         @Override
         public void run() {
+            serverList.add(this);
             try {
                 sendAsk(CommonCommands.FIELD_ONE.command, outPlayerOne);
                 sendAsk(CommonCommands.FIELD_TWO.command, outPlayerTwo);
@@ -140,24 +147,19 @@ public class Server {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-            // serverSocket.setSoTimeout(1000);
-            while (true) { // приложение с помощью System.exit() закрывается по команде от клиента
+            while (true) {
                 // Блокируется до возникновения нового соединения
                 // Ждет первого игрока
                 final Socket socketOne = serverSocket.accept();
-                try {
-                    while (true) { // Ждет второго игрока
-                        final Socket socketTwo = serverSocket.accept();
-                        try {
-                            new ServerSomething(this, socketOne, socketTwo).start();
-                        } catch (final IOException e) {
-                            socketTwo.close();
-                        }
+                while (true) { // Ждет второго игрока
+                    final Socket socketTwo = serverSocket.accept();
+                    try {
+                        new ServerSomething(this, socketOne, socketTwo).start();
+                        break;
+                    } catch (final IOException e) {
+                        socketTwo.close();
+                        socketOne.close();
                     }
-                } catch (final IOException e) {
-                    // Если завершится неудачей, закрывается сокет,
-                    // в противном случае, нить закроет его:
-                    socketOne.close();
                 }
             }
         } catch (final BindException e) {

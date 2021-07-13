@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class SelfPlayClientServer {
+public class SelfPlay10k {
     static Logger logger = LoggerFactory.getLogger(SelfPlayClientServer.class);
 
     private static class PlayServer extends Thread {
@@ -32,9 +32,9 @@ public class SelfPlayClientServer {
     public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
-        new PlayClient().start();
-        new PlayClient().start();
-        new PlayClient().start();
-        new PlayClient().start();
+        for(int i = 0; i < 10000; i++) {
+            new PlayClient().start();
+            new PlayClient().start();
+        }
     }
 }
