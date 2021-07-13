@@ -5,10 +5,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
+import heroes.units.General;
+import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 import org.junit.Test;
@@ -20,10 +24,18 @@ import java.io.StringWriter;
 
 public class Test1 {
     @Test
-    public void test() throws UnitException, GameLogicException, IOException {
+    public void test() throws UnitException, GameLogicException, IOException, BoardException {
         ObjectMapper mapper = new ObjectMapper();
-        final StringWriter writer = new StringWriter();
-        mapper.writeValue(writer, new Answer(new Position(1,2, Fields.PLAYER_ONE), new Position(1,2, Fields.PLAYER_ONE), ActionTypes.HEALING));
-        System.out.println((writer));
+
+        StringWriter writer = new StringWriter();
+        General firstGeneral = new General(GeneralTypes.COMMANDER);
+        Unit[][] firstArmy = new Unit[][]{
+                {new Unit(UnitTypes.BOWMAN), new Unit(UnitTypes.BOWMAN), new Unit(UnitTypes.SWORDSMAN)},
+                {new Unit(UnitTypes.HEALER), firstGeneral, new Unit(UnitTypes.MAGE)}
+        };
+        mapper.writeValue(writer, new Army(firstArmy, firstGeneral));
+        System.out.println(writer.toString());
+
+        Army army = mapper.readValue(writer.toString(), Army.class);
     }
 }

@@ -1,5 +1,6 @@
 package heroes.player;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
@@ -18,8 +19,10 @@ public class Answer {
     private final Position defender;
     @JsonProperty
     private final ActionTypes actionType;
-
-    public Answer(Position attacker, Position defender, ActionTypes actionType) throws GameLogicException {
+    @JsonCreator
+    public Answer(@JsonProperty("attacker") Position attacker,
+                  @JsonProperty("defender") Position defender,
+                  @JsonProperty("actionType") ActionTypes actionType) throws GameLogicException {
         if (attacker == null || defender == null || actionType == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }

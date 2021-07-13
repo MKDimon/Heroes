@@ -42,8 +42,11 @@ public class Board {
     private boolean isArmyTwoInspired;
 
     @JsonCreator
-    public Board(int curNumRound, Fields currentPlayer, Fields roundPlayer,
-                 Army fieldPlayerOne, Army fieldPlayerTwo, boolean isArmyOneInspired, boolean isArmyTwoInspired) {
+    public Board(@JsonProperty("curNumRound")int curNumRound, @JsonProperty("currentPlayer")Fields currentPlayer,
+                 @JsonProperty("roundPlayer")Fields roundPlayer, @JsonProperty("fieldPlayerOne")Army fieldPlayerOne,
+                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo,
+                 @JsonProperty("isArmyOneInspired")boolean isArmyOneInspired,
+                 @JsonProperty("isArmyTwoInspired")boolean isArmyTwoInspired) {
         this.curNumRound = curNumRound;
         this.currentPlayer = currentPlayer;
         this.roundPlayer = roundPlayer;
@@ -159,20 +162,24 @@ public class Board {
         return curNumRound;
     }
 
+    @JsonIgnore
     public Unit[][] getFieldPlayerOne() {
         return new Unit[][]{fieldPlayerOne.getPlayerUnits()[0].clone(),
                 fieldPlayerOne.getPlayerUnits()[1].clone() };
     }
 
+    @JsonIgnore
     public Unit[][] getFieldPlayerTwo() {
         return new Unit[][]{fieldPlayerTwo.getPlayerUnits()[0].clone(),
                 fieldPlayerTwo.getPlayerUnits()[1].clone() };
     }
 
+    @JsonIgnore
     public General getGeneralPlayerOne() throws UnitException {
         return fieldPlayerOne.getGeneral();
     }
 
+    @JsonIgnore
     public General getGeneralPlayerTwo() throws UnitException {
         return fieldPlayerTwo.getGeneral();
     }

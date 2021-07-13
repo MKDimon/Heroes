@@ -17,9 +17,14 @@ public class General extends Unit {
     public final int inspirationAccuracyBonus;
 
     @JsonCreator
-    public General(int bonusArmor, int bonusDamage, int bonusAccuracy, ActionTypes actionType, int maxHP,
-                   int currentHP, int power, int accuracy, int armor, boolean isActive,
-                   int inspirationArmorBonus, int inspirationDamageBonus, int inspirationAccuracyBonus)
+    public General(@JsonProperty("bonusArmor") int bonusArmor,@JsonProperty("bonusDamage") int bonusDamage,
+                   @JsonProperty("bonusAccuracy") int bonusAccuracy, @JsonProperty("actionType") ActionTypes actionType,
+                   @JsonProperty("maxHP")int maxHP, @JsonProperty("currentHP") int currentHP,
+                   @JsonProperty("power") int power, @JsonProperty("accuracy") int accuracy,
+                   @JsonProperty("armor") int armor, @JsonProperty("isActive") boolean isActive,
+                   @JsonProperty("inspirationArmorBonus") int inspirationArmorBonus,
+                   @JsonProperty("inspirationDamageBonus") int inspirationDamageBonus,
+                   @JsonProperty("inspirationAccuracyBonus") int inspirationAccuracyBonus)
             throws UnitException {
         super(bonusArmor, bonusDamage, bonusAccuracy, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
         this.inspirationArmorBonus = inspirationArmorBonus;

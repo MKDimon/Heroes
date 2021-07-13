@@ -1,39 +1,45 @@
 package heroes.units;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
 import java.util.Objects;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = General.class)
+}
+)
 public class Unit {
     @JsonProperty
     private int bonusArmor;
+    @JsonProperty
     private int bonusDamage;
+    @JsonProperty
     private int bonusAccuracy;
     @JsonProperty
     private final ActionTypes actionType;
+    @JsonProperty
     private final int maxHP;
+    @JsonProperty
     private int currentHP;
+    @JsonProperty
     private int power; //Сила удара или лечения
+    @JsonProperty
     private int accuracy;
+    @JsonProperty
     private int armor;
+    @JsonProperty
     private boolean isActive;
 
-
-    public boolean isActive() {
-        return isActive && isAlive();
-    }
-
-    public void setActive(boolean active) {
-        isActive = active && isAlive();
-    }
-
     @JsonCreator
-    public Unit(int bonusArmor, int bonusDamage, int bonusAccuracy, ActionTypes actionType, int maxHP, int currentHP, int power,
-                int accuracy, int armor, boolean isActive) throws UnitException {
+    public Unit(@JsonProperty("bonusArmor") int bonusArmor,@JsonProperty("bonusDamage") int bonusDamage,
+                @JsonProperty("bonusAccuracy") int bonusAccuracy, @JsonProperty("actionType") ActionTypes actionType,
+                @JsonProperty("maxHP")int maxHP, @JsonProperty("currentHP") int currentHP,
+                @JsonProperty("power") int power, @JsonProperty("accuracy") int accuracy,
+                @JsonProperty("armor") int armor, @JsonProperty("isActive") boolean isActive) throws UnitException {
         if(actionType == null){
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
@@ -47,6 +53,15 @@ public class Unit {
         setAccuracy(accuracy);
         setArmor(armor);
         setActive(isActive);
+    }
+
+    @JsonIgnore
+    public boolean isActive() {
+        return isActive && isAlive();
+    }
+
+    public void setActive(boolean active) {
+        isActive = active && isAlive();
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
@@ -138,6 +153,7 @@ public class Unit {
         this.bonusArmor = bonusArmor;
     }
 
+    @JsonIgnore
     public boolean isAlive() {
         return currentHP > 0;
     }

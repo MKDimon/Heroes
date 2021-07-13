@@ -18,8 +18,9 @@ public class Army {
     private General general;
 
     @JsonCreator
-    public Army(Unit[][] playerUnits, General general) throws BoardException, UnitException {
-        if(playerUnits == null || general == null){
+    public Army(@JsonProperty("playerUnits") Unit[][] playerUnits,@JsonProperty("general") General general)
+            throws BoardException, UnitException {
+        if (playerUnits == null || general == null){
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
         if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
@@ -29,7 +30,7 @@ public class Army {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if(playerUnits[i][j].equals(general)){
-                    playerUnits[i][j] = new General(general);
+                    playerUnits[i][j] = general;
                 }
             }
         }
