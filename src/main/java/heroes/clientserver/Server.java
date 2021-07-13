@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Консольный многопользовательский чат.
  * Сервер
  */
 public class Server {
