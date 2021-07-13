@@ -23,16 +23,17 @@ public class TestUnits {
                 () -> assertEquals(30, swordsman.getArmor()),
                 () -> assertEquals(ActionTypes.CLOSE_COMBAT, swordsman.getActionType())
         );
-        swordsman.inspire(new General(GeneralTypes.COMMANDER).getInspiration());
+        General gen = new General(GeneralTypes.COMMANDER);
+        swordsman.inspire(gen.inspirationArmorBonus, gen.inspirationDamageBonus, gen.inspirationDamageBonus);
         assertEquals(40, swordsman.getArmor());
-        swordsman.deinspire(new General(GeneralTypes.COMMANDER).getDeinspiration());
+        swordsman.deinspire(new General(GeneralTypes.COMMANDER).inspirationArmorBonus);
         assertEquals(30, swordsman.getArmor());
     }
 
     @Test
     void testUnits2() throws UnitException {
         General archmage = new General(GeneralTypes.ARCHMAGE);
-        archmage.inspire(archmage.getInspiration());
+        archmage.inspire(archmage.inspirationArmorBonus, archmage.inspirationDamageBonus, archmage.inspirationAccuracyBonus);
         assertAll(
                 () -> assertEquals(70, archmage.getCurrentHP()),
                 () -> assertEquals(25, archmage.getPower()),

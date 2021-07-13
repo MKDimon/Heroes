@@ -1,5 +1,6 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,25 +20,14 @@ public class ControlRound {
         }
     }
 
-    /**
-     * Проверяет на:
-     *  - смерть генерала
-     *  - живую первую линию
-     *  - конец игры
-     *  - новый раунд
-     * Меняет текущего игрока
-     *
-     * @param board - состояние игры
-     * @return - игра не закончена true / закончена false
-     */
-    public static boolean checkStep(final Board board) {
+    public static boolean checkStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
-            Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerOne().getDeinspiration())));
+            board.deinspireArmy(board.getFieldPlayerOne(), board.getGeneralPlayerOne());
             board.setArmyOneInspired(false);
         }
         if (!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()) {
-            Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(board.getGeneralPlayerTwo().getDeinspiration())));
+            board.deinspireArmy(board.getFieldPlayerTwo(), board.getGeneralPlayerTwo());
             board.setArmyTwoInspired(false);
         }
 
@@ -65,14 +55,6 @@ public class ControlRound {
         return true;
     }
 
-    /**
-     * - Проверяет на конец игры по числу раундов
-     * - Убирает защиту у всех юнитов перед началом нового раунда
-     * - Меняет ходящего игрока в начале раунда
-     *
-     * @param board - состояние игры
-     * @return - игра не закончена true / закончена false
-     */
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             logger.info("Конец игры: НИЧЬЯ");
