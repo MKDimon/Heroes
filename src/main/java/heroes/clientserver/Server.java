@@ -10,8 +10,6 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -87,12 +85,13 @@ public class Server {
 
                 // весь игровой процесс
                 while (gameLogic.isGameBegun()) {
-                    getOuter.get(gameLogic.getBoard().getCurrentPlayer()).write(
-                            Serializer.serializeBoard(gameLogic.getBoard())
+                    sendAsk(Serializer.serializeBoard(gameLogic.getBoard()),
+                            getOuter.get(gameLogic.getBoard().getCurrentPlayer())
                     );
 
+                    String str = getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine();
                     Answer answer = Deserializer.deserializeAnswer(
-                            getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine()
+                            str
                     );
 
                     gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
@@ -101,8 +100,8 @@ public class Server {
                     // обработка draw
                 }
 
-                // где то здесь сообщение о победе / ничьей
-                // видимо смотреть в логи ;D
+                sendAsk(CommonCommands.END_GAME.command, outPlayerOne);
+                sendAsk(CommonCommands.END_GAME.command, outPlayerTwo);
 
                 this.downService();
             } catch (final IOException | UnitException e) {

@@ -1,5 +1,6 @@
 package heroes.mathutils;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.gamelogic.Fields;
 
@@ -12,8 +13,8 @@ public class Position {
     private final int y;
     @JsonProperty
     private final Fields f;
-
-    public Position(int x, int y, Fields f) {
+    @JsonCreator
+    public Position(@JsonProperty("x") int x,@JsonProperty("y") int y,@JsonProperty("f") Fields f) {
         this.x = x;
         this.y = y;
         this.f = f;

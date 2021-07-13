@@ -84,14 +84,14 @@ public class Client {
             while (true) {
                 message = in.readLine();
                 if(message.equals(CommonCommands.GET_ARMY.command)){
-                    out.write(sendArmyJson());
+                    out.write(sendArmyJson() + '\n');
                     out.flush();
                 }
                 else if(message.equals(CommonCommands.END_GAME.command)){
                     downService();
                     break;
                 } else {
-                    out.write(sendAnswerJson(message));
+                    out.write(sendAnswerJson(message) + '\n');
                     out.flush();
                 }
             }
