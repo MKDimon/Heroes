@@ -1,5 +1,6 @@
 package heroes.player;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
@@ -11,9 +12,11 @@ import java.util.Objects;
 
 public class Answer {
     Logger logger = LoggerFactory.getLogger(Answer.class);
-
+    @JsonProperty
     private final Position attacker;
+    @JsonProperty
     private final Position defender;
+
     private final ActionTypes actionType;
 
     public Answer(Position attacker, Position defender, ActionTypes actionType) throws GameLogicException {
