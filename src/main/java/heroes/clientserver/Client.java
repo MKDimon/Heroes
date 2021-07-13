@@ -48,7 +48,7 @@ public class Client {
     }
 
     //Метод, который вызывает у игрока создание армии
-    private String sendArmyJson(){
+    private String sendArmyJson() throws IOException {
         return Serializer.serializeArmy(player.getArmy());
     }
 

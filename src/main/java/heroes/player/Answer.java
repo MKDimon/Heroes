@@ -16,7 +16,7 @@ public class Answer {
     private final Position attacker;
     @JsonProperty
     private final Position defender;
-
+    @JsonProperty
     private final ActionTypes actionType;
 
     public Answer(Position attacker, Position defender, ActionTypes actionType) throws GameLogicException {
