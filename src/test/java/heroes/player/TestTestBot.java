@@ -13,8 +13,8 @@ public class TestTestBot {
 
     @Test
     public void testBotGetAction() throws GameLogicException, UnitException {
-        IPlayer player = new TestBot(Fields.PLAYER_ONE);
-        IPlayer player1 = new TestBot(Fields.PLAYER_TWO);
+        BaseBot player = new TestBot(Fields.PLAYER_ONE);
+        BaseBot player1 = new TestBot(Fields.PLAYER_TWO);
 
         GameLogic gl = new GameLogic();
         gl.gameStart(player.getArmy(), player1.getArmy());

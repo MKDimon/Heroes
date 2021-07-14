@@ -2,13 +2,18 @@ package heroes.clientserver;
 
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.gamelogic.Fields;
-import heroes.player.IPlayer;
+import heroes.player.BaseBot;
+import heroes.player.PlayerBot;
 import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -18,7 +23,7 @@ public class Client {
     private final String ip;
     private final int port;
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
-    private IPlayer player;
+    private BaseBot player;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -33,14 +38,14 @@ public class Client {
         catch (IOException ignore) {}
     }
 
-    private Client(final String ip, final int port, IPlayer player){
+    private Client(final String ip, final int port, BaseBot player) {
         this.ip = ip;
         this.port = port;
         this.player = player;
     }
 
-    private void startClient(){
-        try{
+    private void startClient() {
+        try {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -48,6 +53,7 @@ public class Client {
         } catch (IOException e){
             logger.error("Error client starting", e);
         }
+        start();
     }
 
     //Метод, который вызывает у игрока создание армии
@@ -58,6 +64,24 @@ public class Client {
     //Метод, который вызывает у игрока ответ
     private String sendAnswerJson(String jsonBoard) throws GameLogicException, IOException {
         return Serializer.serializeAnswer(player.getAnswer(Deserializer.deserializeBoard(jsonBoard)));
+    }
+
+    private BaseBot chooseBot(Fields field) {
+        Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
+        botFactoryMap.put("Test", new TestBot.TestBotFactory());
+        botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
+        botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
+        System.out.println("Choose your bot: Test, Random, Player");
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                String botTypeString = scanner.next();
+                return botFactoryMap.get(botTypeString).createBot(field);
+            } catch (IllegalArgumentException | GameLogicException e) {
+                System.out.println("Incorrect bot type!!!");
+                System.out.println("Choose your bot: Test, Random, Player");
+            }
+        }
     }
 
     private void downService() {
@@ -76,13 +100,17 @@ public class Client {
         }
     }
 
+    //Первое сообщение - поле игрока
+    //второе сообщение - выбери бота
+    //Третье сообщение - выбери армию
+    //Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
     private void start() {
-        try {//Первое сообщение  - поле игрока
+        try {
             String message = in.readLine();
             if (message.equals(CommonCommands.FIELD_ONE.command)) {
-                player = new RandomBot(Fields.PLAYER_ONE);
+                player = chooseBot(Fields.PLAYER_ONE);
             } else {
-                player = new RandomBot(Fields.PLAYER_TWO);
+                player = chooseBot(Fields.PLAYER_TWO);
             }
             while (true) {
                 message = in.readLine();

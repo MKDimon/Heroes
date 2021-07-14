@@ -19,12 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomBot implements IPlayer{
+public class RandomBot extends BaseBot {
     Logger logger = LoggerFactory.getLogger(RandomBot.class);
-    private Fields field;
 
-    public RandomBot(Fields field){
-        this.field = field;
+    public static class RandomBotFactory extends BaseBotFactory {
+        @Override
+        public RandomBot createBot(Fields fields) throws GameLogicException {
+            return new RandomBot(fields);
+        }
+    }
+
+    public RandomBot(Fields field) throws GameLogicException {
+        super(field);
     }
 
     @Override
@@ -49,7 +55,7 @@ public class RandomBot implements IPlayer{
                         }
                     }
                 }
-            } catch (UnitException e){
+            } catch (UnitException e) {
                 logger.error("Error creating unit in RandomBot", e);
             }
             return new Army(armyArr, general);
@@ -73,18 +79,18 @@ public class RandomBot implements IPlayer{
         Random r = new Random();
 
 
-        Fields defField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
+        Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
         List<Position> posAttack = new ArrayList<>();
         List<Position> posDefend = new ArrayList<>();
 
-        Unit[][] armyAttack = board.getArmy(field);
+        Unit[][] armyAttack = board.getArmy(getField());
         Unit[][] armyDefend = board.getArmy(defField);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (armyAttack[i][j].isActive()) {
-                    posAttack.add(new Position(i, j, field));
+                    posAttack.add(new Position(i, j, getField()));
                 }
                 if (armyDefend[i][j].isAlive()) {
                     posDefend.add(new Position(i, j, defField));
@@ -95,25 +101,20 @@ public class RandomBot implements IPlayer{
         Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
-            defField = field;
+            defField = getField();
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, field))) {
-                        posAttack.add(new Position(i, j, field));
+                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, getField()))) {
+                        posAttack.add(new Position(i, j, getField()));
                     }
                 }
             }
         }
 
-        Position defenderPos = (defField == field)?
-                posAttack.get(r.nextInt(posAttack.size())):
+        Position defenderPos = (defField == getField()) ?
+                posAttack.get(r.nextInt(posAttack.size())) :
                 posDefend.get(r.nextInt(posDefend.size()));
 
         return new Answer(attackerPos, defenderPos, attackType);
-    }
-
-    @Override
-    public Fields getField() {
-        return field;
     }
 }
