@@ -34,7 +34,5 @@ public class SelfPlayClientServer {
         Thread.sleep(300); // Чтобы сервер успел запуститься
         new PlayClient().start();
         new PlayClient().start();
-        new PlayClient().start();
-        new PlayClient().start();
     }
 }

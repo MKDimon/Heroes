@@ -19,32 +19,44 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class TestBot implements IPlayer {
+public class TestBot extends BaseBot {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
-    private final Fields field;
+    public static class TestBotFactory extends BaseBotFactory {
 
-    public TestBot(final Fields f) {
-        field = f;
+        @Override
+        public TestBot createBot(Fields fields) throws GameLogicException {
+            return new TestBot(fields);
+        }
+    }
+
+    public TestBot(final Fields f) throws GameLogicException {
+        super(f);
     }
 
     @Override
     public Army getArmy() {
         try {
-            if (field == Fields.PLAYER_ONE) {
+            if (getField() == Fields.PLAYER_ONE) {
                 General general = new General(GeneralTypes.COMMANDER);
                 Unit[][] army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN); army[1][0] = new Unit(UnitTypes.MAGE);
-                army[0][1] = general;                       army[1][1] = new Unit(UnitTypes.MAGE);
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.SWORDSMAN);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][0] = new Unit(UnitTypes.MAGE);
+                army[0][1] = general;
+                army[1][1] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][2] = new Unit(UnitTypes.SWORDSMAN);
 
                 return new Army(army, general);
             } else {
                 General general = new General(GeneralTypes.ARCHMAGE);
                 Unit[][] army = new Unit[2][3];
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN); army[1][0] = new Unit(UnitTypes.BOWMAN);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN); army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN); army[1][2] = new Unit(UnitTypes.HEALER);
+                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][0] = new Unit(UnitTypes.BOWMAN);
+                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][1] = general;
+                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
+                army[1][2] = new Unit(UnitTypes.HEALER);
 
                 return new Army(army, general);
             }
@@ -69,18 +81,18 @@ public class TestBot implements IPlayer {
         Random r = new Random();
 
 
-        Fields defField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
+        Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
         List<Position> posAttack = new ArrayList<>();
         List<Position> posDefend = new ArrayList<>();
 
-        Unit[][] armyAttack = board.getArmy(field);
+        Unit[][] armyAttack = board.getArmy(getField());
         Unit[][] armyDefend = board.getArmy(defField);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (armyAttack[i][j].isActive()) {
-                    posAttack.add(new Position(i, j, field));
+                    posAttack.add(new Position(i, j, getField()));
                 }
                 if (armyDefend[i][j].isAlive()) {
                     posDefend.add(new Position(i, j, defField));
@@ -91,25 +103,20 @@ public class TestBot implements IPlayer {
         Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
-            defField = field;
+            defField = getField();
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, field))) {
-                        posAttack.add(new Position(i, j, field));
+                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, getField()))) {
+                        posAttack.add(new Position(i, j, getField()));
                     }
                 }
             }
         }
 
-        Position defenderPos = (defField == field)?
-                posAttack.get(r.nextInt(posAttack.size())):
+        Position defenderPos = (defField == getField()) ?
+                posAttack.get(r.nextInt(posAttack.size())) :
                 posDefend.get(r.nextInt(posDefend.size()));
 
         return new Answer(attackerPos, defenderPos, attackType);
-    }
-
-    @Override
-    public Fields getField() {
-        return field;
     }
 }

@@ -19,6 +19,7 @@ public class Answer {
     private final Position defender;
     @JsonProperty
     private final ActionTypes actionType;
+
     @JsonCreator
     public Answer(@JsonProperty("attacker") Position attacker,
                   @JsonProperty("defender") Position defender,
