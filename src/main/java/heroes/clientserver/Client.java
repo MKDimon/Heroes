@@ -50,10 +50,9 @@ public class Client {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             start();
-        } catch (IOException e){
+        } catch (IOException e) {
             logger.error("Error client starting", e);
         }
-        start();
     }
 
     //Метод, который вызывает у игрока создание армии
@@ -88,24 +87,21 @@ public class Client {
         try {
             if (!socket.isClosed()) {
                 socket.close();
-            }
-            if (in != null) {
                 in.close();
-            }
-            if (out != null) {
                 out.close();
             }
         } catch (IOException e) {
             logger.error("Error service downing", e);
         }
     }
-
-    //Первое сообщение - поле игрока
-    //второе сообщение - выбери бота
-    //Третье сообщение - выбери армию
-    //Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
+    /**
+     * Первое сообщение - поле игрока
+     * второе сообщение - выбери бота
+     * Третье сообщение - выбери армию
+     * Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
+     */
     private void start() {
-        try {
+        try {//Первое сообщение  - поле игрока
             String message = in.readLine();
             if (message.equals(CommonCommands.FIELD_ONE.command)) {
                 player = chooseBot(Fields.PLAYER_ONE);
@@ -115,7 +111,7 @@ public class Client {
             while (true) {
                 message = in.readLine();
                 if (message == null) { continue; }
-                if (message.equals(CommonCommands.GET_ARMY.command)){
+                if (message.equals(CommonCommands.GET_ARMY.command)) {
                     out.write(sendArmyJson() + '\n');
                     out.flush();
                 }
@@ -134,7 +130,7 @@ public class Client {
                     out.flush();
                 }
             }
-        } catch (IOException | GameLogicException e){
+        } catch (IOException | GameLogicException e) {
             logger.error("Error client running", e);
             downService();
         }
