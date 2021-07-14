@@ -14,7 +14,6 @@ public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final String IP = "127.0.0.1";
-    private static final int PORT = Server.PORT;
 
     private final String ip;
     private final int port;
@@ -26,8 +25,12 @@ public class Client {
     private BufferedWriter out = null; // поток записи в сокет
 
     public static void main(String[] args) {
-        Client client = new Client(IP, PORT, null);
-        client.startClient();
+        try {
+            ServersConfigs sc = Deserializer.getConfig();
+            Client client = new Client(IP, sc.PORT, null);
+            client.startClient();
+        }
+        catch (IOException ignore) {}
     }
 
     private Client(final String ip, final int port, IPlayer player){
@@ -41,10 +44,10 @@ public class Client {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            start();
         } catch (IOException e){
             logger.error("Error client starting", e);
         }
-        start();
     }
 
     //Метод, который вызывает у игрока создание армии
@@ -83,20 +86,28 @@ public class Client {
             }
             while (true) {
                 message = in.readLine();
-                if(message.equals(CommonCommands.GET_ARMY.command)){
+                if (message == null) { continue; }
+                if (message.equals(CommonCommands.GET_ARMY.command)){
                     out.write(sendArmyJson() + '\n');
                     out.flush();
                 }
                 else if(message.equals(CommonCommands.END_GAME.command)){
+                    // TODO: победа или поражение
                     downService();
                     break;
-                } else {
+                }
+                else if (message.equals(CommonCommands.MAX_ROOMS.command)) {
+                    // TODO: можно писать причину
+                    downService();
+                    break;
+                }else {
                     out.write(sendAnswerJson(message) + '\n');
                     out.flush();
                 }
             }
         } catch (IOException | GameLogicException e){
             logger.error("Error client running", e);
+            downService();
         }
     }
 }

@@ -3,7 +3,6 @@ package heroes.units;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
-import heroes.boardfactory.DamageCommand;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

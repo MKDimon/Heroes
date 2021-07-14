@@ -1,6 +1,5 @@
 package heroes;
 
-import heroes.auxiliaryclasses.GameLogicException;
 import heroes.clientserver.Client;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
@@ -15,7 +14,7 @@ public class SelfPlayClientServer {
         @Override
         public void run() {
             try {
-                new Server().startServer();
+                Server.main(new String[]{});
             } catch (IOException e) {
                 logger.error("Сервер упал(", e);
             }
@@ -32,8 +31,6 @@ public class SelfPlayClientServer {
     public static void main(final String[] args) throws InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
-        new PlayClient().start();
-        new PlayClient().start();
         new PlayClient().start();
         new PlayClient().start();
     }
