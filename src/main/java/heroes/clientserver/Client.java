@@ -30,18 +30,18 @@ public class Client {
         client.startClient();
     }
 
-    private Client(final String ip, final int port, IPlayer player){
+    private Client(final String ip, final int port, IPlayer player) {
         this.ip = ip;
         this.port = port;
         this.player = player;
     }
 
-    private void startClient(){
-        try{
+    private void startClient() {
+        try {
             socket = new Socket(ip, port);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e){
+        } catch (IOException e) {
             logger.error("Error client starting", e);
         }
         start();
@@ -83,11 +83,10 @@ public class Client {
             }
             while (true) {
                 message = in.readLine();
-                if(message.equals(CommonCommands.GET_ARMY.command)){
+                if (message.equals(CommonCommands.GET_ARMY.command)) {
                     out.write(sendArmyJson() + '\n');
                     out.flush();
-                }
-                else if(message.equals(CommonCommands.END_GAME.command)){
+                } else if (message.equals(CommonCommands.END_GAME.command)) {
                     downService();
                     break;
                 } else {
@@ -95,7 +94,7 @@ public class Client {
                     out.flush();
                 }
             }
-        } catch (IOException | GameLogicException e){
+        } catch (IOException | GameLogicException e) {
             logger.error("Error client running", e);
         }
     }
