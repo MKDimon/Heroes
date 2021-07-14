@@ -1,6 +1,7 @@
 package heroes;
 
 import heroes.clientserver.Client;
+import heroes.clientserver.ClientGUI;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,18 @@ public class SelfPlayClientServer {
         }
     }
 
+    private static class PlayClientGUI extends Thread {
+        @Override
+        public void run() {
+            ClientGUI.main(new String[]{});
+        }
+    }
+
     public static void main(final String[] args) throws InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
         new PlayClient().start();
         new PlayClient().start();
+        new PlayClientGUI().start();
     }
 }

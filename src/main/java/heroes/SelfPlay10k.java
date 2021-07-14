@@ -2,6 +2,7 @@ package heroes;
 
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.clientserver.Client;
+import heroes.clientserver.ClientGUI;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,20 @@ public class SelfPlay10k {
         }
     }
 
+    private static class PlayClientGUI extends Thread {
+        @Override
+        public void run() {
+            ClientGUI.main(new String[]{});
+        }
+    }
+
     public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
         for(int i = 0; i < 10000; i++) {
             new PlayClient().start();
             new PlayClient().start();
+            new PlayClientGUI().start();
         }
     }
 }

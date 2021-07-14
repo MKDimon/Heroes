@@ -14,7 +14,6 @@ public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     private static final String IP = "127.0.0.1";
-    private static final int PORT = Server.PORT;
 
     private final String ip;
     private final int port;
@@ -65,11 +64,7 @@ public class Client {
         try {
             if (!socket.isClosed()) {
                 socket.close();
-            }
-            if (in != null) {
                 in.close();
-            }
-            if (out != null) {
                 out.close();
             }
         } catch (IOException e) {

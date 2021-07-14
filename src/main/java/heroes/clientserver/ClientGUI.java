@@ -7,10 +7,9 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientGUI {
-    private static final Logger logger = LoggerFactory.getLogger(Client.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClientGUI.class);
 
     private static final String IP = "127.0.0.1";
-    private static final int PORT = Server.PORT;
 
     private final String ip;
     private final int port;
@@ -20,8 +19,12 @@ public class ClientGUI {
     private BufferedWriter out = null; // поток записи в сокет
 
     public static void main(String[] args) {
-        ClientGUI gui = new ClientGUI(IP, PORT);
-        gui.startClientGUI();
+        try {
+            ServersConfigs sc = Deserializer.getConfig();
+            ClientGUI gui = new ClientGUI(IP, sc.GUI_PORT);
+            gui.startClientGUI();
+        }
+        catch (IOException ignore) {}
     }
 
     private ClientGUI(final String ip, final int port) {
@@ -61,6 +64,20 @@ public class ClientGUI {
             String message;
             while (true) {
                 message = in.readLine();
+                logger.info(message);
+                if (message == null) { continue; }
+                if ("GET_ROOM".equals(message)) {
+                    out.write("1" + '\n');
+                    out.flush();
+                }
+                else if (CommonCommands.END_GAME.command.equals(message)) {
+                    downService();
+                    return;
+                }
+                else {
+                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
+                    out.flush();
+                }
             }
         } catch (IOException e) {
             logger.error("Error client running", e);
