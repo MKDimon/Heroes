@@ -11,7 +11,7 @@ import java.io.IOException;
 public class Deserializer {
 
     public static Board deserializeBoard(final String jsonBoard) throws IOException {
-            return new ObjectMapper().readValue(jsonBoard, Board.class);
+        return new ObjectMapper().readValue(jsonBoard, Board.class);
     }
 
     public static Answer deserializeAnswer(final String jsonAnswer) throws IOException {
