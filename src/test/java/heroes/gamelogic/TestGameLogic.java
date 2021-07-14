@@ -1,9 +1,9 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;

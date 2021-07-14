@@ -7,6 +7,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+/**
+ * Класс с чисто статическими функциями для отслеживания действий
+ * между ходами игроков и раундами
+ */
 public class ControlRound {
     static Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
@@ -20,6 +24,18 @@ public class ControlRound {
         }
     }
 
+    /**
+     * Проверяет последовательно на:
+     * - Смерть генералов
+     * - Смерть первой линии (если умерли, двигает заднюю вперед)
+     * - Смерть всей армии
+     * - Новый раунд
+     * Меняет ходящего игрока
+     *
+     * @param board состояние игры
+     * @return продолжается игра - true / false иначе
+     * @throws UnitException ошибка ;D
+     */
     public static boolean checkStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
@@ -55,6 +71,14 @@ public class ControlRound {
         return true;
     }
 
+    /**
+     * Проверка на достижение максимального количества раундов
+     * Меняет ходящего игрока в начале раунда
+     * Делает всех юнитов активными и убирает бонусную защиту (если ее кто то нажимал)
+     *
+     * @param board состояние игры
+     * @return продолжается игра - true / false иначе
+     */
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             logger.info("Конец игры: НИЧЬЯ");

@@ -1,7 +1,5 @@
 package heroes.gamelogic;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
@@ -10,6 +8,8 @@ import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBoard {
 
