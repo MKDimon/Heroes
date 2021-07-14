@@ -65,10 +65,10 @@ public class GameLogic {
      * Если при проверке пришла ошибка UnitException (UNIT_CANT_STEP)
      * меняет act на ActionTypes.DEFENSE
      *
-     * @param attacker
-     * @param defender
-     * @param act
-     * @return
+     * @param attacker инициатор
+     * @param defender цель
+     * @param act действие
+     * @return успешная валидация - true / false иначе
      */
     private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
         if (!gameBegun) {

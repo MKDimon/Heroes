@@ -11,6 +11,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Класс ответов игроков
+ * @attacker инициатор
+ * @defender цель
+ * @actionType тип действия инициатора (не обязательно над целью)
+ */
 public class Answer {
     Logger logger = LoggerFactory.getLogger(Answer.class);
     @JsonProperty

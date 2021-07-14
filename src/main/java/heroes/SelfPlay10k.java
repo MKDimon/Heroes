@@ -15,7 +15,7 @@ public class SelfPlay10k {
         @Override
         public void run() {
             try {
-                new Server().startServer();
+                Server.main(new String[]{});
             } catch (IOException e) {
                 logger.error("Сервер упал(", e);
             }
