@@ -100,7 +100,8 @@ public class Client {
                     // TODO: можно писать причину
                     downService();
                     break;
-                }else {
+                }
+                else {
                     out.write(sendAnswerJson(message) + '\n');
                     out.flush();
                 }
