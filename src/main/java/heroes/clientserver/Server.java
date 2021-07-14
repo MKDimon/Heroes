@@ -14,6 +14,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -22,8 +23,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Server {
     Logger logger = LoggerFactory.getLogger(Server.class);
 
-    private int PORT;
-    private int maxRooms;
+    private final int PORT;
+    private final int maxRooms;
     private int countRooms = 0;
 
     public Server(int PORT, int maxRooms) {
@@ -31,9 +32,91 @@ public class Server {
         this.PORT = PORT;
     }
 
-    private final ConcurrentLinkedQueue<ServerSomething> serverList = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<GUI> guiList = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Rooms> serverList = new ConcurrentLinkedQueue<>();
 
-    private class ServerSomething extends Thread {
+    /**
+     * GUI сервер, отвечает за прием ClientGUI
+     */
+    private class GUIThread extends Thread {
+        private final int PORT;
+        private final Server server;
+
+        private GUIThread(final int PORT, final Server server) {
+            this.PORT = PORT;
+            this.server = server;
+        }
+
+        @SuppressWarnings("InfiniteLoopStatement")
+        @Override
+        public void run() {
+            System.out.println(String.format("Server started, port: %d", PORT));
+            try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
+                while (true) {
+                    final Socket socket = serverSocket.accept();
+                    try {
+                        server.guiList.add(new GUI(socket, server));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * GUI клиент установленный за комнатой
+     */
+    private class GUI {
+        private final Server server;
+        private final Socket socket;
+        private final BufferedWriter out;
+        private final BufferedReader in;
+
+        public final int id;
+
+        public GUI(Socket socket, Server server) throws IOException {
+            this.socket = socket;
+            this.server = server;
+
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+            out.write("GET_ROOM" + '\n');
+            out.flush();
+
+            id = Integer.parseInt(in.readLine());
+        }
+
+        public boolean send(final String message) throws IOException {
+            out.write(message + '\n');
+            out.flush();
+            return CommonCommands.DRAW_SUCCESSFUL.command.equals(in.readLine());
+        }
+
+        private void downService() {
+            try {
+                if (!socket.isClosed()) {
+                    send(CommonCommands.MAX_ROOMS.command);
+                    socket.close();
+                    in.close();
+                    out.close();
+                }
+                if (server.guiList.contains(this)) {
+                    server.guiList.remove(this);
+                }
+            } catch (final IOException ignored) {
+            }
+        }
+    }
+
+    /**
+     * Комната с игрой
+     */
+    private class Rooms extends Thread {
+        private final int id;
 
         private final Server server;
         private final Socket socketOne;
@@ -55,7 +138,8 @@ public class Server {
          * @param socketOne сокет
          * @param socketTwo сокет
          */
-        private ServerSomething(final Server server, final Socket socketOne, final Socket socketTwo) throws IOException {
+        private Rooms(final Server server, final Socket socketOne, final Socket socketTwo, final int id) throws IOException {
+            this.id = id;
             this.server = server;
             this.socketOne = socketOne;
             this.socketTwo = socketTwo;
@@ -82,7 +166,7 @@ public class Server {
 
         @Override
         public void run() {
-            serverList.add(this);
+            server.serverList.add(this);
             try {
                 if (countRooms >= maxRooms) {
                     downService(CommonCommands.MAX_ROOMS);
@@ -94,11 +178,11 @@ public class Server {
 
                 sendAsk(CommonCommands.GET_ARMY.command, outPlayerOne);
                 Army one = Deserializer.deserializeArmy(inPlayerOne.readLine());
-                //sendDraw();
+                // TODO: sendDraw();
 
                 sendAsk(CommonCommands.GET_ARMY.command, outPlayerTwo);
                 Army two = Deserializer.deserializeArmy(inPlayerTwo.readLine());
-                //sendDraw();
+                // TODO: sendDraw();
 
                 gameLogic.gameStart(one, two);
 
@@ -115,8 +199,7 @@ public class Server {
 
                     gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
-                    // sendDraw();
-                    // обработка draw
+                    sendDraw();
                 }
 
                 sendAsk(CommonCommands.END_GAME.command, outPlayerOne);
@@ -126,6 +209,16 @@ public class Server {
             } catch (final IOException | UnitException e) {
                 this.downService(CommonCommands.END_GAME);
             }//*/
+        }
+
+        private void sendDraw() throws IOException {
+            for (final GUI item: guiList) {
+                if (item.id == this.id) {
+                    if (!item.send(Serializer.serializeBoard(gameLogic.getBoard()))) {
+                        //downService(CommonCommands.END_GAME);
+                    }
+                }
+            }
         }
 
         /**
@@ -157,7 +250,7 @@ public class Server {
                     inPlayerTwo.close();
                     outPlayerTwo.close();
                 }
-                if (serverList.contains(this)) {
+                if (server.serverList.contains(this)) {
                     server.serverList.remove(this);
                     if (command == CommonCommands.END_GAME) {
                         countRooms--;
@@ -172,13 +265,16 @@ public class Server {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
+            int currentNumRoom = 1;
+            new GUIThread(Deserializer.getConfig().GUI_PORT, this).start();
             while (true) {
                 // Блокируется до возникновения нового соединения
                 // Ждет первого игрока
                 final Socket socketOne = serverSocket.accept();
                 final Socket socketTwo = serverSocket.accept();
                 try {
-                    new ServerSomething(this, socketOne, socketTwo).start();
+                    new Rooms(this, socketOne, socketTwo, currentNumRoom).start();
+                    currentNumRoom++;
                 } catch (final IOException e) {
                     socketTwo.close();
                     socketOne.close();
