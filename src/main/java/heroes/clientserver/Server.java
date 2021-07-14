@@ -22,7 +22,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class Server {
     Logger logger = LoggerFactory.getLogger(Server.class);
 
-    static final int PORT = 8081;
+    private int PORT;
+    private int maxRooms;
+    private int countRooms = 0;
+
+    public Server(int PORT, int maxRooms) {
+        this.maxRooms = maxRooms;
+        this.PORT = PORT;
+    }
 
     private final ConcurrentLinkedQueue<ServerSomething> serverList = new ConcurrentLinkedQueue<>();
 
@@ -57,6 +64,7 @@ public class Server {
 
             logger.warn(String.valueOf(socketOne));
             logger.warn(socketTwo.toString());
+            logger.warn(String.valueOf(this.getThreadGroup()));
 
             // если потоку ввода/вывода приведут к генерированию исключения, оно проброситься дальше
             inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
@@ -76,6 +84,11 @@ public class Server {
         public void run() {
             serverList.add(this);
             try {
+                if (countRooms >= maxRooms) {
+                    downService(CommonCommands.MAX_ROOMS);
+                    return;
+                }
+                countRooms++;
                 sendAsk(CommonCommands.FIELD_ONE.command, outPlayerOne);
                 sendAsk(CommonCommands.FIELD_TWO.command, outPlayerTwo);
 
@@ -109,9 +122,9 @@ public class Server {
                 sendAsk(CommonCommands.END_GAME.command, outPlayerOne);
                 sendAsk(CommonCommands.END_GAME.command, outPlayerTwo);
 
-                this.downService();
+                this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException e) {
-                this.downService();
+                this.downService(CommonCommands.END_GAME);
             }//*/
         }
 
@@ -126,16 +139,29 @@ public class Server {
         /**
          * закрытие сервера, удаление себя из списка нитей
          */
-        private void downService() {
+        private void downService(CommonCommands command) {
             try {
-                if (!socketOne.isClosed() || !socketTwo.isClosed()) {
+                if (!socketOne.isClosed()) {
+                    if (command == CommonCommands.MAX_ROOMS) {
+                        sendAsk(CommonCommands.MAX_ROOMS.command, outPlayerOne);
+                    }
                     socketOne.close();
                     inPlayerOne.close();
                     outPlayerOne.close();
+                }
+                if (!socketTwo.isClosed()) {
+                    if (command == CommonCommands.MAX_ROOMS) {
+                        sendAsk(CommonCommands.MAX_ROOMS.command, outPlayerTwo);
+                    }
                     socketTwo.close();
                     inPlayerTwo.close();
                     outPlayerTwo.close();
+                }
+                if (serverList.contains(this)) {
                     server.serverList.remove(this);
+                    if (command == CommonCommands.END_GAME) {
+                        countRooms--;
+                    }
                 }
             } catch (final IOException ignored) {
             }
@@ -164,7 +190,8 @@ public class Server {
     }
 
     public static void main(final String[] args) throws IOException {
-        final Server server = new Server();
+        ServersConfigs sc = Deserializer.getConfig();
+        final Server server = new Server(sc.PORT, sc.MAX_ROOMS);
         server.startServer();
     }
 }

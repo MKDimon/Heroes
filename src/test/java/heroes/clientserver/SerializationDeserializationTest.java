@@ -14,9 +14,10 @@ import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SerializationDeserializationTest {
 
