@@ -84,7 +84,7 @@ public class Server {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            out.write("GET_ROOM" + '\n');
+            out.write(CommonCommands.GET_ROOM.command + '\n');
             out.flush();
 
             id = Integer.parseInt(in.readLine());
@@ -104,9 +104,7 @@ public class Server {
                     in.close();
                     out.close();
                 }
-                if (server.guiList.contains(this)) {
-                    server.guiList.remove(this);
-                }
+                server.guiList.remove(this);
             } catch (final IOException ignored) {
             }
         }

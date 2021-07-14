@@ -24,7 +24,7 @@ public class SelfPlay {
         List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory());
         BaseBot playerOne = factories.get(0).createBot(Fields.PLAYER_ONE);
-        BaseBot playerTwo = factories.get(2).createBot(Fields.PLAYER_TWO);
+        BaseBot playerTwo = factories.get(0).createBot(Fields.PLAYER_TWO);
         Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);

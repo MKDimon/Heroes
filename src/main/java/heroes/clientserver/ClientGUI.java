@@ -47,12 +47,8 @@ public class ClientGUI {
         try {
             if (!socket.isClosed()) {
                 socket.close();
-            }
-            if (in != null) {
-                in.close();
-            }
-            if (out != null) {
                 out.close();
+                in.close();
             }
         } catch (IOException e) {
             logger.error("Error service downing", e);
@@ -64,17 +60,19 @@ public class ClientGUI {
             String message;
             while (true) {
                 message = in.readLine();
-                logger.info(message);
                 if (message == null) { continue; }
-                if ("GET_ROOM".equals(message)) {
+                if (CommonCommands.GET_ROOM.command.equals(message)) {
+                    logger.info(message);
                     out.write("1" + '\n');
                     out.flush();
                 }
                 else if (CommonCommands.END_GAME.command.equals(message)) {
+                    logger.info(message);
                     downService();
                     return;
                 }
                 else {
+                    logger.info("BOARD TO DRAW");
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();
                 }
