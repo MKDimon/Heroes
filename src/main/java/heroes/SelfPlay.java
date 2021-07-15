@@ -9,6 +9,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import com.googlecode.lanterna.terminal.SimpleTerminalResizeListener;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gui.TerminalBorderDrawer;
@@ -21,15 +22,14 @@ import heroes.gui.generaldrawers.*;
 import heroes.gui.unitdrawers.BowmanDrawer;
 import heroes.gui.utils.Side;
 import heroes.mathutils.Pair;
-import heroes.player.Answer;
-import heroes.player.IPlayer;
-import heroes.player.RandomBot;
-import heroes.player.TestBot;
+import heroes.player.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -38,13 +38,15 @@ import java.util.concurrent.TimeUnit;
 public class SelfPlay {
     static Logger logger = LoggerFactory.getLogger(SelfPlay.class);
 
-    public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
+    public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException, UnitException {
         TerminalWrapper tw = new TerminalWrapper();
         tw.start();
 
-        IPlayer playerOne = new RandomBot(Fields.PLAYER_ONE);
-        IPlayer playerTwo = new RandomBot(Fields.PLAYER_TWO);
-        Map<Fields, IPlayer> getPlayer = new HashMap<>();
+        List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
+                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory());
+        BaseBot playerOne = factories.get(0).createBot(Fields.PLAYER_ONE);
+        BaseBot playerTwo = factories.get(0).createBot(Fields.PLAYER_TWO);
+        Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
 

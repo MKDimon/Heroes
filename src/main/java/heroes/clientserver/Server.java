@@ -190,7 +190,7 @@ public class Server {
                 ).army;
 
                 data = new Data(CommonCommands.SEE_ARMY, one);
-                sendDraw(data);
+                //sendDraw(data);
 
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);
                 Army two = Deserializer.deserializeData(inPlayerTwo.readLine()).army;

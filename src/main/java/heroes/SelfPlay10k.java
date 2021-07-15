@@ -43,7 +43,6 @@ public class SelfPlay10k {
         for(int i = 0; i < 10000; i++) {
             new PlayClient().start();
             new PlayClient().start();
-            new PlayClientGUI().start();
         }
     }
 }

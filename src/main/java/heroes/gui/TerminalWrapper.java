@@ -7,6 +7,7 @@ import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.statusdrawers.HealthDrawer;
@@ -49,7 +50,7 @@ public class TerminalWrapper {
         screen.startScreen();
     }
 
-    public void update(final Answer answer, final Board board) throws IOException {
+    public void update(final Answer answer, final Board board) throws IOException, UnitException {
         clean();
 
         TerminalBorderDrawer.drawBorders(this);
