@@ -57,10 +57,12 @@ public class ControlRound {
         ControlRound.nextPlayer(board);
 
         if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+            board.setStatus(EndGameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             return false;
         }
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            board.setStatus(EndGameStatus.PLAYER_TWO_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
@@ -81,6 +83,7 @@ public class ControlRound {
      */
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
+            board.setStatus(EndGameStatus.NO_WINNERS);
             logger.info("Конец игры: НИЧЬЯ");
             return false;
         }

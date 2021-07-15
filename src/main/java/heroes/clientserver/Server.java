@@ -219,6 +219,8 @@ public class Server {
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerOne);
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
 
+
+                sendDraw(new Data(CommonCommands.END_GAME));
                 this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException e) {
                 this.downService(CommonCommands.END_GAME);
@@ -244,11 +246,11 @@ public class Server {
         }
 
         /**
-         * закрытие сервера, удаление себя и гуи из списка нитей
+         * закрытие сервера, удаление себя из списка нитей
+         * гуи остается следить за комнатой
          */
         private void downService(CommonCommands command) {
             try {
-                sendDraw(new Data(CommonCommands.END_GAME));
                 if (!socketOne.isClosed()) {
                     if (command == CommonCommands.MAX_ROOMS) {
                         sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), outPlayerOne);

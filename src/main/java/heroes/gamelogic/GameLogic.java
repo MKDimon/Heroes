@@ -129,6 +129,7 @@ public class GameLogic {
     }
 
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
+        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, act);
         if (actionValidate(attacker, defender, act)) {
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
