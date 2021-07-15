@@ -58,20 +58,27 @@ public class ClientGUI {
     private void startGUI() {
         try {
             String message;
+            Data data;
             while (true) {
                 message = in.readLine();
                 if (message == null) { continue; }
-                if (CommonCommands.GET_ROOM.command.equals(message)) {
+                data = Deserializer.deserializeData(message);
+                if (CommonCommands.GET_ROOM.equals(data.command)) {
                     logger.info(message);
                     out.write("1" + '\n');
                     out.flush();
                 }
-                else if (CommonCommands.END_GAME.command.equals(message)) {
+                else if (CommonCommands.END_GAME.equals(data.command)) {
                     logger.info(message);
                     downService();
                     return;
                 }
-                else {
+                else if (CommonCommands.SEE_ARMY.equals(data.command)) {
+                    logger.info("GUI SEE ARMY");
+                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
+                    out.flush();
+                }
+                else if (CommonCommands.DRAW.equals(data.command)){
                     logger.info("BOARD TO DRAW");
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();
