@@ -9,6 +9,8 @@ import com.googlecode.lanterna.terminal.Terminal;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.statusdrawers.HealthDrawer;
+import heroes.gui.statusdrawers.IStatusDrawer;
 import heroes.gui.unitdrawers.HealerDrawer;
 import heroes.gui.unitdrawers.MageDrawer;
 import heroes.gui.utils.UnitDrawersMap;
@@ -56,15 +58,17 @@ public class TerminalWrapper {
         TerminalGeneralDrawer.drawGenerals(this, gen_one.getActionType(), gen_two.getActionType());
         UnitTerminalGrid utg = new UnitTerminalGrid(this.getTerminal().getTerminalSize().getColumns() / 2 - 35 + 2,
                                                     this.getTerminal().getTerminalSize().getColumns() / 2 + 35 - 1);
+        IStatusDrawer sd = new HealthDrawer();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
                         .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
                                 board.getFieldPlayerOne()[i][j] == board.getGeneralPlayerOne());
-
+                sd.draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)), board.getFieldPlayerOne()[i][j]);
                 UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
                         .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
                                 board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
+                sd.draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)), board.getFieldPlayerTwo()[i][j]);
             }
         }
 

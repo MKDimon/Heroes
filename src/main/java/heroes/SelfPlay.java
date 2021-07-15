@@ -3,6 +3,7 @@ package heroes;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.graphics.BasicTextImage;
+import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.graphics.TextImage;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
@@ -64,15 +65,23 @@ public class SelfPlay {
 
         gl.gameStart(playerOne.getArmy(), playerTwo.getArmy());
         tw.update(null, gl.getBoard());
+        TextGraphics tg = tw.getScreen().newTextGraphics();
+        tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
+                        (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO BEGIN");
+        tw.getScreen().refresh();
+        tw.getScreen().readInput();
+        //tw.stop();
+        while (gl.isGameBegun()) {
+            TimeUnit.SECONDS.sleep(1);
+            Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
+            gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+            tw.update(answer, gl.getBoard());
+        }
+        tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
+                (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO LEAVE THIS MASSACRE...");
+        tw.getScreen().refresh();
         tw.getScreen().readInput();
         tw.stop();
-//        while (gl.isGameBegun()) {
-//            TimeUnit.SECONDS.sleep(1);
-//            Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
-//            gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-//            tw.update(null, gl.getBoard());
-//        }
-//        tw.stop();
 
     }
 }
