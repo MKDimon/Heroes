@@ -1,5 +1,11 @@
 package heroes.clientserver;
 
+import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
+import com.googlecode.lanterna.terminal.SimpleTerminalResizeListener;
+import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gui.TerminalWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +64,14 @@ public class ClientGUI {
 
     private void startGUI() {
         try {
+            TerminalWrapper tw = new TerminalWrapper();
+            tw.start();
             String message;
             Data data;
+            SimpleTerminalResizeListener strl = new SimpleTerminalResizeListener(tw.getTerminal().getTerminalSize());
+            tw.getTerminal().addResizeListener(strl);
+            KeyStroke ks = new KeyStroke(KeyType.Escape);
+
             while (true) {
                 message = in.readLine();
                 if (message == null) { continue; }
@@ -68,7 +80,7 @@ public class ClientGUI {
                     logger.info(message);
                     // TODO: выбор комнаты, пока что рандом
                     int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
-                    out.write(id + '\n');
+                    out.write("1" + '\n');
                     out.flush();
                 }
                 else if (CommonCommands.END_GAME.equals(data.command)) {
@@ -83,11 +95,19 @@ public class ClientGUI {
                 }
                 else if (CommonCommands.DRAW.equals(data.command)){
                     logger.info("BOARD TO DRAW");
+
+                    tw.update(data.answer, data.board);
+                    TextGraphics tg = tw.getScreen().newTextGraphics();
+                    tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
+                            (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO CONTINUE");
+                    tw.getScreen().refresh();
+                    tw.getScreen().readInput();
+
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | UnitException e) {
             logger.error("Error client running", e);
         }
     }
