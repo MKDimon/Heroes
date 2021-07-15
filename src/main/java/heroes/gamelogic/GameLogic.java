@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
@@ -53,6 +54,11 @@ public class GameLogic {
 
             board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
+            StatisticsCollector.recordMessageToCSV("GAME START\n", StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordArmyToCSV(Fields.PLAYER_ONE, fieldPlayerOne,
+                    StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordArmyToCSV(Fields.PLAYER_TWO, fieldPlayerTwo,
+                    StatisticsCollector.actionStatisticsFilename);
             return true;
         } catch (NullPointerException | GameLogicException | UnitException exception) {
             logger.error(" Game Start failed ",exception);
@@ -130,6 +136,11 @@ public class GameLogic {
 
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
         if (actionValidate(attacker, defender, act)) {
+            StatisticsCollector.recordMessageToCSV(new StringBuilder().append(attacker.F().toString()).
+                    append(",").append(attacker.X()).append(",").append(attacker.Y()).append(",").
+                    append(defender.F()).append(",").append(defender.X()).append(",").append(defender.Y()).
+                    append(",").append(act.toString()).append(",").toString(),
+                    StatisticsCollector.actionStatisticsFilename);
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;

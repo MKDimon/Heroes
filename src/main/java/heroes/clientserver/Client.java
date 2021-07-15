@@ -96,12 +96,11 @@ public class Client {
     }
     /**
      * Первое сообщение - поле игрока
-     * второе сообщение - выбери бота
-     * Третье сообщение - выбери армию
+     * Второе сообщение - выбери армию
      * Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
      */
     private void start() {
-        try {//Первое сообщение  - поле игрока
+        try {
             String message = in.readLine();
             if (message.equals(CommonCommands.FIELD_ONE.command)) {
                 player = chooseBot(Fields.PLAYER_ONE);

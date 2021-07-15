@@ -1,5 +1,6 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
@@ -50,18 +51,22 @@ public class ControlRound {
         Board.checkAliveLine(board.getFieldPlayerOne());
         Board.checkAliveLine(board.getFieldPlayerTwo());
 
-        logger.info("\n[NEW STAP]\n");
+        logger.info("\n[NEW STEP]\n");
 
         long active = Board.activeCount(board.getFieldPlayerOne());
         active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+        if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
+            StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_ONE,StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordMessageToCSV("GAME OVER\n",StatisticsCollector.actionStatisticsFilename);
             return false;
         }
-        if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
+            StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO,StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
             return false;
         }
 
@@ -82,6 +87,8 @@ public class ControlRound {
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             logger.info("Конец игры: НИЧЬЯ");
+            StatisticsCollector.recordMessageToCSV("DEAD HEAT \n GAME OVER",
+                    StatisticsCollector.actionStatisticsFilename);
             return false;
         }
 

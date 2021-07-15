@@ -33,10 +33,17 @@ public class Answer {
         if (attacker == null || defender == null || actionType == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }
-        this.attacker = attacker;
-        this.defender = defender;
-        this.actionType = actionType;
-        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, actionType);
+        if(actionType == ActionTypes.DEFENSE){
+            this.attacker = attacker;
+            this.defender = attacker;
+            this.actionType = actionType;
+            logger.info("AttackPos = {}, action = {}", attacker, actionType);
+        } else {
+            this.attacker = attacker;
+            this.defender = defender;
+            this.actionType = actionType;
+            logger.info("AttackPos = {}, defPos = {}, action = {}", attacker, defender, actionType);
+        }
     }
 
     public Position getAttacker() {

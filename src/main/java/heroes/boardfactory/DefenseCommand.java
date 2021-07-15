@@ -1,5 +1,6 @@
 package heroes.boardfactory;
 
+import heroes.auxiliaryclasses.statistics.StatisticsCollector;
 import heroes.units.Unit;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class DefenseCommand extends Command {
     @Override
     public void execute() {
         super.getAtt().defense();
-
+        StatisticsCollector.recordActionToCSV(super.getAtt(),
+                getAtt(), super.getAtt().getArmor(), StatisticsCollector.actionStatisticsFilename);
     }
 }

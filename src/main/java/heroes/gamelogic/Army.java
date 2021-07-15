@@ -65,12 +65,20 @@ public class Army {
         return new General(general);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Army army = (Army) o;
-        return Arrays.deepEquals(playerUnits, army.playerUnits) && Objects.equals(general, army.general);
+    public boolean equals(Army army) {
+        if (this == army) return true;
+        if (army == null || getClass() != army.getClass()) return false;
+        if(!this.general.equals(army.general)){
+            return false;
+        }
+        for(int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++) {
+                if(!this.playerUnits[i][j].equals(army.playerUnits[i][j])){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
