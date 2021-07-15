@@ -94,6 +94,30 @@ public class Board {
     }
 
     /**
+     * Вспомогательный конструктор для промежуточной отрисовки и просмотра чужой армии
+     */
+    public Board(Army army, Fields field) throws UnitException, BoardException {
+        if (army == null) {
+            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
+        curNumRound = 0;
+        currentPlayer = Fields.PLAYER_TWO;
+        getUnits = new HashMap<>();
+        if (field == Fields.PLAYER_ONE) {
+            fieldPlayerOne = new Army(army);
+            fieldPlayerTwo = null;
+            getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+            getUnits.put(Fields.PLAYER_TWO, null);
+        }
+        else {
+            fieldPlayerOne = null;
+            fieldPlayerTwo = new Army(army);
+            getUnits.put(Fields.PLAYER_ONE, null);
+            getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+        }
+    }
+
+    /**
      * Воодушевление на армию
      *
      * @param army - армия содержащая генерала

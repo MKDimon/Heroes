@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Random;
 
 public class ClientGUI {
     private static final Logger logger = LoggerFactory.getLogger(ClientGUI.class);
@@ -65,7 +66,9 @@ public class ClientGUI {
                 data = Deserializer.deserializeData(message);
                 if (CommonCommands.GET_ROOM.equals(data.command)) {
                     logger.info(message);
-                    out.write("1" + '\n');
+                    // TODO: выбор комнаты, пока что рандом
+                    int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
+                    out.write(id + '\n');
                     out.flush();
                 }
                 else if (CommonCommands.END_GAME.equals(data.command)) {
