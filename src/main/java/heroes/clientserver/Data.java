@@ -19,29 +19,29 @@ public class Data {
     public final Answer answer;
 
     @JsonCreator
-    public Data(@JsonProperty("command") CommonCommands command,@JsonProperty("oneArmy") Army army,
-                @JsonProperty("board") Board board, @JsonProperty("answer")Answer answer) {
+    public Data(@JsonProperty("command") final CommonCommands command,@JsonProperty("oneArmy") final Army army,
+                @JsonProperty("board") final Board board, @JsonProperty("answer") final Answer answer) {
         this.command = command;
         this.army = army;
         this.board = board;
         this.answer = answer;
     }
 
-    public Data(CommonCommands command) {
+    public Data(final CommonCommands command) {
         this.command = command;
         this.army = null;
         this.board = null;
         this.answer = null;
     }
 
-    public Data(Answer answer) {
+    public Data(final Answer answer) {
         this.command = null;
         this.army = null;
         this.board = null;
         this.answer = answer;
     }
 
-    public Data(CommonCommands command, Army one) {
+    public Data(final CommonCommands command, Army one) {
         this.command = command;
         this.army = one;
         this.board = null;

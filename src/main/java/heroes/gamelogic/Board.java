@@ -100,7 +100,7 @@ public class Board {
     /**
      * Вспомогательный конструктор для промежуточной отрисовки и просмотра чужой армии
      */
-    public Board(Army army, Fields field) throws UnitException, BoardException {
+    public Board(final Army army, final Fields field) throws UnitException, BoardException {
         if (army == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }

@@ -27,7 +27,7 @@ public class Server {
     private int countRooms = 0;
     private final Map<Integer, Rooms> getRoom;
 
-    public Server(int PORT, int maxRooms) {
+    public Server(final int PORT,final  int maxRooms) {
         this.maxRooms = maxRooms;
         this.PORT = PORT;
         getRoom = new HashMap<>();
@@ -78,7 +78,7 @@ public class Server {
 
         public final int id;
 
-        public GUI(Socket socket, Server server) throws IOException {
+        public GUI(final Socket socket,final Server server) throws IOException {
             this.socket = socket;
             this.server = server;
 
@@ -227,7 +227,7 @@ public class Server {
             }//*/
         }
 
-        private void sendDraw(Data data) throws IOException {
+        private void sendDraw(final Data data) throws IOException {
             for (final GUI item: guiList) {
                 if (item.id == this.id) {
                     if (!item.send(Serializer.serializeData(data))) {
@@ -249,7 +249,7 @@ public class Server {
          * закрытие сервера, удаление себя из списка нитей
          * гуи остается следить за комнатой
          */
-        private void downService(CommonCommands command) {
+        private void downService(final CommonCommands command) {
             try {
                 getRoom.put(id, null);
                 if (!socketOne.isClosed()) {

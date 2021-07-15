@@ -39,7 +39,7 @@ public class Client {
         catch (IOException ignore) {}
     }
 
-    private Client(final String ip, final int port, BaseBot player) {
+    private Client(final String ip, final int port,final BaseBot player) {
         this.ip = ip;
         this.port = port;
         this.player = player;
@@ -62,13 +62,13 @@ public class Client {
     }
 
     //Метод, который вызывает у игрока ответ
-    private String sendAnswerJson(String json) throws GameLogicException, IOException {
+    private String sendAnswerJson(final String json) throws GameLogicException, IOException {
         return Serializer.serializeData(
                 new Data(player.getAnswer(Deserializer.deserializeData(json).board))
         );
     }
 
-    private BaseBot chooseBot(Fields field) {
+    private BaseBot chooseBot(final Fields field) {
         Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());

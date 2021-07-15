@@ -10,10 +10,10 @@ public abstract class BaseBot {
 
     public abstract static class BaseBotFactory {
 
-        public abstract BaseBot createBot(Fields fields) throws GameLogicException;
+        public abstract BaseBot createBot(final Fields fields) throws GameLogicException;
     }
 
-    public BaseBot(Fields field) throws GameLogicException {
+    public BaseBot(final Fields field) throws GameLogicException {
         if (field == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }

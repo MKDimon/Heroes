@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 public class Serializer {
-    public static String serializeData(Data data) throws IOException {
+    public static String serializeData(final Data data) throws IOException {
         StringWriter writer = new StringWriter();
         new ObjectMapper().writeValue(writer, data);
         return writer.toString();
