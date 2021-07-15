@@ -40,11 +40,13 @@ public class Board {
     private boolean isArmyOneInspired;
     @JsonProperty
     private boolean isArmyTwoInspired;
+    @JsonProperty
+    private EndGameStatus status = EndGameStatus.NO_WINNERS;
 
     @JsonCreator
     public Board(@JsonProperty("curNumRound")int curNumRound, @JsonProperty("currentPlayer")Fields currentPlayer,
                  @JsonProperty("roundPlayer")Fields roundPlayer, @JsonProperty("fieldPlayerOne")Army fieldPlayerOne,
-                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo,
+                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo, @JsonProperty("status") EndGameStatus status,
                  @JsonProperty("isArmyOneInspired")boolean isArmyOneInspired,
                  @JsonProperty("isArmyTwoInspired")boolean isArmyTwoInspired) {
         this.curNumRound = curNumRound;
@@ -54,6 +56,7 @@ public class Board {
         this.fieldPlayerTwo = fieldPlayerTwo;
         this.isArmyOneInspired = isArmyOneInspired;
         this.isArmyTwoInspired = isArmyTwoInspired;
+        this.status = status;
         getUnits = new HashMap<>();
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
@@ -87,6 +90,7 @@ public class Board {
         fieldPlayerOne = new Army(board.fieldPlayerOne);
         fieldPlayerTwo = new Army(board.fieldPlayerTwo);
         getUnits = new HashMap<>();
+        status = board.status;
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
         isArmyOneInspired = board.isArmyOneInspired;
@@ -238,5 +242,13 @@ public class Board {
 
     public void setArmyTwoInspired(final boolean armyTwoInspired) {
         isArmyTwoInspired = armyTwoInspired;
+    }
+
+    public EndGameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EndGameStatus status) {
+        this.status = status;
     }
 }

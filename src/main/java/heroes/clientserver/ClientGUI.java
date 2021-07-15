@@ -73,7 +73,7 @@ public class ClientGUI {
                 }
                 else if (CommonCommands.END_GAME.equals(data.command)) {
                     logger.info(message);
-                    downService();
+                    //downService();
                     return;
                 }
                 else if (CommonCommands.SEE_ARMY.equals(data.command)) {

@@ -36,7 +36,6 @@ public class Answer {
         this.attacker = attacker;
         this.defender = defender;
         this.actionType = actionType;
-        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, actionType);
     }
 
     public Position getAttacker() {
