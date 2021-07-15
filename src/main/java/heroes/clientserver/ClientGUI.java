@@ -62,6 +62,7 @@ public class ClientGUI {
         }
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     private void startGUI() {
         try {
             TerminalWrapper tw = new TerminalWrapper();
@@ -85,8 +86,9 @@ public class ClientGUI {
                 }
                 else if (CommonCommands.END_GAME.equals(data.command)) {
                     logger.info(message);
+                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
+                    out.flush();
                     //downService();
-                    return;
                 }
                 else if (CommonCommands.SEE_ARMY.equals(data.command)) {
                     logger.info("GUI SEE ARMY");
@@ -106,6 +108,7 @@ public class ClientGUI {
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();
                 }
+                // TODO: закрытие клиента при закрытии терминала
             }
         } catch (IOException | UnitException e) {
             logger.error("Error client running", e);

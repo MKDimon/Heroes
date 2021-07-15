@@ -94,7 +94,7 @@ public class Server {
         public boolean send(final String message) throws IOException {
             out.write(message + '\n');
             out.flush();
-            return CommonCommands.DRAW_SUCCESSFUL.command.equals(in.readLine());
+            return !CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine());
         }
 
         private void downService() {
@@ -251,6 +251,7 @@ public class Server {
          */
         private void downService(CommonCommands command) {
             try {
+                getRoom.put(id, null);
                 if (!socketOne.isClosed()) {
                     if (command == CommonCommands.MAX_ROOMS) {
                         sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), outPlayerOne);
@@ -283,7 +284,7 @@ public class Server {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
             new GUIThread(Deserializer.getConfig().GUI_PORT, this).start();
-            for (int i = 1; i <= maxRooms; i++) {
+            for (int i = 0; i <= maxRooms; i++) {
                 getRoom.put(i, null);
             }
             while (true) {
