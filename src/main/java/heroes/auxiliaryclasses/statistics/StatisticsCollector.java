@@ -26,8 +26,8 @@ import java.util.Map;
 
 public class StatisticsCollector {
     static final Logger logger = LoggerFactory.getLogger(StatisticsCollector.class);
-    public static final String actionStatisticsFilename = "Heroes/src/main/resources/actionstatistics.csv";
-    public static final String armyStatisticsFilename = "Heroes/src/main/resources/armystatistics.csv";
+    public static final String actionStatisticsFilename = "src/main/resources/actionstatistics.csv";
+    public static final String armyStatisticsFilename = "src/main/resources/armystatistics.csv";
     static final Map<ActionTypes, String> actToUnitMap = Map.of(
             ActionTypes.CLOSE_COMBAT, UnitTypes.SWORDSMAN.toString(),
             ActionTypes.RANGE_COMBAT, UnitTypes.BOWMAN.toString(),
@@ -99,7 +99,7 @@ public class StatisticsCollector {
 
     public static void recordMessageToCSV(final String message, final String filename){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))){
-            writer.write(String.valueOf(new StringBuffer(message)));
+            writer.write(message);
         } catch (IOException e){
             logger.error("Error action recording", e);
         }
@@ -120,6 +120,7 @@ public class StatisticsCollector {
  *    0          1   2       3        4         5    6       7             8       9             10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,actionType,defX,defY,attackerUnitType,atHP,defenderUnitType,defHP,actionPower,
  * ...
+ * lastRoundNumber
  * PLAYER_WINNER
  * GAME OVER
  **/

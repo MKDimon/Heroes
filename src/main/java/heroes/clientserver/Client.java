@@ -1,6 +1,7 @@
 package heroes.clientserver;
 
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.gamelogic.Fields;
 import heroes.player.BaseBot;
 import heroes.player.PlayerBot;
@@ -78,6 +79,9 @@ public class Client {
         while (true) {
             try {
                 String botTypeString = scanner.next();
+                if(!botFactoryMap.keySet().contains(botTypeString)){
+                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+                }
                 return botFactoryMap.get(botTypeString).createBot(field);
             } catch (IllegalArgumentException | GameLogicException e) {
                 System.out.println("Incorrect bot type!!!");
