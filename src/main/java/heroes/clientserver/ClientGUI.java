@@ -67,11 +67,9 @@ public class ClientGUI {
         try {
             TerminalWrapper tw = new TerminalWrapper();
             tw.start();
+            TextGraphics tg = tw.getScreen().newTextGraphics();
             String message;
             Data data;
-            SimpleTerminalResizeListener strl = new SimpleTerminalResizeListener(tw.getTerminal().getTerminalSize());
-            tw.getTerminal().addResizeListener(strl);
-            KeyStroke ks = new KeyStroke(KeyType.Escape);
 
             while (true) {
                 message = in.readLine();
@@ -99,8 +97,7 @@ public class ClientGUI {
                     logger.info("BOARD TO DRAW");
 
                     tw.update(data.answer, data.board);
-                    TextGraphics tg = tw.getScreen().newTextGraphics();
-                    tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
+                    tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
                             (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO CONTINUE");
                     tw.getScreen().refresh();
                     tw.getScreen().readInput();
