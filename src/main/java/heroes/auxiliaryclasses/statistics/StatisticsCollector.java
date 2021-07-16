@@ -117,6 +117,7 @@ public class StatisticsCollector {
  * PLAYER_ONE ARMY
  * PLAYER_TWO ARMY
  * ...
+ *    0          1   2       3        4         5    6       7             8       9             10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,actionType,defX,defY,attackerUnitType,atHP,defenderUnitType,defHP,actionPower,
  * ...
  * PLAYER_WINNER
