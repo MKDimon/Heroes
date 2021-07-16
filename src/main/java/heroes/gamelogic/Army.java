@@ -65,9 +65,11 @@ public class Army {
         return general;
     }
 
-    public boolean equals(Army army) {
-        if (this == army) return true;
-        if (army == null || getClass() != army.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Army army = (Army)o;
         if(!this.general.equals(army.general)){
             return false;
         }

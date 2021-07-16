@@ -64,6 +64,7 @@ public class ControlRound {
             StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
                             append(",")),
                     StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_ONE, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
             return false;
@@ -74,6 +75,7 @@ public class ControlRound {
             StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
                             append(",")),
                     StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
             return false;
