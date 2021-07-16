@@ -62,6 +62,11 @@ public class ClientGUI {
         }
     }
 
+    /**
+     *  tw - терминал (окно гуи)
+     *  обнолвяет его когда приходит draw
+     *  TODO: обновление на конец игры (ждем в гуи такую возможность)
+     */
     @SuppressWarnings("InfiniteLoopStatement")
     private void startGUI() {
         try {
@@ -77,7 +82,7 @@ public class ClientGUI {
                 data = Deserializer.deserializeData(message);
                 if (CommonCommands.GET_ROOM.equals(data.command)) {
                     logger.info(message);
-                    // TODO: выбор комнаты, пока что рандом
+                    // TODO: выбор комнаты, пока что рандом или 1 комната
                     int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
                     out.write("1" + '\n');
                     out.flush();
