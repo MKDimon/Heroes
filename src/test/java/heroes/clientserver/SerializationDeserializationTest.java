@@ -26,8 +26,8 @@ public class SerializationDeserializationTest {
         Answer anw1 = new Answer(new Position(1,1, Fields.PLAYER_ONE),
                 new Position(1,1 , Fields.PLAYER_ONE), ActionTypes.HEALING);
         String jsonAnw1 = Serializer.serializeData(new Data(anw1));
-        assertEquals("{\"attacker\":{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
-                "{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"actionType\":\"HEALING\"}", jsonAnw1);
+        assertEquals("{\"command\":null,\"board\":null,\"answer\":{\"attacker\":{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
+                "{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"actionType\":\"HEALING\"},\"army\":null}", jsonAnw1);
         Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }
@@ -37,8 +37,8 @@ public class SerializationDeserializationTest {
         Answer anw1 = new Answer(new Position(0,1, Fields.PLAYER_ONE),
                 new Position(0,1, Fields.PLAYER_TWO), ActionTypes.CLOSE_COMBAT);
         String jsonAnw1 = Serializer.serializeData(new Data(anw1));
-        assertEquals("{\"attacker\":{\"x\":0,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
-                "{\"x\":0,\"y\":1,\"f\":\"PLAYER_TWO\"},\"actionType\":\"CLOSE_COMBAT\"}", jsonAnw1);
+        assertEquals("{\"command\":null,\"board\":null,\"answer\":{\"attacker\":{\"x\":0,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
+                "{\"x\":0,\"y\":1,\"f\":\"PLAYER_TWO\"},\"actionType\":\"CLOSE_COMBAT\"},\"army\":null}", jsonAnw1);
         Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }

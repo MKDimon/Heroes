@@ -20,12 +20,12 @@ public class Army {
     @JsonCreator
     public Army(@JsonProperty("playerUnits") Unit[][] playerUnits,@JsonProperty("general") General general)
             throws BoardException, UnitException {
-        if (playerUnits == null || general == null){
-            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
-        }
+        Validator.checkNullPointer(playerUnits, general);
         if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
             throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
         }
+        Validator.checkNullPointerInArmy(playerUnits);
+
         this.playerUnits = playerUnits;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {

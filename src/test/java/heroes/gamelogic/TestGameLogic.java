@@ -54,13 +54,14 @@ public class TestGameLogic {
 
         GameLogic gl = new GameLogic();
 
-        assertFalse(
-                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerOne, generalPlayerOne)));
+        Army one = new Army(fieldPlayerOne, generalPlayerOne);
+        Army two = new Army(fieldPlayerTwo, generalPlayerTwo);
+
+        assertFalse(gl.gameStart(one, one));
 
         fieldPlayerOne[0][2] = null;
 
-        assertFalse(
-                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo)));
+        assertFalse(gl.gameStart(one, two));
     }
 
     @Test
