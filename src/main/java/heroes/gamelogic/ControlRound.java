@@ -33,18 +33,18 @@ public class ControlRound {
         Board.checkAliveLine(board.getFieldPlayerOne());
         Board.checkAliveLine(board.getFieldPlayerTwo());
 
-        logger.info("\n[NEW STAP]\n");
+        logger.info("\n[NEW STEP]\n");
 
         long active = Board.activeCount(board.getFieldPlayerOne());
         active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
         if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-            logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
+            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
-            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
+            logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             return false;
         }
 

@@ -12,6 +12,8 @@ public class TextColorMap {
         Map<String, TextColor> temp = new HashMap<>();
         temp.put("orange", new TextColor.RGB(253, 134, 18));
         temp.put("red", new TextColor.RGB(192, 0, 0));
+        temp.put("darkred", new TextColor.RGB(139,0,0));
+        temp.put("darkestred", new TextColor.RGB(90,0,0));
         temp.put("black", new TextColor.RGB(0, 0, 0));
         temp.put("blue", new TextColor.RGB(0,0,240));
         temp.put("lightblue", new TextColor.RGB(65,105,225));

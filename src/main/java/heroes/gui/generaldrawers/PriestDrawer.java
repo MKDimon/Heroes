@@ -15,8 +15,8 @@ public class PriestDrawer implements IGeneralDrawer {
         TextGraphics tg = tw.getScreen().newTextGraphics();
         tg.putString(x_start, y_start + 1, "                  .---.");
         tg.putString(x_start, y_start + 2, "         /^\\     /.'\"'.\\");
-        tg.putString(x_start, y_start + 3, "       .'_|_'.   \\\\   ||");
-        tg.putString(x_start, y_start + 4, "      <   |   > ,_),-',' ");
+        tg.putString(x_start, y_start + 3, "       .'   '.   \\\\   ||");
+        tg.putString(x_start, y_start + 4, "      <       > ,_),-',' ");
         tg.putString(x_start, y_start + 5, "       \\_____/     ()");
         tg.putString(x_start, y_start + 6, "       {/a a\\}     ||");
         tg.putString(x_start, y_start + 7, "      {/-.^.-\\}   (_|");

@@ -12,9 +12,11 @@ public class HealthDrawer implements IStatusDrawer {
         TextGraphics tg = tw.getScreen().newTextGraphics();
         tg.setForegroundColor(TextColorMap.getColor("red"));
         int currentHP = unit.getCurrentHP();
-//        if (currentHP < 0) {
-//            currentHP = 0;
-//        }
+        if (currentHP <= 0) {
+            currentHP = 0;
+            DeathDrawer dd = new DeathDrawer();
+            dd.draw(tw, topLeftCorner, unit);
+        }
         tg.putString(topLeftCorner.getX() + 1, topLeftCorner.getY() + 8, "HP: " + currentHP);
 
         tg.setForegroundColor(TextColorMap.getColor("white"));
