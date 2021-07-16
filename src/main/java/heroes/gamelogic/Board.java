@@ -41,12 +41,12 @@ public class Board {
     @JsonProperty
     private boolean isArmyTwoInspired;
     @JsonProperty
-    private EndGameStatus status = EndGameStatus.NO_WINNERS;
+    private GameStatus status = GameStatus.GAME_PROCESS;
 
     @JsonCreator
     public Board(@JsonProperty("curNumRound")int curNumRound, @JsonProperty("currentPlayer")Fields currentPlayer,
                  @JsonProperty("roundPlayer")Fields roundPlayer, @JsonProperty("fieldPlayerOne")Army fieldPlayerOne,
-                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo, @JsonProperty("status") EndGameStatus status,
+                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo, @JsonProperty("status") GameStatus status,
                  @JsonProperty("isArmyOneInspired")boolean isArmyOneInspired,
                  @JsonProperty("isArmyTwoInspired")boolean isArmyTwoInspired) {
         this.curNumRound = curNumRound;
@@ -174,7 +174,8 @@ public class Board {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
     }
 
-    public static void checkAliveLine(final Unit[][] army) {
+    public void checkAliveLine(Fields fields) {
+        Unit[][] army = getUnits.get(fields);
         if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
             Unit[] temp = army[0];
             army[0] = army[1];
@@ -244,11 +245,11 @@ public class Board {
         isArmyTwoInspired = armyTwoInspired;
     }
 
-    public EndGameStatus getStatus() {
+    public GameStatus getStatus() {
         return status;
     }
 
-    public void setStatus(EndGameStatus status) {
+    public void setStatus(GameStatus status) {
         this.status = status;
     }
 }

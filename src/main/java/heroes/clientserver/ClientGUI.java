@@ -62,16 +62,19 @@ public class ClientGUI {
         }
     }
 
+    /**
+     *  tw - терминал (окно гуи)
+     *  обнолвяет его когда приходит draw
+     *  TODO: обновление на конец игры (ждем в гуи такую возможность)
+     */
     @SuppressWarnings("InfiniteLoopStatement")
     private void startGUI() {
         try {
             TerminalWrapper tw = new TerminalWrapper();
             tw.start();
+            TextGraphics tg = tw.getScreen().newTextGraphics();
             String message;
             Data data;
-            SimpleTerminalResizeListener strl = new SimpleTerminalResizeListener(tw.getTerminal().getTerminalSize());
-            tw.getTerminal().addResizeListener(strl);
-            KeyStroke ks = new KeyStroke(KeyType.Escape);
 
             while (true) {
                 message = in.readLine();
@@ -79,7 +82,7 @@ public class ClientGUI {
                 data = Deserializer.deserializeData(message);
                 if (CommonCommands.GET_ROOM.equals(data.command)) {
                     logger.info(message);
-                    // TODO: выбор комнаты, пока что рандом
+                    // TODO: выбор комнаты, пока что рандом или 1 комната
                     int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
                     out.write("1" + '\n');
                     out.flush();
@@ -99,8 +102,7 @@ public class ClientGUI {
                     logger.info("BOARD TO DRAW");
 
                     tw.update(data.answer, data.board);
-                    TextGraphics tg = tw.getScreen().newTextGraphics();
-                    tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
+                    tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
                             (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO CONTINUE");
                     tw.getScreen().refresh();
                     tw.getScreen().readInput();

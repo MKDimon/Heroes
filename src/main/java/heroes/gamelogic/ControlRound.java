@@ -48,8 +48,8 @@ public class ControlRound {
             board.setArmyTwoInspired(false);
         }
 
-        Board.checkAliveLine(board.getFieldPlayerOne());
-        Board.checkAliveLine(board.getFieldPlayerTwo());
+        board.checkAliveLine(Fields.PLAYER_ONE);
+        board.checkAliveLine(Fields.PLAYER_TWO);
 
         logger.info("\n[NEW STEP]\n");
 
@@ -57,9 +57,8 @@ public class ControlRound {
         active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
-            board.setStatus(EndGameStatus.PLAYER_ONE_WINS);
+            board.setStatus(GameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
                             append(",")),
@@ -97,6 +96,7 @@ public class ControlRound {
      */
     public static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
+            board.setStatus(GameStatus.NO_WINNERS);
             StatisticsCollector.recordMessageToCSV(new StringBuffer().append("DEAD HEAT\n").toString(),
                     StatisticsCollector.actionStatisticsFilename);
             board.setStatus(EndGameStatus.NO_WINNERS);

@@ -76,9 +76,9 @@ public class GameLogic {
      * @param act действие
      * @return успешная валидация - true / false иначе
      */
-    private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
+    private ValidationUnits actionValidate(Position attacker, Position defender, ActionTypes act) {
         if (!gameBegun) {
-            return false;
+            return ValidationUnits.INVALID_STEP;
         }
         try {
             Validator.checkNullPointer(attacker, defender, act);
@@ -107,13 +107,11 @@ public class GameLogic {
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
         } catch (NullPointerException | BoardException exception) {
             logger.warn(exception.getMessage());
-            return false;
+            return ValidationUnits.INVALID_STEP;
         } catch (UnitException exception) {
-            act = ActionTypes.DEFENSE;
-            return true;
+            return ValidationUnits.UNIT_CANT_STEP;
         }
-
-        return true;
+        return ValidationUnits.SUCCESSFUL_STEP;
     }
 
     /**
@@ -134,15 +132,31 @@ public class GameLogic {
         return result;
     }
 
+    /**
+     * Запрашивает валидацию, далее смотрит по ситуации
+     * INVALID_STEP - действие не может быть выполнено
+     * UNIT_CANT_STEP - отправляет юнита в защиту, т.к. у него нет ходов
+     * SUCCESSFUL_STEP - выполняет действие
+     * после прогоняет шаг в ControlRound для смены шага
+     *
+     * @param attacker инициатор
+     * @param defender цель
+     * @param act действвие
+     * @return прошло или нет
+     * @throws UnitException у юнитов может что то пойти не так
+     */
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
         logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, act);
-        if (actionValidate(attacker, defender, act)) {
+        ValidationUnits result = actionValidate(attacker, defender, act);
+        if (result != ValidationUnits.INVALID_STEP) {
+            logger.info(result.toString());
+            ActionTypes type = (result == ValidationUnits.SUCCESSFUL_STEP)? act: ActionTypes.DEFENSE;
             StatisticsCollector.recordMessageToCSV(new StringBuilder().append(attacker.F().toString()).
-                    append(",").append(attacker.X()).append(",").append(attacker.Y()).append(",").
-                    append(defender.F()).append(",").append(defender.X()).append(",").append(defender.Y()).
-                    append(",").append(act.toString()).append(",").toString(),
+                            append(",").append(attacker.X()).append(",").append(attacker.Y()).append(",").
+                            append(defender.F()).append(",").append(defender.X()).append(",").append(defender.Y()).
+                            append(",").append(act.toString()).append(",").toString(),
                     StatisticsCollector.actionStatisticsFilename);
-            board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
+            board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, type), type);
             gameBegun = ControlRound.checkStep(board);
             return true;
         }
