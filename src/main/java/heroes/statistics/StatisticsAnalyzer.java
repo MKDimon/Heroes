@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses.statistics;
+package heroes.statistics;
 
 import heroes.gamelogic.Army;
 

@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses.statistics;
+package heroes.statistics;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
@@ -77,9 +77,11 @@ public class StatisticsCollector {
     /**
      * Метод записывает информацию о ходе текущего игрока в формате
      * attackerUnitType,attackerHP,defenderUnitType,defenderHP,actPower
+     * Замечание. Здоровье юнита записывается ПОСЛЕ примененного действия.
      * @param attacker - кем ходит
      * @param defender - на кого ходит
      * @param actPower - с какой силой ходит
+     * @param filename - куда записывать
      **/
 
     public static void recordActionToCSV(final Unit attacker, final Unit defender,
@@ -117,8 +119,8 @@ public class StatisticsCollector {
  * PLAYER_ONE ARMY
  * PLAYER_TWO ARMY
  * ...
- *    0          1   2       3        4         5    6       7             8       9             10     11
- * PLAYER_ATTACK,atX,atY,PLAYER_DEF,actionType,defX,defY,attackerUnitType,atHP,defenderUnitType,defHP,actionPower,
+ *    0           1   2       3        4   5      6         7              8       9             10     11
+ * PLAYER_ATTACK,atX,atY,PLAYER_DEF,defX,defY,actionType,attackerUnitType,atHP,defenderUnitType,defHP,actionPower,
  * ...
  * lastRoundNumber
  * PLAYER_WINNER

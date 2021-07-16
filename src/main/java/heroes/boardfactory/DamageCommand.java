@@ -1,6 +1,6 @@
 package heroes.boardfactory;
 
-import heroes.auxiliaryclasses.statistics.StatisticsCollector;
+import heroes.statistics.StatisticsCollector;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +40,7 @@ public class DamageCommand extends Command {
                     int reducedDamage = reducedDamage(super.getAtt().getPower(), elem.getArmor());
                     elem.setCurrentHP(elem.getCurrentHP() -
                             reducedDamage);
-
+                    //Статистика собирается ПОСЛЕ нанесения урона
                     StatisticsCollector.recordActionToCSV(super.getAtt(),
                             elem, reducedDamage, StatisticsCollector.actionStatisticsFilename);
                     logger.info("Unit hit! Dealing damage.");

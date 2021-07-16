@@ -1,6 +1,6 @@
 package heroes.gamelogic;
 
-import heroes.auxiliaryclasses.statistics.StatisticsCollector;
+import heroes.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
@@ -62,16 +62,17 @@ public class ControlRound {
             board.setStatus(EndGameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
-                            append("\n")),
+                            append(",")),
                     StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_ONE, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
+            return false;
         }
         if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
             board.setStatus(EndGameStatus.PLAYER_TWO_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
-                            append("\n")),
+                            append(",")),
                     StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);

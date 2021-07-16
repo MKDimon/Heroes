@@ -1,6 +1,6 @@
 package heroes.boardfactory;
 
-import heroes.auxiliaryclasses.statistics.StatisticsCollector;
+import heroes.statistics.StatisticsCollector;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

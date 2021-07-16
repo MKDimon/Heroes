@@ -4,7 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.statistics.StatisticsCollector;
+import heroes.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
