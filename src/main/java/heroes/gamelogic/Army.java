@@ -61,8 +61,8 @@ public class Army {
         return playerUnits;
     }
 
-    public General getGeneral() throws UnitException {
-        return new General(general);
+    public final General getGeneral() throws UnitException {
+        return general;
     }
 
     public boolean equals(Army army) {

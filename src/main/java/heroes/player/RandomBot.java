@@ -24,12 +24,12 @@ public class RandomBot extends BaseBot {
 
     public static class RandomBotFactory extends BaseBotFactory {
         @Override
-        public RandomBot createBot(Fields fields) throws GameLogicException {
+        public RandomBot createBot(final Fields fields) throws GameLogicException {
             return new RandomBot(fields);
         }
     }
 
-    public RandomBot(Fields field) throws GameLogicException {
+    public RandomBot(final Fields field) throws GameLogicException {
         super(field);
     }
 
@@ -75,7 +75,7 @@ public class RandomBot extends BaseBot {
      * @throws GameLogicException
      */
     @Override
-    public Answer getAnswer(Board board) throws GameLogicException {
+    public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
 
 

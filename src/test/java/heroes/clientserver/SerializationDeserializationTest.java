@@ -25,10 +25,10 @@ public class SerializationDeserializationTest {
     public void testSDAnswer1() throws GameLogicException, IOException {
         Answer anw1 = new Answer(new Position(1,1, Fields.PLAYER_ONE),
                 new Position(1,1 , Fields.PLAYER_ONE), ActionTypes.HEALING);
-        String jsonAnw1 = Serializer.serializeAnswer(anw1);
+        String jsonAnw1 = Serializer.serializeData(new Data(anw1));
         assertEquals("{\"attacker\":{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
                 "{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"actionType\":\"HEALING\"}", jsonAnw1);
-        Answer anw2 = Deserializer.deserializeAnswer(jsonAnw1);
+        Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }
 
@@ -36,10 +36,10 @@ public class SerializationDeserializationTest {
     public void testSDAnswer2() throws GameLogicException, IOException {
         Answer anw1 = new Answer(new Position(0,1, Fields.PLAYER_ONE),
                 new Position(0,1, Fields.PLAYER_TWO), ActionTypes.CLOSE_COMBAT);
-        String jsonAnw1 = Serializer.serializeAnswer(anw1);
+        String jsonAnw1 = Serializer.serializeData(new Data(anw1));
         assertEquals("{\"attacker\":{\"x\":0,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
                 "{\"x\":0,\"y\":1,\"f\":\"PLAYER_TWO\"},\"actionType\":\"CLOSE_COMBAT\"}", jsonAnw1);
-        Answer anw2 = Deserializer.deserializeAnswer(jsonAnw1);
+        Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }
 
@@ -58,7 +58,9 @@ public class SerializationDeserializationTest {
         Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
         board.deinspireArmy(firstArmy, firstGeneral);
         board.deinspireArmy(secondArmy, secondGeneral);
-        Board board1 = Deserializer.deserializeBoard(Serializer.serializeBoard(board));
+        Board board1 = Deserializer.deserializeData(Serializer.serializeData(
+                new Data(null, null, board, null))
+        ).board;
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3; j++){
                 assertEquals(board.getArmy(Fields.PLAYER_ONE)[i][j], board1.getArmy(Fields.PLAYER_ONE)[i][j]);
@@ -81,7 +83,7 @@ public class SerializationDeserializationTest {
         army.getPlayerUnits()[1][0].setPower(11);
         army.getPlayerUnits()[1][1].setActive(false);
         army.getPlayerUnits()[1][2].setActive(false);
-        Army army1 = Deserializer.deserializeArmy(Serializer.serializeArmy(army));
+        Army army1 = Deserializer.deserializeData(Serializer.serializeData(new Data(null, army))).army;
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3; j++){
                 assertEquals(army.getPlayerUnits()[i][j], army.getPlayerUnits()[i][j]);

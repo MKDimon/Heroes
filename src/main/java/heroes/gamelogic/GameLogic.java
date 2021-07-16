@@ -135,6 +135,7 @@ public class GameLogic {
     }
 
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
+        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, act);
         if (actionValidate(attacker, defender, act)) {
             StatisticsCollector.recordMessageToCSV(new StringBuilder().append(attacker.F().toString()).
                     append(",").append(attacker.X()).append(",").append(attacker.Y()).append(",").

@@ -41,11 +41,13 @@ public class Board {
     private boolean isArmyOneInspired;
     @JsonProperty
     private boolean isArmyTwoInspired;
+    @JsonProperty
+    private EndGameStatus status = EndGameStatus.NO_WINNERS;
 
     @JsonCreator
     public Board(@JsonProperty("curNumRound")int curNumRound, @JsonProperty("currentPlayer")Fields currentPlayer,
                  @JsonProperty("roundPlayer")Fields roundPlayer, @JsonProperty("fieldPlayerOne")Army fieldPlayerOne,
-                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo,
+                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo, @JsonProperty("status") EndGameStatus status,
                  @JsonProperty("isArmyOneInspired")boolean isArmyOneInspired,
                  @JsonProperty("isArmyTwoInspired")boolean isArmyTwoInspired) {
         this.curNumRound = curNumRound;
@@ -55,6 +57,7 @@ public class Board {
         this.fieldPlayerTwo = fieldPlayerTwo;
         this.isArmyOneInspired = isArmyOneInspired;
         this.isArmyTwoInspired = isArmyTwoInspired;
+        this.status = status;
         getUnits = new HashMap<>();
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
@@ -88,10 +91,35 @@ public class Board {
         fieldPlayerOne = new Army(board.fieldPlayerOne);
         fieldPlayerTwo = new Army(board.fieldPlayerTwo);
         getUnits = new HashMap<>();
+        status = board.status;
         getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
         getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
         isArmyOneInspired = board.isArmyOneInspired;
         isArmyTwoInspired = board.isArmyTwoInspired;
+    }
+
+    /**
+     * Вспомогательный конструктор для промежуточной отрисовки и просмотра чужой армии
+     */
+    public Board(final Army army, final Fields field) throws UnitException, BoardException {
+        if (army == null) {
+            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
+        }
+        curNumRound = 0;
+        currentPlayer = Fields.PLAYER_TWO;
+        getUnits = new HashMap<>();
+        if (field == Fields.PLAYER_ONE) {
+            fieldPlayerOne = new Army(army);
+            fieldPlayerTwo = null;
+            getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+            getUnits.put(Fields.PLAYER_TWO, null);
+        }
+        else {
+            fieldPlayerOne = null;
+            fieldPlayerTwo = new Army(army);
+            getUnits.put(Fields.PLAYER_ONE, null);
+            getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+        }
     }
 
     /**
@@ -215,5 +243,13 @@ public class Board {
 
     public void setArmyTwoInspired(final boolean armyTwoInspired) {
         isArmyTwoInspired = armyTwoInspired;
+    }
+
+    public EndGameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(EndGameStatus status) {
+        this.status = status;
     }
 }

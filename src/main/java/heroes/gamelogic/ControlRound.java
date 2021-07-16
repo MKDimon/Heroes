@@ -56,14 +56,15 @@ public class ControlRound {
         long active = Board.activeCount(board.getFieldPlayerOne());
         active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
-
+        
+        
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            board.setStatus(EndGameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
-            StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_ONE,StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordMessageToCSV("GAME OVER\n",StatisticsCollector.actionStatisticsFilename);
-            return false;
-        }
+            StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO,StatisticsCollector.actionStatisticsFilename);
+            StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
         if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+            board.setStatus(EndGameStatus.PLAYER_TWO_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO,StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
@@ -86,9 +87,8 @@ public class ControlRound {
      */
     private static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
+            board.setStatus(EndGameStatus.NO_WINNERS);
             logger.info("Конец игры: НИЧЬЯ");
-            StatisticsCollector.recordMessageToCSV("DEAD HEAT \n GAME OVER",
-                    StatisticsCollector.actionStatisticsFilename);
             return false;
         }
 

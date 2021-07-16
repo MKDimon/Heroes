@@ -9,6 +9,7 @@ import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.Cipher;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
@@ -38,7 +39,7 @@ public class Client {
         catch (IOException ignore) {}
     }
 
-    private Client(final String ip, final int port, BaseBot player) {
+    private Client(final String ip, final int port,final BaseBot player) {
         this.ip = ip;
         this.port = port;
         this.player = player;
@@ -57,15 +58,17 @@ public class Client {
 
     //Метод, который вызывает у игрока создание армии
     private String sendArmyJson() throws IOException {
-        return Serializer.serializeArmy(player.getArmy());
+        return Serializer.serializeData(new Data(null, player.getArmy()));
     }
 
     //Метод, который вызывает у игрока ответ
-    private String sendAnswerJson(String jsonBoard) throws GameLogicException, IOException {
-        return Serializer.serializeAnswer(player.getAnswer(Deserializer.deserializeBoard(jsonBoard)));
+    private String sendAnswerJson(final String json) throws GameLogicException, IOException {
+        return Serializer.serializeData(
+                new Data(player.getAnswer(Deserializer.deserializeData(json).board))
+        );
     }
 
-    private BaseBot chooseBot(Fields field) {
+    private BaseBot chooseBot(final Fields field) {
         Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
@@ -102,7 +105,9 @@ public class Client {
     private void start() {
         try {
             String message = in.readLine();
-            if (message.equals(CommonCommands.FIELD_ONE.command)) {
+            Data data = Deserializer.deserializeData(message);
+
+            if (data.command.equals(CommonCommands.FIELD_ONE)) {
                 player = chooseBot(Fields.PLAYER_ONE);
             } else {
                 player = chooseBot(Fields.PLAYER_TWO);
@@ -110,26 +115,29 @@ public class Client {
             while (true) {
                 message = in.readLine();
                 if (message == null) { continue; }
-                if (message.equals(CommonCommands.GET_ARMY.command)) {
+                data = Deserializer.deserializeData(message);
+                if (CommonCommands.GET_ARMY.equals(data.command)) {
+                    // TODO: армия на основе армии противника
+                    // У игрока 2 прилетает армия 1 вместе с запросом
                     out.write(sendArmyJson() + '\n');
                     out.flush();
                 }
-                else if(message.equals(CommonCommands.END_GAME.command)){
+                else if(CommonCommands.END_GAME.equals(data.command)){
                     // TODO: победа или поражение
                     downService();
                     break;
                 }
-                else if (message.equals(CommonCommands.MAX_ROOMS.command)) {
+                else if (CommonCommands.MAX_ROOMS.equals(data.command)) {
                     // TODO: можно писать причину
                     downService();
                     break;
                 }
-                else {
+                else if (CommonCommands.GET_ANSWER.equals(data.command)){
                     out.write(sendAnswerJson(message) + '\n');
                     out.flush();
                 }
             }
-        } catch (IOException | GameLogicException e) {
+        } catch (IOException | NullPointerException | GameLogicException e) {
             logger.error("Error client running", e);
             downService();
         }

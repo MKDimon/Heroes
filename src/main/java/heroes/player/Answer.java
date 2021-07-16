@@ -27,9 +27,9 @@ public class Answer {
     private final ActionTypes actionType;
 
     @JsonCreator
-    public Answer(@JsonProperty("attacker") Position attacker,
-                  @JsonProperty("defender") Position defender,
-                  @JsonProperty("actionType") ActionTypes actionType) throws GameLogicException {
+    public Answer(@JsonProperty("attacker") final Position attacker,
+                  @JsonProperty("defender") final Position defender,
+                  @JsonProperty("actionType") final ActionTypes actionType) throws GameLogicException {
         if (attacker == null || defender == null || actionType == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }

@@ -25,7 +25,7 @@ public class TestBot extends BaseBot {
     public static class TestBotFactory extends BaseBotFactory {
 
         @Override
-        public TestBot createBot(Fields fields) throws GameLogicException {
+        public TestBot createBot(final Fields fields) throws GameLogicException {
             return new TestBot(fields);
         }
     }

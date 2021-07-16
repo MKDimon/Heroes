@@ -25,12 +25,12 @@ public class PlayerBot extends BaseBot {
     public static class PlayerBotFactory extends BaseBotFactory {
 
         @Override
-        public PlayerBot createBot(Fields fields) throws GameLogicException {
+        public PlayerBot createBot(final Fields fields) throws GameLogicException {
             return new PlayerBot(fields);
         }
     }
 
-    public PlayerBot(Fields fields) throws GameLogicException {
+    public PlayerBot(final Fields fields) throws GameLogicException {
         super(fields);
     }
 
@@ -95,7 +95,7 @@ public class PlayerBot extends BaseBot {
     }
 
     @Override
-    public Answer getAnswer(Board board) throws GameLogicException {
+    public Answer getAnswer(final Board board) throws GameLogicException {
         int attackerX;
         int attackerY;
         System.out.println("Choose attacker position: ");
