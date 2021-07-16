@@ -66,23 +66,33 @@ public class SelfPlay {
 //        }
 
         gl.gameStart(playerOne.getArmy(), playerTwo.getArmy());
+
+
         tw.update(null, gl.getBoard());
+
+
         TextGraphics tg = tw.getScreen().newTextGraphics();
         tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
                         (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO BEGIN");
         tw.getScreen().refresh();
         tw.getScreen().readInput();
+
+
         //tw.stop();
         while (gl.isGameBegun()) {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.MICROSECONDS.sleep(50000);
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
             tw.update(answer, gl.getBoard());
         }
+
+        //not necessary
         tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
                 (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO LEAVE THIS MASSACRE...");
         tw.getScreen().refresh();
         tw.getScreen().readInput();
+
+
         tw.stop();
 
     }
