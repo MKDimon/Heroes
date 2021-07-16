@@ -60,21 +60,21 @@ public class ControlRound {
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
             board.setStatus(GameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
-            StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
+            StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append("\n").
+                            append(board.getCurNumRound()).
                             append(",")),
                     StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_ONE, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
             return false;
         }
         if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-            board.setStatus(EndGameStatus.PLAYER_TWO_WINS);
+            board.setStatus(GameStatus.PLAYER_TWO_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
-            StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append(board.getCurNumRound()).
+            StatisticsCollector.recordMessageToCSV(String.valueOf(new StringBuffer().append("\n").
+                            append(board.getCurNumRound()).
                             append(",")),
                     StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordWinnerToCSV(Fields.PLAYER_TWO, StatisticsCollector.actionStatisticsFilename);
             StatisticsCollector.recordMessageToCSV("GAME OVER\n", StatisticsCollector.actionStatisticsFilename);
             return false;
@@ -97,9 +97,9 @@ public class ControlRound {
     public static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
             board.setStatus(GameStatus.NO_WINNERS);
-            StatisticsCollector.recordMessageToCSV(new StringBuffer().append("DEAD HEAT\n").toString(),
+            StatisticsCollector.recordMessageToCSV(new StringBuffer().append("\n10,DEAD HEAT\n").toString(),
                     StatisticsCollector.actionStatisticsFilename);
-            board.setStatus(EndGameStatus.NO_WINNERS);
+            board.setStatus(GameStatus.NO_WINNERS);
             logger.info("Конец игры: НИЧЬЯ");
             return false;
         }

@@ -29,5 +29,6 @@ public class HealCommand extends Command {
             StatisticsCollector.recordActionToCSV(super.getAtt(),
                     elem, Math.min(reducedHealPower, healPower), StatisticsCollector.actionStatisticsFilename);
         }
+        StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
     }
 }
