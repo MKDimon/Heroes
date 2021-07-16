@@ -34,6 +34,13 @@ public class Data {
         this.answer = null;
     }
 
+    public Data(final CommonCommands command, final Board board) {
+        this.command = command;
+        this.army = null;
+        this.board = board;
+        this.answer = null;
+    }
+
     public Data(final Answer answer) {
         this.command = null;
         this.army = null;

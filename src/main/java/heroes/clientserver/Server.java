@@ -1,7 +1,9 @@
 package heroes.clientserver;
 
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
+import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.player.Answer;
@@ -189,7 +191,7 @@ public class Server {
                         inPlayerOne.readLine()
                 ).army;
 
-                data = new Data(CommonCommands.SEE_ARMY, one);
+                data = new Data(CommonCommands.SEE_ARMY, new Board(one, Fields.PLAYER_ONE));
                 //sendDraw(data);
 
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);
@@ -197,13 +199,13 @@ public class Server {
 
 
                 gameLogic.gameStart(one, two);
-                data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), null);
+                data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
                 sendDraw(data);
 
                 // весь игровой процесс
-                Answer answer = null;
+                Answer answer;
                 while (gameLogic.isGameBegun()) {
-                    data = new Data(CommonCommands.GET_ANSWER, one, gameLogic.getBoard(), answer);
+                    data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
                     sendAsk(Serializer.serializeData(data),
                             getOuter.get(gameLogic.getBoard().getCurrentPlayer())
                     );
@@ -220,9 +222,9 @@ public class Server {
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
 
 
-                sendDraw(new Data(CommonCommands.END_GAME));
+                sendDraw(new Data(CommonCommands.END_GAME, gameLogic.getBoard()));
                 this.downService(CommonCommands.END_GAME);
-            } catch (final IOException | UnitException e) {
+            } catch (final IOException | UnitException | BoardException e) {
                 this.downService(CommonCommands.END_GAME);
             }//*/
         }

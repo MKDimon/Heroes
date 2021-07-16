@@ -174,7 +174,8 @@ public class Board {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
     }
 
-    public static void checkAliveLine(final Unit[][] army) {
+    public void checkAliveLine(Fields fields) {
+        Unit[][] army = getUnits.get(fields);
         if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
             Unit[] temp = army[0];
             army[0] = army[1];

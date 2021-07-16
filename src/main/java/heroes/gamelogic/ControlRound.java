@@ -47,8 +47,8 @@ public class ControlRound {
             board.setArmyTwoInspired(false);
         }
 
-        Board.checkAliveLine(board.getFieldPlayerOne());
-        Board.checkAliveLine(board.getFieldPlayerTwo());
+        board.checkAliveLine(Fields.PLAYER_ONE);
+        board.checkAliveLine(Fields.PLAYER_TWO);
 
         logger.info("\n[NEW STEP]\n");
 
