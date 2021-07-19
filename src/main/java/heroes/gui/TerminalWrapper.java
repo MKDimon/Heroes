@@ -1,35 +1,33 @@
 package heroes.gui;
 
 import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.statusdrawers.HealthDrawer;
-import heroes.gui.statusdrawers.IStatusDrawer;
-import heroes.gui.unitdrawers.HealerDrawer;
-import heroes.gui.unitdrawers.MageDrawer;
 import heroes.gui.utils.UnitDrawersMap;
 import heroes.gui.utils.UnitTerminalGrid;
-import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.units.General;
-import heroes.units.GeneralTypes;
-
-import java.awt.*;
 import java.io.IOException;
 
+/**
+ * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
+ */
 public class TerminalWrapper {
 
     final private Screen screen;
     final private Terminal terminal;
 
+    /**
+     * Конструктор по умолчанию вызывает DefaultTerminalFactory, задает некоторые начальные настройки
+     * (стартовый размер экрана и название окна) и создает терминал и screen в нём.
+     * @throws IOException исключение из методов Лантерны пробрасывается выше.
+     */
     public TerminalWrapper() throws IOException {
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
         defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(150, 50));
@@ -38,6 +36,9 @@ public class TerminalWrapper {
         screen = new TerminalScreen(terminal);
     }
 
+    /**
+     * Обертка над медотом clear(). Удаляет все данные из терминала.
+     */
     private void clean() {
         screen.clear();
     }
@@ -46,10 +47,22 @@ public class TerminalWrapper {
         screen.refresh();
     }
 
+    /**
+     * Обертка над методом startScreen(). Запускает окно терминала.
+     * @throws IOException исключение из методов Лантерны пробрасывается выше.
+     */
     public void start() throws IOException {
         screen.startScreen();
     }
 
+    /**
+     * Основной метод отрисовки GUI, по сути точка входа в инфраструктуру. Вызывает метод clean(), затем все методы
+     * отрисовки, после чего вызывает метод refresh() для переноса данных из внутреннего буфера Lanterna на терминал.
+     * @param answer отвечает за вызванное ботом (игроком) действие, необходим для отрисовки действий.
+     * @param board передается для отрисовки актуального состояния игрового поля.
+     * @throws IOException исключение из методов Лантерны пробрасывается выше.
+     * @throws UnitException исключение из методов класса Board также пробрасывается выше.
+     */
     public void update(final Answer answer, final Board board) throws IOException, UnitException {
         clean();
 
@@ -59,23 +72,36 @@ public class TerminalWrapper {
         TerminalGeneralDrawer.drawGenerals(this, gen_one.getActionType(), gen_two.getActionType());
         UnitTerminalGrid utg = new UnitTerminalGrid(this.getTerminal().getTerminalSize().getColumns() / 2 - 35 + 2,
                                                     this.getTerminal().getTerminalSize().getColumns() / 2 + 35 - 1);
-        IStatusDrawer sd = new HealthDrawer();
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
-                        .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
-                                board.getFieldPlayerOne()[i][j] == board.getGeneralPlayerOne());
-                sd.draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)), board.getFieldPlayerOne()[i][j]);
-                UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
-                        .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
-                                board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
-                sd.draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)), board.getFieldPlayerTwo()[i][j]);
+                //draw units of 1st army
+                if (board.getArmy(Fields.PLAYER_ONE) != null) {
+                    UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
+                            .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
+                                    board.getFieldPlayerOne()[i][j] == board.getGeneralPlayerOne());
+                    //draw status of all units
+                    TerminalStatusDrawer.invokeAllStatusDrawers(this,
+                            utg.getPair(new Position(i, j, Fields.PLAYER_ONE)), board.getFieldPlayerOne()[i][j]);
+                }
+                //draw units of 2nd army
+                if (board.getArmy(Fields.PLAYER_TWO) != null) {
+                    UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
+                            .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
+                                    board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
+                    //draw status of all units
+                    TerminalStatusDrawer.invokeAllStatusDrawers(this,
+                            utg.getPair(new Position(i, j, Fields.PLAYER_TWO)), board.getFieldPlayerTwo()[i][j]);
+                }
             }
         }
 
         refresh();
     }
 
+    /**
+     * Обертка над методом stopScreen(). Закрывает терминал и очищает внутренний буфер Лантерны.
+     * @throws IOException исключение из методов Лантерны пробрасывается выше.
+     */
     public void stop() throws IOException {
         screen.stopScreen();
     }

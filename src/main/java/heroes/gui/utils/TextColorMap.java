@@ -2,10 +2,14 @@ package heroes.gui.utils;
 
 import com.googlecode.lanterna.TextColor;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс хранит неизменяемый Map RGB цветов. Так как Lanterna не предоставляет удобных инструментов для работы с
+ * цветами, то была создана эта обертка. Названию цвета соответствует статическая переменная Лантерны, которую можно
+ * использовать в некоторых её методах.
+ */
 public class TextColorMap {
     private static final Map<String, TextColor> textColorMap;
     static {

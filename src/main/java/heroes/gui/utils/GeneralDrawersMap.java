@@ -5,10 +5,14 @@ import heroes.gui.generaldrawers.CommanderDrawer;
 import heroes.gui.generaldrawers.IGeneralDrawer;
 import heroes.gui.generaldrawers.PriestDrawer;
 import heroes.gui.generaldrawers.SniperDrawer;
-import heroes.units.GeneralTypes;
 
 import java.util.Map;
 
+/**
+ * Статический класс хранит неизменяемый Map, который создает связь между типом генерала и соответствующим классом
+ * Drawer. Эти классы рисуют портреты генералов.
+ * По сути, вместе с IGeneralDrawer, это урезанная реализация паттерна Strategy.
+ */
 public class GeneralDrawersMap {
     private static final Map<ActionTypes, IGeneralDrawer> generalDrawersMap;
     static {

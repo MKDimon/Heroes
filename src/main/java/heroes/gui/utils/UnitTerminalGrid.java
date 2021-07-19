@@ -1,17 +1,16 @@
 package heroes.gui.utils;
 
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gamelogic.Fields;
-import heroes.gui.generaldrawers.CommanderDrawer;
-import heroes.gui.generaldrawers.IGeneralDrawer;
-import heroes.gui.generaldrawers.PriestDrawer;
-import heroes.gui.generaldrawers.SniperDrawer;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Класс содержит Map, который создает связь между расположением юнита в массиве юнитов и координатами для его
+ * отрисовки в терминале.
+ */
 public class UnitTerminalGrid {
     private final Map<Position, Pair<Integer, Integer>> unitGrid;
     final int x_start_1;

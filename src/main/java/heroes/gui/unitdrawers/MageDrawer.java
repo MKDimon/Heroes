@@ -29,22 +29,22 @@ public class MageDrawer implements IUnitDrawer {
             pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("red"));
         }
 
-        ti.setCharacterAt(1, 0, dot);
-        ti.setCharacterAt(2, 0, pipe);
+        ti.setCharacterAt(2, 0, dot);
         ti.setCharacterAt(3, 0, pipe);
-        ti.setCharacterAt(4, 0, comma);
+        ti.setCharacterAt(4, 0, pipe);
+        ti.setCharacterAt(5, 0, comma);
 
-        ti.setCharacterAt(0, 1, backslash);
-        ti.setCharacterAt(1, 1, dot);
-        ti.setCharacterAt(2, 1, aqute);
-        ti.setCharacterAt(3, 1, apostrophe);
-        ti.setCharacterAt(4, 1, comma);
-        ti.setCharacterAt(5, 1, slash);
+        ti.setCharacterAt(1, 1, backslash);
+        ti.setCharacterAt(2, 1, dot);
+        ti.setCharacterAt(3, 1, aqute);
+        ti.setCharacterAt(4, 1, apostrophe);
+        ti.setCharacterAt(5, 1, comma);
+        ti.setCharacterAt(6, 1, slash);
 
-        ti.setCharacterAt(1, 2, equ);
-        ti.setCharacterAt(2, 2, comma);
-        ti.setCharacterAt(3, 2, dot);
-        ti.setCharacterAt(4, 2, equ);
+        ti.setCharacterAt(2, 2, equ);
+        ti.setCharacterAt(3, 2, comma);
+        ti.setCharacterAt(4, 2, dot);
+        ti.setCharacterAt(5, 2, equ);
 
         if (isGeneral) {
             pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("gold"));
@@ -53,24 +53,24 @@ public class MageDrawer implements IUnitDrawer {
         }
 
 
-        ti.setCharacterAt(0, 3, slash);
-        ti.setCharacterAt(1, 3, minus);
-        ti.setCharacterAt(2, 3, pipe);
+        ti.setCharacterAt(1, 3, slash);
+        ti.setCharacterAt(2, 3, minus);
         ti.setCharacterAt(3, 3, pipe);
-        ti.setCharacterAt(4, 3, minus);
-        ti.setCharacterAt(5, 3, backslash);
+        ti.setCharacterAt(4, 3, pipe);
+        ti.setCharacterAt(5, 3, minus);
+        ti.setCharacterAt(6, 3, backslash);
 
-        ti.setCharacterAt(2, 4, pipe);
         ti.setCharacterAt(3, 4, pipe);
+        ti.setCharacterAt(4, 4, pipe);
 
-        ti.setCharacterAt(2, 5, pipe);
         ti.setCharacterAt(3, 5, pipe);
+        ti.setCharacterAt(4, 5, pipe);
 
-        ti.setCharacterAt(2, 6, pipe);
         ti.setCharacterAt(3, 6, pipe);
+        ti.setCharacterAt(4, 6, pipe);
 
-        ti.setCharacterAt(2, 7, pipe);
         ti.setCharacterAt(3, 7, pipe);
+        ti.setCharacterAt(4, 7, pipe);
 
         return ti;
     }
