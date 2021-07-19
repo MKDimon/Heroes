@@ -15,7 +15,8 @@ public class GetRoomCommand extends Command{
     public void execute() {
         //TODO: логику
         try {
-            getOut().write("1" + '\n');
+
+            getOut().write( "1"+ '\n');
             getOut().flush();
         } catch (IOException e) {
 
