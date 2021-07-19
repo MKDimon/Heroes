@@ -2,11 +2,9 @@ package heroes.clientserver;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
+import heroes.gamelogic.*;
 import heroes.player.Answer;
+import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,7 +182,7 @@ public class Server {
                 Data data;
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_ONE)), outPlayerOne);
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_TWO)), outPlayerTwo);
-
+                StatisticsCollector collector = new StatisticsCollector(id);
                 // Выдача армий и отрисовка их на поле
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), outPlayerOne);
                 Army one = Deserializer.deserializeData(
@@ -199,6 +197,11 @@ public class Server {
 
 
                 gameLogic.gameStart(one, two);
+
+                collector.recordMessageToCSV("GAME START\n");
+                collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
+                collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
+
                 data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
                 sendDraw(data);
 
@@ -213,7 +216,17 @@ public class Server {
                     String str = getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine();
                     answer = Deserializer.deserializeData(str).answer;
 
+                    //для статистики
+                    int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+
                     gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+                    collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(),
+                            gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()),
+                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                    - defenderHP);
+
                     data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
                     sendDraw(data);
                 }
@@ -221,12 +234,19 @@ public class Server {
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerOne);
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
 
-
+                GameStatus status = gameLogic.getBoard().getStatus();
+                collector.recordMessageToCSV(new StringBuffer().append(gameLogic.getBoard().getCurNumRound()).
+                        append(",").toString());
+                switch(status){
+                    case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                    case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                    case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+                }
                 sendDraw(new Data(CommonCommands.END_GAME, gameLogic.getBoard()));
                 this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException | BoardException e) {
                 this.downService(CommonCommands.END_GAME);
-            }//*/
+            }
         }
 
         private void sendDraw(final Data data) throws IOException {

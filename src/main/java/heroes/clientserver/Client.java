@@ -112,9 +112,9 @@ public class Client {
             Data data = Deserializer.deserializeData(message);
 
             if (data.command.equals(CommonCommands.FIELD_ONE)) {
-                player = chooseBot(Fields.PLAYER_ONE);
+                player = new RandomBot(Fields.PLAYER_ONE);//chooseBot(Fields.PLAYER_ONE);
             } else {
-                player = chooseBot(Fields.PLAYER_TWO);
+                player = new RandomBot(Fields.PLAYER_TWO);//chooseBot(Fields.PLAYER_TWO);
             }
             while (true) {
                 message = in.readLine();

@@ -1,6 +1,5 @@
 package heroes.boardfactory;
 
-import heroes.statistics.StatisticsCollector;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +17,11 @@ public class HealCommand extends Command {
     @Override
     public void execute() {
         for (Unit elem : super.getDef()) {
-            int healPower = super.getAtt().getPower();
-            int reducedHealPower = elem.getCurrentHP();
             logger.info("Defender current hp: {}.", elem.getCurrentHP());
-            elem.setCurrentHP(elem.getCurrentHP() + healPower);
+            elem.setCurrentHP(elem.getCurrentHP() + super.getAtt().getPower());
             logger.info("Unit healed!");
             logger.info("Defender current hp: {}.", elem.getCurrentHP());
-            logger.info("Attacker heal power: {}.", healPower);
-            reducedHealPower = -1 * (reducedHealPower - elem.getCurrentHP());
-            StatisticsCollector.recordActionToCSV(super.getAtt(),
-                    elem, Math.min(reducedHealPower, healPower), StatisticsCollector.actionStatisticsFilename);
+            logger.info("Attacker heal power: {}.", super.getAtt().getPower());
         }
-        StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
     }
 }

@@ -37,26 +37,17 @@ public class DamageCommand extends Command {
 
         if (getHitChance(super.getAtt().getAccuracy())) {
             for (Unit elem : super.getDef()) {
-                    int reducedDamage = reducedDamage(super.getAtt().getPower(), elem.getArmor());
-                    elem.setCurrentHP(elem.getCurrentHP() -
-                            reducedDamage);
-                    //Статистика собирается ПОСЛЕ нанесения урона
-                    StatisticsCollector.recordActionToCSV(super.getAtt(),
-                            elem, reducedDamage, StatisticsCollector.actionStatisticsFilename);
-                    logger.info("Unit hit! Dealing damage.");
-                    logger.info("Attacker power: {}. Reduced by armor damage = {}", super.getAtt().getPower(),
-                            reducedDamage(super.getAtt().getPower(), elem.getArmor()));
-                    logger.info("Defender current hp: {}.", elem.getCurrentHP());
-                    logger.info("Defender max hp: {}.", elem.getMaxHP());
+                elem.setCurrentHP(elem.getCurrentHP() -
+                        reducedDamage(super.getAtt().getPower(), elem.getArmor()));
+                logger.info("Unit hit! Dealing damage.");
+                logger.info("Attacker power: {}. Reduced by armor damage = {}", super.getAtt().getPower(),
+                        reducedDamage(super.getAtt().getPower(), elem.getArmor()));
+                logger.info("Defender current hp: {}.", elem.getCurrentHP());
+                logger.info("Defender max hp: {}.", elem.getMaxHP());
             }
-            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
 
         } else {
             logger.info("Unit missed");
-            StatisticsCollector.recordActionToCSV(super.getAtt(),
-                    getDef().get(0), 0, StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordMessageToCSV("\n", StatisticsCollector.actionStatisticsFilename);
-
         }
     }
 }

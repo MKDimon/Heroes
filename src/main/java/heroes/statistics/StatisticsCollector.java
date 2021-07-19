@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
+import heroes.mathutils.Position;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
@@ -33,7 +34,14 @@ public class StatisticsCollector {
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
 
-    public static void recordWinnerToCSV(final Fields field, final String filename){
+    public final String filename;
+
+    public StatisticsCollector(int fileID){
+        filename = new StringBuffer().append("src/main/resources/statistics/gameStatistics").
+                append(fileID).append(".csv").toString();
+    }
+
+    public void recordWinnerToCSV(final Fields field){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))){
             writer.write(field.toString());
             writer.write("\n");
@@ -48,7 +56,7 @@ public class StatisticsCollector {
      * Если на ij-ом месте встертился генерал, то указывается тип генерала
      **/
 
-    public static void recordArmyToCSV(final Fields field, final Army army, final String filename){
+    public void recordArmyToCSV(final Fields field, final Army army){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))){
             StringBuffer record = new StringBuffer();
             record.append(field).append(",");
@@ -76,25 +84,26 @@ public class StatisticsCollector {
      * @param attacker - кем ходит
      * @param defender - на кого ходит
      * @param actPower - с какой силой ходит
-     * @param filename - куда записывать
      **/
 
-    public static void recordActionToCSV(final Unit attacker, final Unit defender,
-                                         final int actPower, final String filename){
+    public void recordActionToCSV(Position attackPos, Position defPos, final Unit attacker, final Unit defender,
+                                  final int actPower){
             StringBuffer record = new StringBuffer();
-            record.append(actToUnitMap.get(attacker.getActionType())).append(",").
-                    append(attacker.getCurrentHP()).append(",");
-            record.append(actToUnitMap.get(defender.getActionType())).append(",").
-                    append(defender.getCurrentHP()).append(",");
-            record.append(actPower).append(",");
-            recordMessageToCSV(record.toString(), filename);
+            record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").append(attackPos.Y()).
+                    append(",").append(defPos.F().toString()).append(",").
+                    append(defPos.X()).append(",").append(defPos.Y()).append(",").
+                    append(actToUnitMap.get(attacker.getActionType())).append(",").
+                    append(attacker.getCurrentHP()).append(",").
+                    append(actToUnitMap.get(defender.getActionType())).append(",").
+                    append(defender.getCurrentHP()).append(",").append(actPower).append("\n");
+            recordMessageToCSV(record.toString());
     }
 
     /**
      * Записывает сообщение в файл
      **/
 
-    public static void recordMessageToCSV(final String message, final String filename){
+    public void recordMessageToCSV(final String message){
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))){
             writer.write(message);
         } catch (IOException e){

@@ -54,11 +54,6 @@ public class GameLogic {
 
             board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
-            StatisticsCollector.recordMessageToCSV("GAME START\n", StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordArmyToCSV(Fields.PLAYER_ONE, fieldPlayerOne,
-                    StatisticsCollector.actionStatisticsFilename);
-            StatisticsCollector.recordArmyToCSV(Fields.PLAYER_TWO, fieldPlayerTwo,
-                    StatisticsCollector.actionStatisticsFilename);
             return true;
         } catch (NullPointerException | GameLogicException | UnitException exception) {
             logger.error(" Game Start failed ",exception);
@@ -151,11 +146,6 @@ public class GameLogic {
         if (result != ValidationUnits.INVALID_STEP) {
             logger.info(result.toString());
             ActionTypes type = (result == ValidationUnits.SUCCESSFUL_STEP)? act: ActionTypes.DEFENSE;
-            StatisticsCollector.recordMessageToCSV(new StringBuilder().append(attacker.F().toString()).
-                            append(",").append(attacker.X()).append(",").append(attacker.Y()).append(",").
-                            append(defender.F()).append(",").append(defender.X()).append(",").append(defender.Y()).
-                            append(",").append(act.toString()).append(",").toString(),
-                    StatisticsCollector.actionStatisticsFilename);
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, type), type);
             gameBegun = ControlRound.checkStep(board);
             return true;

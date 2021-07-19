@@ -14,8 +14,5 @@ public class DefenseCommand extends Command {
     @Override
     public void execute() {
         super.getAtt().defense();
-        StatisticsCollector.recordActionToCSV(super.getAtt(),
-                getAtt(), super.getAtt().getArmor(), StatisticsCollector.actionStatisticsFilename);
-        StatisticsCollector.recordMessageToCSV("\n",StatisticsCollector.actionStatisticsFilename);
     }
 }
