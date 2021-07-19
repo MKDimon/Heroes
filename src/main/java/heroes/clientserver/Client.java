@@ -1,7 +1,11 @@
 package heroes.clientserver;
 
+import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
+import heroes.gui.TerminalWrapper;
 import heroes.player.BaseBot;
 import heroes.player.PlayerBot;
 import heroes.player.RandomBot;
@@ -14,6 +18,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Client {
@@ -105,28 +110,40 @@ public class Client {
      */
     private void start() {
         try {//Первое сообщение  - поле игрока
-            String message = in.readLine();
-            Data data = Deserializer.deserializeData(message);
+            TerminalWrapper tw = new TerminalWrapper();
+            tw.start();
+            TextGraphics tg = tw.getScreen().newTextGraphics();
+            String message = null;
+            Data data = new Data();
 
-            if (data.command.equals(CommonCommands.FIELD_ONE)) {
-                player = chooseBot(Fields.PLAYER_ONE);
-            } else {
-                player = chooseBot(Fields.PLAYER_TWO);
-            }
+            int i = 0;
             while (true) {
-                message = in.readLine();
+                if (in.ready()) {
+                    message = in.readLine();
+                    data = Deserializer.deserializeData(message);
+                }
                 if (message == null) { continue; }
-                data = Deserializer.deserializeData(message);
-                if (CommonCommands.GET_ARMY.equals(data.command)) {
+
+                if (CommonCommands.FIELD_ONE.equals(data.command)){
+                    player = chooseBot(Fields.PLAYER_ONE);
+                    data = new Data(data);
+                }
+                else if (CommonCommands.FIELD_TWO.equals(data.command)) {
+                    player = chooseBot(Fields.PLAYER_TWO);
+                    data = new Data(data);
+                }
+                else if (CommonCommands.GET_ARMY.equals(data.command)) {
                     // TODO: армия на основе армии противника
                     // У игрока 2 прилетает армия 1 вместе с запросом
                     out.write(sendArmyJson() + '\n');
                     out.flush();
+                    data = new Data(data);
                 }
                 else if(CommonCommands.END_GAME.equals(data.command)){
                     // TODO: победа или поражение
-                    downService();
-                    break;
+                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
+                    out.flush();
+                    data = new Data(data);
                 }
                 else if (CommonCommands.MAX_ROOMS.equals(data.command)) {
                     // TODO: можно писать причину
@@ -136,9 +153,34 @@ public class Client {
                 else if (CommonCommands.GET_ANSWER.equals(data.command)){
                     out.write(sendAnswerJson(message) + '\n');
                     out.flush();
+                    data = new Data(data);
                 }
+                else if (CommonCommands.GET_ROOM.equals(data.command)) {
+                    logger.info(message);
+                    // TODO: выбор комнаты, пока что рандом или 1 комната
+                    int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
+                    out.write("1" + '\n');
+                    out.flush();
+                    data = new Data(data);
+                }
+                else if (CommonCommands.DRAW.equals(data.command)){
+                    //  logger.info("BOARD TO DRAW");
+                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
+                    out.flush();
+                    data = new Data(data);
+                }
+
+                if (data.board != null) {
+                    tw.update(data.answer, data.board);
+                }
+                // типа кадры смотрим
+                tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
+                        (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), String.valueOf(i));
+                tw.getScreen().refresh();
+                i++;
+                if (i > 1000) i = 0;
             }
-        } catch (IOException | NullPointerException | GameLogicException e) {
+        } catch (IOException | NullPointerException | GameLogicException | UnitException | BoardException e) {
             logger.error("Error client running", e);
             downService();
         }

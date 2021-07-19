@@ -29,19 +29,10 @@ public class SelfPlayClientServer {
         }
     }
 
-    private static class PlayClientGUI extends Thread {
-        @Override
-        public void run() {
-            ClientGUI.main(new String[]{});
-        }
-    }
-
     public static void main(final String[] args) throws InterruptedException {
         new PlayServer().start();
         Thread.sleep(300); // Чтобы сервер успел запуститься
         new PlayClient().start();
         new PlayClient().start();
-        Thread.sleep(300);
-        new PlayClientGUI().start();
     }
 }

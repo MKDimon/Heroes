@@ -98,11 +98,6 @@ public class ClientGUI {
                     data = new Data();
                     //downService();
                 }
-                else if (CommonCommands.SEE_ARMY.equals(data.command)) {
-                    logger.info("GUI SEE ARMY");
-                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
-                    out.flush();
-                }
                 else if (CommonCommands.DRAW.equals(data.command)){
                     //  logger.info("BOARD TO DRAW");
 

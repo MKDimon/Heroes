@@ -3,6 +3,9 @@ package heroes.clientserver;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.player.Answer;
@@ -25,6 +28,17 @@ public class Data {
         this.army = army;
         this.board = board;
         this.answer = answer;
+    }
+
+    /**
+     * Вспомогательный для снятия команды
+     * @param data - данные
+     */
+    public Data(final Data data) throws GameLogicException, UnitException, BoardException {
+        command = null;
+        army = (data.army != null)? new Army(data.army): null;
+        board = (data.board != null)? new Board(data.board): null;
+        answer = (data.answer != null)? new Answer(data.answer): null;
     }
 
     public Data(final CommonCommands command) {

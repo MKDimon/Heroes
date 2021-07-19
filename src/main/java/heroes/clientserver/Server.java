@@ -15,6 +15,7 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -32,86 +33,10 @@ public class Server {
     public Server(final int PORT,final  int maxRooms) {
         this.maxRooms = maxRooms;
         this.PORT = PORT;
-        getRoom = new HashMap<>();
+        getRoom = new Hashtable<>();
     }
 
-    private final ConcurrentLinkedQueue<GUI> guiList = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<Rooms> serverList = new ConcurrentLinkedQueue<>();
-
-    /**
-     * GUI сервер, отвечает за прием ClientGUI
-     */
-    private class GUIThread extends Thread {
-        private final int PORT;
-        private final Server server;
-
-        private GUIThread(final int PORT, final Server server) {
-            this.PORT = PORT;
-            this.server = server;
-        }
-
-        @SuppressWarnings("InfiniteLoopStatement")
-        @Override
-        public void run() {
-            System.out.println(String.format("Server started, port: %d", PORT));
-            try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-                while (true) {
-                    final Socket socket = serverSocket.accept();
-                    try {
-                        server.guiList.add(new GUI(socket, server));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * GUI клиент установленный за комнатой
-     */
-    private class GUI {
-        private final Server server;
-        private final Socket socket;
-        private final BufferedWriter out;
-        private final BufferedReader in;
-
-        public final int id;
-
-        public GUI(final Socket socket,final Server server) throws IOException {
-            this.socket = socket;
-            this.server = server;
-
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-            out.write(Serializer.serializeData(new Data(CommonCommands.GET_ROOM)) + '\n');
-            out.flush();
-
-            id = Integer.parseInt(in.readLine());
-        }
-
-        public boolean send(final String message) throws IOException {
-            out.write(message + '\n');
-            out.flush();
-            return !CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine());
-        }
-
-        private void downService() {
-            try {
-                if (!socket.isClosed()) {
-                    send(CommonCommands.END_GAME.command);
-                    socket.close();
-                    in.close();
-                    out.close();
-                }
-                server.guiList.remove(this);
-            } catch (final IOException ignored) {
-            }
-        }
-    }
 
     /**
      * Комната с игрой
@@ -132,6 +57,19 @@ public class Server {
         private final Map<Fields, BufferedWriter> getOuter;
         private final Map<Fields, BufferedReader> getReader;
 
+        private Rooms() {
+            server = null;
+            socketOne = null;
+            socketTwo = null;
+            inPlayerOne = null;
+            outPlayerOne = null;
+            inPlayerTwo = null;
+            outPlayerTwo = null;
+            gameLogic = null;
+            getOuter = null;
+            getReader = null;
+        }
+
         /**
          * Для общения с клиентом необходим сокет (адресные данные)
          *
@@ -141,7 +79,7 @@ public class Server {
          */
         private Rooms(final Server server, final Socket socketOne, final Socket socketTwo) throws IOException {
             for (int i = 1; i <= maxRooms; i++) {
-                if (getRoom.get(i) == null) {
+                if (getRoom.get(i) == getRoom.get(-1)) {
                     this.id = i;
                     getRoom.put(i, this);
                     break;
@@ -187,9 +125,7 @@ public class Server {
 
                 // Выдача армий и отрисовка их на поле
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), outPlayerOne);
-                Army one = Deserializer.deserializeData(
-                        inPlayerOne.readLine()
-                ).army;
+                Army one = Deserializer.deserializeData(inPlayerOne.readLine()).army;
 
                 data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
                 //sendDraw(data);
@@ -197,10 +133,10 @@ public class Server {
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);
                 Army two = Deserializer.deserializeData(inPlayerTwo.readLine()).army;
 
-
                 gameLogic.gameStart(one, two);
                 data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
-                sendDraw(data);
+                sendDraw(Serializer.serializeData(data), outPlayerOne, inPlayerOne);
+                sendDraw(Serializer.serializeData(data), outPlayerTwo, inPlayerTwo);
 
                 // весь игровой процесс
                 Answer answer;
@@ -215,28 +151,17 @@ public class Server {
 
                     gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
                     data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
-                    sendDraw(data);
+                    sendDraw(Serializer.serializeData(data), outPlayerOne, inPlayerOne);
+                    sendDraw(Serializer.serializeData(data), outPlayerTwo, inPlayerTwo);
                 }
 
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerOne);
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
 
-
-                sendDraw(new Data(CommonCommands.END_GAME, gameLogic.getBoard()));
                 this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException | BoardException e) {
                 this.downService(CommonCommands.END_GAME);
             }//*/
-        }
-
-        private void sendDraw(final Data data) throws IOException {
-            for (final GUI item: guiList) {
-                if (item.id == this.id) {
-                    if (!item.send(Serializer.serializeData(data))) {
-                        //downService(CommonCommands.END_GAME);
-                    }
-                }
-            }
         }
 
         /**
@@ -247,13 +172,21 @@ public class Server {
             out.flush();
         }
 
+        public void sendDraw(final String message, final BufferedWriter out, final BufferedReader in) throws IOException {
+            out.write(message + '\n');
+            out.flush();
+            if (CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine())) {
+                throw new IOException("Error drawing");
+            }
+        }
+
         /**
          * закрытие сервера, удаление себя из списка нитей
          * гуи остается следить за комнатой
          */
         private void downService(final CommonCommands command) {
             try {
-                getRoom.put(id, null);
+                getRoom.put(id, getRoom.get(-1));
                 if (!socketOne.isClosed()) {
                     if (command == CommonCommands.MAX_ROOMS) {
                         sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), outPlayerOne);
@@ -285,9 +218,9 @@ public class Server {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-            new GUIThread(Deserializer.getConfig().GUI_PORT, this).start();
+            getRoom.put(-1, new Rooms());
             for (int i = 0; i <= maxRooms; i++) {
-                getRoom.put(i, null);
+                getRoom.put(i, getRoom.get(-1));
             }
             while (true) {
                 // Блокируется до возникновения нового соединения
