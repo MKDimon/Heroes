@@ -2,6 +2,7 @@ package heroes.gamelogic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Board {
     /*
      *          ---> X
@@ -58,8 +60,12 @@ public class Board {
         this.isArmyTwoInspired = isArmyTwoInspired;
         this.status = status;
         getUnits = new HashMap<>();
-        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
-        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+        if (fieldPlayerOne != null) {
+            getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
+        }
+        if (fieldPlayerTwo != null) {
+            getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+        }
     }
 
     public Board(final Army fieldPlayerOne, final Army fieldPlayerTwo) throws UnitException { //TODO: Validation

@@ -74,23 +74,28 @@ public class ClientGUI {
             tw.start();
             TextGraphics tg = tw.getScreen().newTextGraphics();
             String message;
-            Data data;
+            Data data = new Data();
+            int i = 0;
 
-            while (true) {
-                message = in.readLine();
-                if (message == null) { continue; }
-                data = Deserializer.deserializeData(message);
+            while (true) { //TODO: REFACTOR TO STATE MACHINE
+                if (in.ready()) {
+                    message = in.readLine();
+                    data = Deserializer.deserializeData(message);
+                }
+                else message = null;
                 if (CommonCommands.GET_ROOM.equals(data.command)) {
                     logger.info(message);
                     // TODO: выбор комнаты, пока что рандом или 1 комната
                     int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
                     out.write("1" + '\n');
                     out.flush();
+                    data = new Data();
                 }
                 else if (CommonCommands.END_GAME.equals(data.command)) {
                     logger.info(message);
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();
+                    data = new Data();
                     //downService();
                 }
                 else if (CommonCommands.SEE_ARMY.equals(data.command)) {
@@ -99,13 +104,15 @@ public class ClientGUI {
                     out.flush();
                 }
                 else if (CommonCommands.DRAW.equals(data.command)){
-                    logger.info("BOARD TO DRAW");
+                    //  logger.info("BOARD TO DRAW");
 
                     tw.update(data.answer, data.board);
+                    // типа кадры смотрим
                     tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
-                            (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO CONTINUE");
+                            (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), String.valueOf(i));
                     tw.getScreen().refresh();
-                    tw.getScreen().readInput();
+                    i++;
+                    if (i > 1000) i = 0;
 
                     out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
                     out.flush();

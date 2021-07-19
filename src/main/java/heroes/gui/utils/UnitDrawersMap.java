@@ -1,15 +1,14 @@
 package heroes.gui.utils;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.gui.generaldrawers.CommanderDrawer;
-import heroes.gui.generaldrawers.IGeneralDrawer;
-import heroes.gui.generaldrawers.PriestDrawer;
-import heroes.gui.generaldrawers.SniperDrawer;
 import heroes.gui.unitdrawers.*;
-import heroes.units.UnitTypes;
 
 import java.util.Map;
 
+/**
+ * Статический класс хранит неизменяемый Map, который создает связь между типом юнита и соответствующим классом Drawer.
+ * По сути, вместе с IUnitDrawer, это урезанная реализация паттерна Strategy.
+ */
 public class UnitDrawersMap {
     private static final Map<ActionTypes, IUnitDrawer> unitDrawersMap;
     static {

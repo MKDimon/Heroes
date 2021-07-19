@@ -54,4 +54,11 @@ public class Data {
         this.board = null;
         this.answer = null;
     }
+
+    public Data() {
+        this.command = null;
+        this.army = null;
+        this.board = null;
+        this.answer = null;
+    }
 }

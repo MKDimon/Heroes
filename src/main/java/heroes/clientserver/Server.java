@@ -191,7 +191,7 @@ public class Server {
                         inPlayerOne.readLine()
                 ).army;
 
-                data = new Data(CommonCommands.SEE_ARMY, new Board(one, Fields.PLAYER_ONE));
+                data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
                 //sendDraw(data);
 
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);

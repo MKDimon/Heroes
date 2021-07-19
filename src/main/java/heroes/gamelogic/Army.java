@@ -1,6 +1,7 @@
 package heroes.gamelogic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
@@ -57,10 +58,12 @@ public class Army {
         }
     }
 
+    @JsonIgnore
     public Unit[][] getPlayerUnits() {
         return playerUnits;
     }
 
+    @JsonIgnore
     public final General getGeneral() throws UnitException {
         return general;
     }
