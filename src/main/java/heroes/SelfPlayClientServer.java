@@ -1,7 +1,6 @@
 package heroes;
 
 import heroes.clientserver.Client;
-import heroes.clientserver.ClientGUI;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

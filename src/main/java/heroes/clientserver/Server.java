@@ -2,6 +2,7 @@ package heroes.clientserver;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -128,7 +129,8 @@ public class Server {
                 Army one = Deserializer.deserializeData(inPlayerOne.readLine()).army;
 
                 data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
-                //sendDraw(data);
+                sendDraw(Serializer.serializeData(data), outPlayerOne, inPlayerOne);
+                sendDraw(Serializer.serializeData(data), outPlayerTwo, inPlayerTwo);
 
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);
                 Army two = Deserializer.deserializeData(inPlayerTwo.readLine()).army;

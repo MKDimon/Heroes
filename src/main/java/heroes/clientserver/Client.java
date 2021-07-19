@@ -2,8 +2,7 @@ package heroes.clientserver;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.commands.CommandFactory;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.player.BaseBot;
@@ -13,12 +12,10 @@ import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.crypto.Cipher;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Client {
@@ -28,8 +25,11 @@ public class Client {
 
     private final String ip;
     private final int port;
+
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
+
+    private TerminalWrapper tw;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -61,19 +61,7 @@ public class Client {
         }
     }
 
-    //Метод, который вызывает у игрока создание армии
-    private String sendArmyJson() throws IOException {
-        return Serializer.serializeData(new Data(null, player.getArmy()));
-    }
-
-    //Метод, который вызывает у игрока ответ
-    private String sendAnswerJson(final String json) throws GameLogicException, IOException {
-        return Serializer.serializeData(
-                new Data(player.getAnswer(Deserializer.deserializeData(json).board))
-        );
-    }
-
-    private BaseBot chooseBot(final Fields field) {
+    public void chooseBot(final Fields field) {
         Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
@@ -83,7 +71,8 @@ public class Client {
         while (true) {
             try {
                 String botTypeString = scanner.next();
-                return botFactoryMap.get(botTypeString).createBot(field);
+                player = botFactoryMap.get(botTypeString).createBot(field);
+                break;
             } catch (IllegalArgumentException | GameLogicException e) {
                 System.out.println("Incorrect bot type!!!");
                 System.out.println("Choose your bot: Test, Random, Player");
@@ -91,7 +80,7 @@ public class Client {
         }
     }
 
-    private void downService() {
+    public void downService() {
         try {
             if (!socket.isClosed()) {
                 socket.close();
@@ -102,85 +91,40 @@ public class Client {
             logger.error("Error service downing", e);
         }
     }
+
+    public BaseBot getPlayer() {
+        return player;
+    }
+
+    public TerminalWrapper getTw() {
+        return tw;
+    }
+
     /**
      * Первое сообщение - поле игрока
      * второе сообщение - выбери бота
      * Третье сообщение - выбери армию
      * Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
      */
+    @SuppressWarnings("InfiniteLoopStatement")
     private void start() {
         try {//Первое сообщение  - поле игрока
-            TerminalWrapper tw = new TerminalWrapper();
+            tw = new TerminalWrapper();
             tw.start();
             TextGraphics tg = tw.getScreen().newTextGraphics();
-            String message = null;
+            String message;
             Data data = new Data();
 
-            int i = 0;
             while (true) {
                 if (in.ready()) {
                     message = in.readLine();
                     data = Deserializer.deserializeData(message);
-                }
-                if (message == null) { continue; }
 
-                if (CommonCommands.FIELD_ONE.equals(data.command)){
-                    player = chooseBot(Fields.PLAYER_ONE);
-                    data = new Data(data);
+                    CommandFactory commandFactory = new CommandFactory();
+                    commandFactory.getCommand(data, out, this).execute();
                 }
-                else if (CommonCommands.FIELD_TWO.equals(data.command)) {
-                    player = chooseBot(Fields.PLAYER_TWO);
-                    data = new Data(data);
-                }
-                else if (CommonCommands.GET_ARMY.equals(data.command)) {
-                    // TODO: армия на основе армии противника
-                    // У игрока 2 прилетает армия 1 вместе с запросом
-                    out.write(sendArmyJson() + '\n');
-                    out.flush();
-                    data = new Data(data);
-                }
-                else if(CommonCommands.END_GAME.equals(data.command)){
-                    // TODO: победа или поражение
-                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
-                    out.flush();
-                    data = new Data(data);
-                }
-                else if (CommonCommands.MAX_ROOMS.equals(data.command)) {
-                    // TODO: можно писать причину
-                    downService();
-                    break;
-                }
-                else if (CommonCommands.GET_ANSWER.equals(data.command)){
-                    out.write(sendAnswerJson(message) + '\n');
-                    out.flush();
-                    data = new Data(data);
-                }
-                else if (CommonCommands.GET_ROOM.equals(data.command)) {
-                    logger.info(message);
-                    // TODO: выбор комнаты, пока что рандом или 1 комната
-                    int id = new Random().nextInt(Deserializer.getConfig().MAX_ROOMS);
-                    out.write("1" + '\n');
-                    out.flush();
-                    data = new Data(data);
-                }
-                else if (CommonCommands.DRAW.equals(data.command)){
-                    //  logger.info("BOARD TO DRAW");
-                    out.write(CommonCommands.DRAW_SUCCESSFUL.command + '\n');
-                    out.flush();
-                    data = new Data(data);
-                }
-
-                if (data.board != null) {
-                    tw.update(data.answer, data.board);
-                }
-                // типа кадры смотрим
-                tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
-                        (int)((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), String.valueOf(i));
-                tw.getScreen().refresh();
-                i++;
-                if (i > 1000) i = 0;
             }
-        } catch (IOException | NullPointerException | GameLogicException | UnitException | BoardException e) {
+        } catch (IOException | NullPointerException e) {
             logger.error("Error client running", e);
             downService();
         }
