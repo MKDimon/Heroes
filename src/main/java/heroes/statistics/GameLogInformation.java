@@ -12,11 +12,11 @@ public class GameLogInformation {
     private final Army playerOneArmy;
     private final Army playerTwoArmy;
     private final List<LogInformation> logList;
-    private final Fields winner;
+    private final String winner;
     private final int countOfRounds;
 
     public GameLogInformation(Army playerOneArmy, Army playerTwoArmy,
-                              List<LogInformation> logList, Fields winner, int countOfRounds) {
+                              List<LogInformation> logList, String winner, int countOfRounds) {
         this.playerOneArmy = playerOneArmy;
         this.playerTwoArmy = playerTwoArmy;
         this.logList = logList;
@@ -36,7 +36,7 @@ public class GameLogInformation {
         return List.copyOf(logList);
     }
 
-    public Fields getWinner() {
+    public String getWinner() {
         return winner;
     }
 

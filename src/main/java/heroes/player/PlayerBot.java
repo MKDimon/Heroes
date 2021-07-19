@@ -130,7 +130,7 @@ public class PlayerBot extends BaseBot {
                 break;
             } catch (IllegalArgumentException | GameLogicException e) {
                 System.out.println("Incorrect action!");
-                System.out.println(new StringBuffer().append("Choose action: "));
+                System.out.println("Choose action: ");
             }
         }
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;

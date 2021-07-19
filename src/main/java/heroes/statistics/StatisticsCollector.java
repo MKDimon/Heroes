@@ -17,17 +17,12 @@ import java.util.Map;
 
 /**
  * Класс - сборщик статистики.
- * Записывает следующие данные:
- * 1)
- * 2)
- *
- * Собирает статистику действий, совершенных юнитами
  * */
 
 public class StatisticsCollector {
     static final Logger logger = LoggerFactory.getLogger(StatisticsCollector.class);
-    public static final String actionStatisticsFilename = "src/main/resources/actionstatistics.csv";
-    public static final String armyStatisticsFilename = "src/main/resources/armystatistics.csv";
+    public static final String actionStatisticsFilename = "src/main/resources/statistics/actionstatistics.csv";
+    public static final String armyStatisticsFilename = "src/main/resources/statistics/armystatistics.csv";
     static final Map<ActionTypes, String> actToUnitMap = Map.of(
             ActionTypes.CLOSE_COMBAT, UnitTypes.SWORDSMAN.toString(),
             ActionTypes.RANGE_COMBAT, UnitTypes.BOWMAN.toString(),
@@ -106,13 +101,41 @@ public class StatisticsCollector {
             logger.error("Error action recording", e);
         }
     }
+
+    /**
+     * Далее набор классов, которые выводят обработанную статистику в файл
+     **/
+
+    public static void recordArmiesStatisticsToCSV(final Map<Army, Integer[]> armiesStatistics, final String filename){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+            for(Army army:armiesStatistics.keySet()){
+                StringBuffer record = new StringBuffer();
+                Unit[][] unitArray = army.getPlayerUnits();
+                for (Unit[] units : unitArray) {
+                    for (Unit unit : units) {
+                        if (unit.equals(army.getGeneral())) {
+                            record.append(actToGeneralMap.get(unit.getActionType())).append(",");
+                        } else {
+                            record.append(actToUnitMap.get(unit.getActionType())).append(",");
+                        }
+                    }
+                }
+                record.append(armiesStatistics.get(army)[0]).append(",").
+                        append(armiesStatistics.get(army)[1]).append(",").
+                        append(armiesStatistics.get(army)[2]).append("\n");
+                writer.write(record.toString());
+            }
+        } catch (IOException | UnitException e) {
+            logger.error("Error armies statistics recording", e);
+        }
+    }
 }
 
 /**
  * Классы для сбора статистики:
  * Коллектор - собирает данные в файл
  * Парсер - разбирает данные
- * Анализатор - анализирует данные и сводит статистику
+ * Анализатор - анализирует данные.
  *
  * Логи одной игры имеют следующую структуру:
  * GAME START
@@ -122,7 +145,7 @@ public class StatisticsCollector {
  *    0           1   2       3        4   5      6         7              8       9             10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,defX,defY,actionType,attackerUnitType,atHP,defenderUnitType,defHP,actionPower,
  * ...
- *
+ * *пустая строка*
  * lastRoundNumber,PLAYER_WINNER
  * GAME OVER
  **/

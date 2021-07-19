@@ -37,7 +37,7 @@ public class TestStatisticsParser {
         Army armyTwo = new Army(armyPlayerTwo, generalPlayerTwo);
         Fields winner = Fields.PLAYER_TWO;
         int countOfRounds = 2;
-        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/teststatistics.csv"));
+        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/statistics/teststatistics.csv"));
         GameLogInformation gameLog = StatisticsParser.
                 parseGameLogInformation(reader);
         LogInformation log1 = new LogInformation(new Position(0,2,Fields.PLAYER_ONE), new Position(1,0,Fields.PLAYER_TWO),
@@ -57,7 +57,7 @@ public class TestStatisticsParser {
                 parseGameLogInformation(reader);
         GameLogInformation gameLog3 = StatisticsParser.
                 parseGameLogInformation(reader);
-        List<GameLogInformation> fileInfo = StatisticsParser.parseLogFile("src/main/resources/teststatistics.csv");
+        List<GameLogInformation> fileInfo = StatisticsParser.parseLogFile("src/main/resources/statistics/teststatistics.csv");
         assertEquals(gameLog2, fileInfo.get(1));
         assertEquals(gameLog3, fileInfo.get(2));
         assertEquals(3, fileInfo.size());

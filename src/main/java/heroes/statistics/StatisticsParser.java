@@ -155,10 +155,10 @@ public class StatisticsParser {
                 throw new IOException("Incorrect logs format");
             }
             return new GameLogInformation(armyPlayerOne, armyPlayerTwo,logList,
-                    Fields.valueOf(winnerPair.getX()), winnerPair.getY());
+                    winnerPair.getX(), winnerPair.getY());
         } catch (IOException | GameLogicException | NumberFormatException | NullPointerException e) {
             logger.error("Error game logs parsing", e);
-            //Если встретился некорректно написанный лог, то в анализатор статистики метод передаст null.
+            //Если встретился некорректно написанный лог, то метод передаст null.
             //Таким образом, отчистив результат от null`ов, получим набор распарсенных логов по всем играм.
             return null;
         }
