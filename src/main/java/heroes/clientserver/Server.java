@@ -235,13 +235,14 @@ public class Server {
                 sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
 
                 GameStatus status = gameLogic.getBoard().getStatus();
-                collector.recordMessageToCSV(new StringBuffer().append(gameLogic.getBoard().getCurNumRound()).
+                collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
                         append(",").toString());
                 switch(status){
                     case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
                     case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
                     case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
                 }
+                collector.recordMessageToCSV("\nGAME OVER\n");
                 sendDraw(new Data(CommonCommands.END_GAME, gameLogic.getBoard()));
                 this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException | BoardException e) {

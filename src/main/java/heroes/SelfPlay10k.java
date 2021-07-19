@@ -39,7 +39,7 @@ public class SelfPlay10k {
 
     public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
         new PlayServer().start();
-        for(int i = 0; i < 100; i++) {
+        for(int i = 0; i < 150; i++) {
             Thread.sleep(300); // Чтобы сервер успел запуститься
             new PlayClient().start();
             new PlayClient().start();
