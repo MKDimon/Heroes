@@ -8,6 +8,7 @@ import com.googlecode.lanterna.terminal.Terminal;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.utils.Side;
 import heroes.gui.utils.UnitDrawersMap;
 import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
@@ -63,19 +64,19 @@ public class TerminalWrapper {
      * @throws IOException исключение из методов Лантерны пробрасывается выше.
      * @throws UnitException исключение из методов класса Board также пробрасывается выше.
      */
-    public void update(final Answer answer, final Board board) throws IOException, UnitException {
+    public void update(final Answer answer, final Board board) throws IOException, UnitException { //TODO: REFACTOR GENERAL DRAWER
         clean();
-
         TerminalBorderDrawer.drawBorders(this);
-        General gen_one = board.getGeneralPlayerOne();
-        General gen_two = board.getGeneralPlayerTwo();
-        TerminalGeneralDrawer.drawGenerals(this, gen_one.getActionType(), gen_two.getActionType());
+
         UnitTerminalGrid utg = new UnitTerminalGrid(this.getTerminal().getTerminalSize().getColumns() / 2 - 35 + 2,
                                                     this.getTerminal().getTerminalSize().getColumns() / 2 + 35 - 1);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 //draw units of 1st army
                 if (board.getArmy(Fields.PLAYER_ONE) != null) {
+                    General gen_one = board.getGeneralPlayerOne();
+                    TerminalGeneralDrawer.drawGeneral(this, gen_one.getActionType(), Side.LHS);
+
                     UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
                                     board.getFieldPlayerOne()[i][j] == board.getGeneralPlayerOne());
@@ -85,6 +86,8 @@ public class TerminalWrapper {
                 }
                 //draw units of 2nd army
                 if (board.getArmy(Fields.PLAYER_TWO) != null) {
+                    General gen_two = board.getGeneralPlayerTwo();
+                    TerminalGeneralDrawer.drawGeneral(this, gen_two.getActionType(), Side.RHS);
                     UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
                                     board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());

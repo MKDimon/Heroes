@@ -77,7 +77,7 @@ public class ClientGUI {
             Data data = new Data();
             int i = 0;
 
-            while (true) {
+            while (true) { //TODO: REFACTOR TO STATE MACHINE
                 if (in.ready()) {
                     message = in.readLine();
                     data = Deserializer.deserializeData(message);
