@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestStatisticsParser {
     @Test
-    public void testParseGameLogInformation() throws UnitException, GameLogicException, BoardException, IOException {
+    public void testParseGameLogInformation() throws UnitException, BoardException, IOException {
         General generalPlayerOne = new General(GeneralTypes.SNIPER);
         Unit[][] armyPlayerOne = new Unit[2][3];
         armyPlayerOne[0][0] = new Unit(UnitTypes.MAGE); armyPlayerOne[1][0] = new Unit(UnitTypes.SWORDSMAN);

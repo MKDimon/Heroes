@@ -14,6 +14,8 @@ import java.util.Objects;
 )
 public class Unit {
     @JsonProperty
+    private int defenseArmor;
+    @JsonProperty
     private int bonusArmor;
     @JsonProperty
     private int bonusDamage;
@@ -35,7 +37,7 @@ public class Unit {
     private boolean isActive;
 
     @JsonCreator
-    public Unit(@JsonProperty("bonusArmor") int bonusArmor,@JsonProperty("bonusDamage") int bonusDamage,
+    public Unit(@JsonProperty("defenseArmor") int defenseArmor, @JsonProperty("bonusArmor") int bonusArmor,@JsonProperty("bonusDamage") int bonusDamage,
                 @JsonProperty("bonusAccuracy") int bonusAccuracy, @JsonProperty("actionType") ActionTypes actionType,
                 @JsonProperty("maxHP")int maxHP, @JsonProperty("currentHP") int currentHP,
                 @JsonProperty("power") int power, @JsonProperty("accuracy") int accuracy,
@@ -43,6 +45,7 @@ public class Unit {
         if(actionType == null){
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
+        this.defenseArmor = defenseArmor;
         this.bonusArmor = bonusArmor;
         this.bonusDamage = bonusDamage;
         this.bonusAccuracy = bonusAccuracy;
@@ -65,7 +68,7 @@ public class Unit {
     }
 
     public Unit(UnitTypes unitType) throws UnitException {
-        this(0,0,0, unitType.actionType,unitType.HP,unitType.HP,unitType.power,
+        this(0,0,0,0, unitType.actionType,unitType.HP,unitType.HP,unitType.power,
                 unitType.accuracy, unitType.armor, true);
     }
 
@@ -73,6 +76,7 @@ public class Unit {
         if (unit == null || unit.getActionType() == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
+        defenseArmor = unit.defenseArmor;
         maxHP = unit.maxHP;
         setCurrentHP(unit.currentHP);
         setPower(unit.power);
@@ -88,13 +92,13 @@ public class Unit {
     public void inspire(int inspirationArmorBonus, int inspirationDamageBonus, int inspirationAccuracyBonus) {
         bonusDamage = inspirationDamageBonus;
         bonusAccuracy = inspirationAccuracyBonus;
-        bonusArmor += inspirationArmorBonus;
+        bonusArmor = inspirationArmorBonus;
     }
 
-    public void deinspire(int inspirationBonusArmor) {
+    public void deinspire() {
         bonusDamage = 0;
         bonusAccuracy = 0;
-        bonusArmor -= inspirationBonusArmor;
+        bonusArmor = 0;
     }
 
     public int getCurrentHP() {
@@ -114,7 +118,7 @@ public class Unit {
     }
 
     public int getArmor() {
-        return armor + bonusArmor;
+        return armor + bonusArmor + defenseArmor;
     }
 
     public ActionTypes getActionType() {
@@ -159,8 +163,16 @@ public class Unit {
     }
 
     public void defense() {
-        bonusArmor += 20;
+        defenseArmor += 20;
         isActive = false;
+    }
+
+    public int getDefenseArmor() {
+        return defenseArmor;
+    }
+
+    public void setDefenseArmor(int defenseArmor) {
+        this.defenseArmor = defenseArmor;
     }
 
     @Override
