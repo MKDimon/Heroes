@@ -8,6 +8,8 @@ import com.googlecode.lanterna.terminal.Terminal;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
+import heroes.gui.selectiondrawers.TerminalSelectionDrawer;
 import heroes.gui.utils.Side;
 import heroes.gui.utils.UnitDrawersMap;
 import heroes.gui.utils.UnitTerminalGrid;
@@ -64,12 +66,11 @@ public class TerminalWrapper {
      * @throws IOException исключение из методов Лантерны пробрасывается выше.
      * @throws UnitException исключение из методов класса Board также пробрасывается выше.
      */
-    public void update(final Answer answer, final Board board) throws IOException, UnitException { //TODO: REFACTOR GENERAL DRAWER
+    public void update(final Answer answer, final Board board) throws IOException, UnitException {
         clean();
         TerminalBorderDrawer.drawBorders(this);
 
-        UnitTerminalGrid utg = new UnitTerminalGrid(this.getTerminal().getTerminalSize().getColumns() / 2 - 35 + 2,
-                                                    this.getTerminal().getTerminalSize().getColumns() / 2 + 35 - 1);
+        UnitTerminalGrid utg = new UnitTerminalGrid(this);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 //draw units of 1st army
@@ -94,6 +95,10 @@ public class TerminalWrapper {
                     //draw status of all units
                     TerminalStatusDrawer.invokeAllStatusDrawers(this,
                             utg.getPair(new Position(i, j, Fields.PLAYER_TWO)), board.getFieldPlayerTwo()[i][j]);
+                }
+
+                if (answer != null && board.getArmy(Fields.PLAYER_ONE) != null && board.getArmy(Fields.PLAYER_TWO) != null) {
+                    TerminalAnswerDrawer.drawAnswer(this, answer);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package heroes.gui;
 
 import heroes.gui.statusdrawers.ActiveDrawer;
+import heroes.gui.statusdrawers.DefenseDrawer;
 import heroes.gui.statusdrawers.HealthDrawer;
 import heroes.mathutils.Pair;
 import heroes.units.Unit;
@@ -21,6 +22,7 @@ public class TerminalStatusDrawer {
         hd.draw(tw, topLeftCorner, unit);
         ActiveDrawer ad = new ActiveDrawer();
         ad.draw(tw, topLeftCorner, unit);
-
+        DefenseDrawer dd = new DefenseDrawer();
+        dd.draw(tw, topLeftCorner, unit);
     }
 }
