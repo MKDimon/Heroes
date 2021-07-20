@@ -12,6 +12,6 @@ public class EndGameCommand extends Command{
 
     @Override
     public void execute() {
-
+        //TODO: возможность выбора комнаты заново
     }
 }
