@@ -12,6 +12,11 @@ import java.util.Objects;
         @JsonSubTypes.Type(value = General.class)
 }
 )
+
+/**
+ * Класс - игровой юнит
+ **/
+
 public class Unit {
     @JsonProperty
     private int defenseArmor;
@@ -63,16 +68,16 @@ public class Unit {
         return isActive && isAlive();
     }
 
-    public void setActive(boolean active) {
+    public void setActive(final boolean active) {
         isActive = active && isAlive();
     }
 
-    public Unit(UnitTypes unitType) throws UnitException {
+    public Unit(final UnitTypes unitType) throws UnitException {
         this(0,0,0,0, unitType.actionType,unitType.HP,unitType.HP,unitType.power,
                 unitType.accuracy, unitType.armor, true);
     }
 
-    public Unit(Unit unit) throws UnitException {
+    public Unit(final Unit unit) throws UnitException {
         if (unit == null || unit.getActionType() == null) {
             throw new UnitException(UnitExceptionTypes.NULL_POINTER);
         }
@@ -89,7 +94,8 @@ public class Unit {
         bonusDamage = unit.bonusDamage;
     }
 
-    public void inspire(int inspirationArmorBonus, int inspirationDamageBonus, int inspirationAccuracyBonus) {
+    public void inspire(final int inspirationArmorBonus, final int inspirationDamageBonus,
+                        final int inspirationAccuracyBonus) {
         bonusDamage = inspirationDamageBonus;
         bonusAccuracy = inspirationAccuracyBonus;
         bonusArmor = inspirationArmorBonus;
@@ -125,9 +131,9 @@ public class Unit {
         return actionType;
     }
 
-    public void setCurrentHP(int currentHP) {
+    public void setCurrentHP(final int currentHP) {
         if (currentHP > maxHP) {
-            currentHP = maxHP;
+            this.currentHP = maxHP;
         }
         if (currentHP <= 0) {
             isActive = false;
@@ -135,26 +141,22 @@ public class Unit {
         this.currentHP = currentHP;
     }
 
-    public void setPower(int power) throws UnitException {
+    public void setPower(final int power) throws UnitException {
         if (power <= 0) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_POWER);
         }
         this.power = power;
     }
 
-    public void setAccuracy(int accuracy) throws UnitException {
+    public void setAccuracy(final int accuracy) throws UnitException {
         this.accuracy = Math.min(Math.max(accuracy, 0), 100);
     }
 
-    public void setArmor(int armor) throws UnitException {
+    public void setArmor(final int armor) throws UnitException {
         if (armor < 0) {
             throw new UnitException(UnitExceptionTypes.INCORRECT_ARMOR);
         }
         this.armor = armor;
-    }
-
-    public void setBonusArmor(int bonusArmor) {
-        this.bonusArmor = bonusArmor;
     }
 
     @JsonIgnore
@@ -167,10 +169,6 @@ public class Unit {
         isActive = false;
     }
 
-    public int getDefenseArmor() {
-        return defenseArmor;
-    }
-
     public void setDefenseArmor(int defenseArmor) {
         this.defenseArmor = defenseArmor;
     }
@@ -180,11 +178,16 @@ public class Unit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Unit unit = (Unit) o;
-        return bonusArmor == unit.bonusArmor && bonusDamage == unit.bonusDamage && bonusAccuracy == unit.bonusAccuracy && maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power && accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive && actionType == unit.actionType;
+        return defenseArmor == unit.defenseArmor && bonusArmor == unit.bonusArmor &&
+                bonusDamage == unit.bonusDamage && bonusAccuracy == unit.bonusAccuracy &&
+                maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power &&
+                accuracy == unit.accuracy && armor == unit.armor && isActive == unit.isActive &&
+                actionType == unit.actionType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bonusArmor, bonusDamage, bonusAccuracy, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
+        return Objects.hash(defenseArmor, bonusArmor, bonusDamage, bonusAccuracy, actionType, maxHP,
+                currentHP, power, accuracy, armor, isActive);
     }
 }

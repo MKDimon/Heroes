@@ -1,9 +1,6 @@
 package heroes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import org.junit.Test;
 
 import java.io.FileOutputStream;

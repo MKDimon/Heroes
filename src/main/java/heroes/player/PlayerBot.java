@@ -1,8 +1,8 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
@@ -18,9 +18,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
+/**
+ * Класс - бот, управляемый игроком.
+ * Игрок через консоль задает армию и выбирает дейтсвия над юнитами.
+ **/
+
 public class PlayerBot extends BaseBot {
     private final Logger logger = LoggerFactory.getLogger(PlayerBot.class);
     private final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Фабрика ботов.
+     **/
 
     public static class PlayerBotFactory extends BaseBotFactory {
 
@@ -115,8 +124,8 @@ public class PlayerBot extends BaseBot {
 
             }
         }
-        Position attacker = new Position(attackerX, attackerY, getField());
-        System.out.println(new StringBuffer().append("Choose action: ")
+        final Position attacker = new Position(attackerX, attackerY, getField());
+        System.out.println(new StringBuffer("Choose action: ")
                 .append(board.getUnitByCoordinate(attacker).getActionType().toString())
                 .append(", ").append(ActionTypes.DEFENSE));
         ActionTypes act;
@@ -130,7 +139,7 @@ public class PlayerBot extends BaseBot {
                 break;
             } catch (IllegalArgumentException | GameLogicException e) {
                 System.out.println("Incorrect action!");
-                System.out.println(new StringBuffer().append("Choose action: "));
+                System.out.println("Choose action: ");
             }
         }
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;

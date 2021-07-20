@@ -1,7 +1,7 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
@@ -19,8 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Тестовый бот. Имеет фиксированный состав армии. Дейвтсвия выбирает случайнвм образом.
+ **/
+
 public class TestBot extends BaseBot {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
+
+    /**
+     * Фабрика ботов
+     **/
 
     public static class TestBotFactory extends BaseBotFactory {
 

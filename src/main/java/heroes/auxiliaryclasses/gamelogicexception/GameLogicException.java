@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses;
+package heroes.auxiliaryclasses.gamelogicexception;
 
 public class GameLogicException extends Exception {
 

@@ -1,10 +1,7 @@
 package heroes;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.input.KeyStroke;
-import com.googlecode.lanterna.input.KeyType;
-import com.googlecode.lanterna.terminal.SimpleTerminalResizeListener;
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;

@@ -14,7 +14,7 @@ public enum UnitTypes {
     public final int accuracy;
     public final int armor;
 
-    UnitTypes(int HP, int power, int accuracy, int armor, ActionTypes actionType) {
+    UnitTypes(final int HP, final int power, final int accuracy, final int armor, final ActionTypes actionType) {
         this.HP = HP;
         this.power = power;
         this.armor = armor;

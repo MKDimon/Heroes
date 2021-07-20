@@ -5,11 +5,9 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.commands.CommonCommands;
 import heroes.auxiliaryclasses.serverexcetions.ServerException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
+import heroes.gamelogic.*;
 import heroes.player.Answer;
+import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Сервер
  */
+
 public class Server {
     Logger logger = LoggerFactory.getLogger(Server.class);
 
@@ -124,6 +123,8 @@ public class Server {
                         }
                     }
 
+                    StatisticsCollector collector = new StatisticsCollector(id);
+
                     getPlayer.put(Fields.PLAYER_ONE, playerOne);
                     getPlayer.put(Fields.PLAYER_TWO, playerTwo);
 
@@ -152,6 +153,11 @@ public class Server {
                     Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
 
                     gameLogic.gameStart(one, two);
+
+                    collector.recordMessageToCSV("GAME START\n");
+                    collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
+                    collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
+
                     // Отрисовка
                     data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
                     playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
@@ -174,7 +180,16 @@ public class Server {
                         String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
                         answer = Deserializer.deserializeData(str).answer;
 
+                        //для статистики
+                        int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+
                         gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+                        collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(),
+                                gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()),
+                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                        - defenderHP);
                         // Отрисовка
                         data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
                         playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
@@ -186,6 +201,16 @@ public class Server {
                     sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerOne.out);
                     sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerTwo.out);
 
+                    GameStatus status = gameLogic.getBoard().getStatus();
+                    collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
+                            append(",").toString());
+                    switch(status){
+                        case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                        case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                        case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+                    }
+                    collector.recordMessageToCSV("\nGAME OVER\n");
+
                     this.endGame();
                 }
             }
@@ -195,7 +220,7 @@ public class Server {
             }catch (final IOException | UnitException | BoardException e) {
                 logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
                 this.downService();
-            }//*/
+            }
         }
 
         /**

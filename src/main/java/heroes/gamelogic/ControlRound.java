@@ -1,5 +1,6 @@
 package heroes.gamelogic;
 
+import heroes.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
@@ -56,14 +57,14 @@ public class ControlRound {
         active += Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
-            board.setStatus(GameStatus.PLAYER_TWO_WINS);
-            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
-            return false;
-        }
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
             board.setStatus(GameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
+            return false;
+        }
+        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+            board.setStatus(GameStatus.PLAYER_TWO_WINS);
+            logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
 
@@ -81,8 +82,9 @@ public class ControlRound {
      * @param board состояние игры
      * @return продолжается игра - true / false иначе
      */
-    private static boolean newRound(final Board board) {
+    public static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
+            board.setStatus(GameStatus.NO_WINNERS);
             board.setStatus(GameStatus.NO_WINNERS);
             logger.info("Конец игры: НИЧЬЯ");
             return false;

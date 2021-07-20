@@ -1,8 +1,8 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
@@ -85,7 +85,6 @@ public class GameLogic {
             Validator.checkCorrectAttacker(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
-            // можно через лямбду
             int countAliveAtc = 0, x = attacker.X(),
                     countAliveDef = 0, xD = defender.X();
             Unit[][] units = board.getArmy(attacker.F());

@@ -72,8 +72,18 @@ public class Army {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Army army = (Army) o;
-        return Arrays.deepEquals(playerUnits, army.playerUnits) && Objects.equals(general, army.general);
+        Army army = (Army)o;
+        if(!this.general.equals(army.general)){
+            return false;
+        }
+        for(int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++) {
+                if(!this.playerUnits[i][j].equals(army.playerUnits[i][j])){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package heroes;
 
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.Client;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
@@ -31,8 +31,8 @@ public class SelfPlay10k {
 
     public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException {
         new PlayServer().start();
-        Thread.sleep(300); // Чтобы сервер успел запуститься
-        for(int i = 0; i < 10000; i++) {
+        for(int i = 0; i < 150; i++) {
+            Thread.sleep(300); // Чтобы сервер успел запуститься
             new PlayClient().start();
             new PlayClient().start();
         }

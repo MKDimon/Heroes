@@ -1,7 +1,7 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
@@ -19,8 +19,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Случайный бот.
+ * Случайнвм образом выбирает армию и случайно делает ходы.
+ **/
+
 public class RandomBot extends BaseBot {
     Logger logger = LoggerFactory.getLogger(RandomBot.class);
+
+    /**
+     * Фабрика ботов
+     **/
 
     public static class RandomBotFactory extends BaseBotFactory {
         @Override

@@ -7,6 +7,9 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 
 import java.util.Objects;
 
+/**
+ * Класс - генерал
+ **/
 
 public class General extends Unit {
     @JsonProperty
@@ -17,14 +20,16 @@ public class General extends Unit {
     public final int inspirationAccuracyBonus;
 
     @JsonCreator
-    public General(@JsonProperty("defenseArmor") int defenseArmor, @JsonProperty("bonusArmor") int bonusArmor,@JsonProperty("bonusDamage") int bonusDamage,
-                   @JsonProperty("bonusAccuracy") int bonusAccuracy, @JsonProperty("actionType") ActionTypes actionType,
-                   @JsonProperty("maxHP")int maxHP, @JsonProperty("currentHP") int currentHP,
-                   @JsonProperty("power") int power, @JsonProperty("accuracy") int accuracy,
-                   @JsonProperty("armor") int armor, @JsonProperty("isActive") boolean isActive,
-                   @JsonProperty("inspirationArmorBonus") int inspirationArmorBonus,
-                   @JsonProperty("inspirationDamageBonus") int inspirationDamageBonus,
-                   @JsonProperty("inspirationAccuracyBonus") int inspirationAccuracyBonus)
+    public General(@JsonProperty("defenseArmor") final int defenseArmor, @JsonProperty("bonusArmor") final int bonusArmor,
+                   @JsonProperty("bonusDamage") final int bonusDamage,
+                   @JsonProperty("bonusAccuracy") final int bonusAccuracy,
+                   @JsonProperty("actionType") final ActionTypes actionType,
+                   @JsonProperty("maxHP") final int maxHP, @JsonProperty("currentHP") final  int currentHP,
+                   @JsonProperty("power") final int power, @JsonProperty("accuracy") final int accuracy,
+                   @JsonProperty("armor") final int armor, @JsonProperty("isActive") final boolean isActive,
+                   @JsonProperty("inspirationArmorBonus") final int inspirationArmorBonus,
+                   @JsonProperty("inspirationDamageBonus") final int inspirationDamageBonus,
+                   @JsonProperty("inspirationAccuracyBonus") final int inspirationAccuracyBonus)
             throws UnitException {
         super(defenseArmor, bonusArmor, bonusDamage, bonusAccuracy, actionType, maxHP, currentHP, power, accuracy, armor, isActive);
         this.inspirationArmorBonus = inspirationArmorBonus;
@@ -32,14 +37,14 @@ public class General extends Unit {
         this.inspirationAccuracyBonus = inspirationAccuracyBonus;
     }
 
-    public General(GeneralTypes generalType) throws UnitException {
+    public General(final GeneralTypes generalType) throws UnitException {
         super(generalType.unitType);
         inspirationArmorBonus = generalType.inspirationArmorBonus;
         inspirationDamageBonus = generalType.inspirationDamageBonus;
         inspirationAccuracyBonus = generalType.inspirationAccuracyBonus;
     }
 
-    public General(General general) throws UnitException {
+    public General(final General general) throws UnitException {
         super(general);
         inspirationArmorBonus = general.inspirationArmorBonus;
         inspirationDamageBonus = general.inspirationDamageBonus;
