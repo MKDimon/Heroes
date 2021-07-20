@@ -46,6 +46,12 @@ public class Answer {
         }
     }
 
+    public Answer(final Answer answer) {
+        attacker = new Position(answer.attacker);
+        defender = new Position(answer.defender);
+        actionType = answer.actionType;
+    }
+
     public Position getAttacker() {
         return attacker;
     }

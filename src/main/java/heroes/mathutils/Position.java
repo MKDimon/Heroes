@@ -20,6 +20,12 @@ public class Position {
         this.f = f;
     }
 
+    public Position(final Position pos) {
+        x = pos.x;
+        y = pos.y;
+        f = pos.f;
+    }
+
     public int X() {
         return x;
     }

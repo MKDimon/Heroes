@@ -1,4 +1,4 @@
-package heroes.clientserver;
+package heroes.clientserver.commands;
 
 import heroes.gamelogic.Fields;
 

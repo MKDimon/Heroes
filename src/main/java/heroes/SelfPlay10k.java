@@ -2,7 +2,6 @@ package heroes;
 
 import heroes.auxiliaryclasses.GameLogicException;
 import heroes.clientserver.Client;
-import heroes.clientserver.ClientGUI;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +26,6 @@ public class SelfPlay10k {
         @Override
         public void run() {
             Client.main(new String[]{});
-        }
-    }
-
-    private static class PlayClientGUI extends Thread {
-        @Override
-        public void run() {
-            ClientGUI.main(new String[]{});
         }
     }
 
