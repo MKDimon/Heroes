@@ -61,7 +61,6 @@ public class TestStatisticsParser {
         final List<GameLogInformation> fileInfo = StatisticsParser.parseLogFile("src/main/resources/teststatistics.csv");
         assertEquals(gameLog2, fileInfo.get(1));
         assertEquals(gameLog3, fileInfo.get(2));
-        assertEquals(3, fileInfo.size());
         assertEquals(4, fileInfo.size());
     }
 }
