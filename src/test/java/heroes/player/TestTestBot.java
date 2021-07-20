@@ -1,6 +1,6 @@
 package heroes.player;
 
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;

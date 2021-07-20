@@ -1,4 +1,4 @@
-package heroes.statistics;
+package heroes.auxiliaryclasses.statisticsexception;
 
 public class StatisticsException extends Exception {
     public StatisticsException(StatisticsExceptionTypes type){

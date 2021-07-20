@@ -1,6 +1,6 @@
 package heroes;
 
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.Client;
 import heroes.clientserver.Server;
 import org.slf4j.Logger;

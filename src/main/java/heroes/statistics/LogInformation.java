@@ -6,6 +6,10 @@ import heroes.units.UnitTypes;
 
 import java.util.Objects;
 
+/**
+ * Класс, хранящий информацию об одном действии игрока.
+ **/
+
 public class LogInformation {
     private final Position attacker;
     private final Position defender;
@@ -16,9 +20,9 @@ public class LogInformation {
     private final int defenderHP;
     private final int actPower;
 
-    public LogInformation(Position attacker, Position defender, ActionTypes actionType,
-                          UnitTypes attackerType, int attackerHP, UnitTypes defenderType,
-                          int defenderHP, int actPower) {
+    public LogInformation(final Position attacker, final Position defender, final ActionTypes actionType,
+                          final UnitTypes attackerType, final int attackerHP, final UnitTypes defenderType,
+                          final int defenderHP, final int actPower) {
         this.attacker = attacker;
         this.defender = defender;
         this.actionType = actionType;

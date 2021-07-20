@@ -3,10 +3,16 @@ package heroes.statistics;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
 
 import java.util.List;
 import java.util.Objects;
+
+/**
+ * Класс хрнаит следующую ифнормацю о одной игре.
+ * Составы армий игроков
+ * Историю ходов
+ * Победитель, количетсво раундов
+ **/
 
 public class GameLogInformation {
     private final Army playerOneArmy;
@@ -15,8 +21,8 @@ public class GameLogInformation {
     private final String winner;
     private final int countOfRounds;
 
-    public GameLogInformation(Army playerOneArmy, Army playerTwoArmy,
-                              List<LogInformation> logList, String winner, int countOfRounds) {
+    public GameLogInformation(final Army playerOneArmy, final Army playerTwoArmy,
+                              final List<LogInformation> logList, final String winner, final int countOfRounds) {
         this.playerOneArmy = playerOneArmy;
         this.playerTwoArmy = playerTwoArmy;
         this.logList = logList;
@@ -49,7 +55,9 @@ public class GameLogInformation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GameLogInformation that = (GameLogInformation) o;
-        return countOfRounds == that.countOfRounds && Objects.equals(playerOneArmy, that.playerOneArmy) && Objects.equals(playerTwoArmy, that.playerTwoArmy) && Objects.equals(logList, that.logList) && winner == that.winner;
+        return countOfRounds == that.countOfRounds && Objects.equals(playerOneArmy, that.playerOneArmy)
+                && Objects.equals(playerTwoArmy, that.playerTwoArmy) &&
+                Objects.equals(logList, that.logList) && winner.equals(that.winner);
     }
 
     @Override

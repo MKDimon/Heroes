@@ -1,7 +1,7 @@
 package heroes.player;
 
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;

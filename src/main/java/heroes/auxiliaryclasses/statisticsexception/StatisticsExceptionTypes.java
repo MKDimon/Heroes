@@ -1,4 +1,4 @@
-package heroes.statistics;
+package heroes.auxiliaryclasses.statisticsexception;
 
 public enum StatisticsExceptionTypes {
     NULL_POINTER("Null pointer"),

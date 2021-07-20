@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses;
+package heroes.auxiliaryclasses.gamelogicexception;
 
 public enum GameLogicExceptionType {
     INCORRECT_PARAMS("Incorrect params for GL"),

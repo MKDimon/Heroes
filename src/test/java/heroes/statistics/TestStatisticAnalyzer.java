@@ -1,6 +1,7 @@
 package heroes.statistics;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.units.General;
