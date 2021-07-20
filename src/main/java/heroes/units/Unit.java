@@ -131,9 +131,9 @@ public class Unit {
         return actionType;
     }
 
-    public void setCurrentHP(final int currentHP) {
+    public void setCurrentHP(int currentHP) {
         if (currentHP > maxHP) {
-            this.currentHP = maxHP;
+            currentHP = maxHP;
         }
         if (currentHP <= 0) {
             isActive = false;
@@ -167,6 +167,10 @@ public class Unit {
     public void defense() {
         defenseArmor += 20;
         isActive = false;
+    }
+
+    public int getDefenseArmor(){
+        return defenseArmor;
     }
 
     public void setDefenseArmor(int defenseArmor) {

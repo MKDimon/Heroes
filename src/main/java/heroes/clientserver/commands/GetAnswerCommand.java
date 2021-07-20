@@ -1,6 +1,6 @@
 package heroes.clientserver.commands;
 
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
 import heroes.clientserver.Serializer;

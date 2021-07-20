@@ -1,6 +1,6 @@
 package heroes.clientserver;
 
-import com.googlecode.lanterna.graphics.TextGraphics;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;
@@ -71,6 +71,9 @@ public class Client {
         while (true) {
             try {
                 String botTypeString = scanner.next();
+                if(!botFactoryMap.containsKey(botTypeString)){
+                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+                }
                 player = botFactoryMap.get(botTypeString).createBot(field);
                 break;
             } catch (IllegalArgumentException | GameLogicException e) {

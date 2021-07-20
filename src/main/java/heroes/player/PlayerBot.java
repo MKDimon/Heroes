@@ -158,7 +158,7 @@ public class PlayerBot extends BaseBot {
                 defenderX = scanner.nextInt();
                 System.out.print("Y: ");
                 defenderY = scanner.nextInt();
-                if (!board.getUnitByCoordinate(new Position(attackerX, attackerY, getField())).isActive()) {
+                if (!board.getUnitByCoordinate(new Position(defenderX, defenderY, getField())).isAlive()) {
                     throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
                 }
                 break;

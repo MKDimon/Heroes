@@ -75,7 +75,7 @@ public class StatisticsCollector {
                     }
                 }
             }
-            record.append("\n");
+            record.delete(record.length()-1,record.length()).append("\n");
             writer.write(record.toString());
         } catch (IOException | UnitException e) {
             logger.error("Error army recording", e);
@@ -89,22 +89,29 @@ public class StatisticsCollector {
      *
      * @param attackPos - позиция атакующего юнита
      * @param defPos    - позиция защищающегося юнита
+     * @param actType   - тип действия
      * @param attacker  - кем ходит
      * @param defender  - на кого ходит
      * @param actPower  - с какой силой ходит
      **/
 
-    public void recordActionToCSV(final Position attackPos, final Position defPos, final Unit attacker,
-                                  final Unit defender, final int actPower) {
-        final StringBuffer record = new StringBuffer();
-        record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
-                append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
-                append(defPos.X()).append(",").append(defPos.Y()).append(",").
-                append(actToUnitMap.get(attacker.getActionType())).append(",").
-                append(attacker.getCurrentHP()).append(",").
-                append(actToUnitMap.get(defender.getActionType())).append(",").
-                append(defender.getCurrentHP()).append(",").append(actPower).append("\n");
-        recordMessageToCSV(record.toString());
+    public void recordActionToCSV(final Position attackPos, final Position defPos, ActionTypes actType,
+                                  final Unit attacker, final Unit defender, int actPower) {
+        //Проверка на то, что дейтсвие корректно. Некорректное дейтсвие не выполнится => не должно попасть в лог
+        if(actType != ActionTypes.CLOSE_COMBAT || actPower != 0) {
+            if(actType == ActionTypes.DEFENSE){
+                actPower = defender.getArmor();
+            }
+            final StringBuffer record = new StringBuffer();
+            record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
+                    append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
+                    append(defPos.X()).append(",").append(defPos.Y()).append(",").append(actType.toString()).append(",").
+                    append(actToUnitMap.get(attacker.getActionType())).append(",").
+                    append(attacker.getCurrentHP()).append(",").
+                    append(actToUnitMap.get(defender.getActionType())).append(",").
+                    append(defender.getCurrentHP()).append(",").append(actPower).append("\n");
+            recordMessageToCSV(record.toString());
+        }
     }
 
     /**
