@@ -5,10 +5,7 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.commands.CommonCommands;
 import heroes.auxiliaryclasses.serverexcetions.ServerException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
+import heroes.gamelogic.*;
 import heroes.player.Answer;
 import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
@@ -27,6 +24,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * Сервер
  */
+
 public class Server {
     Logger logger = LoggerFactory.getLogger(Server.class);
 

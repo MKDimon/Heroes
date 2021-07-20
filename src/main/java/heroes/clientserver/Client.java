@@ -1,10 +1,8 @@
 package heroes.clientserver;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
-import heroes.auxiliaryclasses.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.player.BaseBot;
@@ -110,7 +108,7 @@ public class Client {
      */
     @SuppressWarnings("InfiniteLoopStatement")
     private void start() {
-        try {//Первое сообщение  - поле игрока
+        try {
             tw = new TerminalWrapper();
             tw.start();
             String message;
@@ -131,17 +129,3 @@ public class Client {
         }
     }
 }
-/*Сервер отправляет клиенту запросы следующих типов:
-    Создать армию (специальная строка)
-*   Выбрать ход (Получает сериализованный борт, отправляет сериализованный ансвер)
-    Закончить игру (спец строка)
-
-На сервере ход не будет выполенен, если он выбран неверно,
-т.е. запрос "сделать ход" будет отправляься до тех пор, пока не будет выбран возможный ход
-
-Если получен запрос СОЗДАТЬ АРМИЮ, то клиент должен попросить игрока создать армию
- и отправить сериализованную армию на сервер
-
- Если получен запрос сделать ход, то клиент получает сериализованную доску, десериализует ее и отправляет боту,
-  тот делает ход (Answer) и отправляет его клиенту, клиент отправляет сериализованный ответ на сервер
-*/

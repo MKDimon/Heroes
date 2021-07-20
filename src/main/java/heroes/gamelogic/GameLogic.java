@@ -85,7 +85,6 @@ public class GameLogic {
             Validator.checkCorrectAttacker(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
-            // можно через лямбду
             int countAliveAtc = 0, x = attacker.X(),
                     countAliveDef = 0, xD = defender.X();
             Unit[][] units = board.getArmy(attacker.F());
