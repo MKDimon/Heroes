@@ -113,9 +113,8 @@ public class Client {
         try {//Первое сообщение  - поле игрока
             tw = new TerminalWrapper();
             tw.start();
-            TextGraphics tg = tw.getScreen().newTextGraphics();
             String message;
-            Data data = new Data();
+            Data data;
 
             while (true) {
                 if (in.ready()) {

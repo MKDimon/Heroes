@@ -94,7 +94,7 @@ public class GameLogic {
                 if (units[x][i].isAlive()) {
                     countAliveAtc++;
                 }
-                if (unitsD[x][i].isAlive()) {
+                if (unitsD[xD][i].isAlive()) {
                     countAliveDef++;
                 }
             }
