@@ -59,15 +59,15 @@ public class StatisticsParser {
         try {
             String logLine = reader.readLine();
             if (logLine == null) {
-                throw new NullPointerException("Null line");
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             if (!logLine.equals("GAME START")) {
-                throw new IOException("Incorrect logs format");
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             final String armyOneLine = reader.readLine();
             final String armyTwoLine = reader.readLine();
             if (!armyOneLine.startsWith("PLAYER_ONE") || !armyTwoLine.startsWith("PLAYER_TWO")) {
-                throw new IOException("Incorrect logs format");
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             final Army armyPlayerOne = parseArmy(armyOneLine.split(","), 0);
             final Army armyPlayerTwo = parseArmy(armyTwoLine.split(","), 0);
@@ -75,7 +75,7 @@ public class StatisticsParser {
             final Pair<String, Integer> winnerPair = parseWinner(reader);
             logLine = reader.readLine();
             if (!logLine.equals("GAME OVER")) {
-                throw new IOException("Incorrect logs format");
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             return new GameLogInformation(armyPlayerOne, armyPlayerTwo, logList,
                     winnerPair.getX(), winnerPair.getY());
