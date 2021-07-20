@@ -25,7 +25,7 @@ public class TestUnits {
         General gen = new General(GeneralTypes.COMMANDER);
         swordsman.inspire(gen.inspirationArmorBonus, gen.inspirationDamageBonus, gen.inspirationDamageBonus);
         assertEquals(40, swordsman.getArmor());
-        swordsman.deinspire(new General(GeneralTypes.COMMANDER).inspirationArmorBonus);
+        swordsman.deinspire();
         assertEquals(30, swordsman.getArmor());
     }
 

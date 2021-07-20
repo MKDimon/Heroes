@@ -139,7 +139,7 @@ public class Board {
     }
 
     public void deinspireArmy(final Unit[][] army, final General general){
-        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire(general.inspirationArmorBonus)));
+        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire()));
     }
 
     /**

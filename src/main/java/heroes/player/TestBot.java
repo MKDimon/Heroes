@@ -53,10 +53,10 @@ public class TestBot extends BaseBot {
                 Unit[][] army = new Unit[2][3];
                 army[0][0] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][0] = new Unit(UnitTypes.MAGE);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
+                army[0][1] = new Unit(UnitTypes.HEALER);
                 army[1][1] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.MAGE);
+                army[0][2] = new Unit(UnitTypes.HEALER);
+                army[1][2] = new Unit(UnitTypes.SWORDSMAN);
 
                 return new Army(army, general);
             }

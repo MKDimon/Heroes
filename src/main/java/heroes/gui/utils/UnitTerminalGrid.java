@@ -1,9 +1,14 @@
 package heroes.gui.utils;
 
+import heroes.boardfactory.DamageCommand;
 import heroes.gamelogic.Fields;
+import heroes.gui.TerminalWrapper;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +17,22 @@ import java.util.Map;
  * отрисовки в терминале.
  */
 public class UnitTerminalGrid {
+    Logger logger = LoggerFactory.getLogger(UnitTerminalGrid.class);
     private final Map<Position, Pair<Integer, Integer>> unitGrid;
-    final int x_start_1;
-    final int x_start_2;
+    private int x_start_1;
+    private int x_start_2;
 
-    public UnitTerminalGrid(int x_start_1, int x_start_2) {
-        this.x_start_1 = x_start_1;
-        this.x_start_2 = x_start_2;
+    private void setConstants(final TerminalWrapper tw) {
+        try {
+            this.x_start_1 = tw.getTerminal().getTerminalSize().getColumns() / 2 - 35 + 2;
+            this.x_start_2 = tw.getTerminal().getTerminalSize().getColumns() / 2 + 35 - 1;
+        } catch (IOException e) {
+            logger.error("Cannot get terminal size in class UnitTerminalGrid", e);
+        }
+    }
+
+    public UnitTerminalGrid(final TerminalWrapper tw) {
+        setConstants(tw);
 
         unitGrid = new HashMap<>();
 
