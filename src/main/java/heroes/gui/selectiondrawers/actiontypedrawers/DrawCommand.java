@@ -3,8 +3,6 @@ package heroes.gui.selectiondrawers.actiontypedrawers;
 import heroes.gui.TerminalWrapper;
 import heroes.mathutils.Position;
 
-import java.util.List;
-
 
 public abstract class DrawCommand {
     private final Position att;

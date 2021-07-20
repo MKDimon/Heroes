@@ -3,7 +3,6 @@ package heroes.gui.unitdrawers;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.TerminalWrapper;
 import heroes.mathutils.Pair;
-import heroes.units.UnitTypes;
 
 /**
  * Интерфейс для группы классов, рисующих юнитов.

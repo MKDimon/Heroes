@@ -5,9 +5,6 @@ import heroes.gui.selectiondrawers.TerminalSelectionDrawer;
 import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
 
-import java.io.IOException;
-import java.util.List;
-
 public class DrawDamageCommand extends DrawCommand {
 
     public DrawDamageCommand(final TerminalWrapper tw, final Position att, final Position def) {

@@ -1,9 +1,6 @@
 package heroes.clientserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.player.Answer;
 
 import java.io.FileInputStream;
 import java.io.IOException;

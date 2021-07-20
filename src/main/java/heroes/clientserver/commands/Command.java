@@ -23,7 +23,7 @@ public abstract class Command {
 
     private final Client client;
 
-    public Command(final Data data, final BufferedWriter out, Client client) {
+    public Command(final Data data, final BufferedWriter out, final Client client) {
         this.out = out;
         this.data = data;
         this.client = client;

@@ -1,13 +1,10 @@
 package heroes.gui.selectiondrawers.actiontypedrawers;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.boardfactory.*;
 import heroes.gui.TerminalWrapper;
 import heroes.mathutils.Position;
-import heroes.units.Unit;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DrawCommandMap {

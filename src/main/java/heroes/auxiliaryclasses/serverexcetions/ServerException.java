@@ -2,7 +2,7 @@ package heroes.auxiliaryclasses.serverexcetions;
 
 public class ServerException extends Exception {
 
-    public ServerException(ServerExceptionType errorType) {
+    public ServerException(final ServerExceptionType errorType) {
         super(errorType.getErrorType());
     }
 

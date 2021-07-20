@@ -1,8 +1,8 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
@@ -80,9 +80,9 @@ public class TestBot extends BaseBot {
      * Из списка живых юнитов противника выбирает цель
      * Учитывает смену поля при ActionTypes.HEALING
      *
-     * @param board
-     * @return
-     * @throws GameLogicException
+     * @param board - состояние игры
+     * @return - ответ
+     * @throws GameLogicException - ошибки логики
      */
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {

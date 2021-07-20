@@ -1,6 +1,5 @@
 package heroes.gamelogic;
 
-import heroes.statistics.StatisticsCollector;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.DamageCommand;
 import org.slf4j.Logger;
@@ -40,11 +39,11 @@ public class ControlRound {
     public static boolean checkStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
-            board.deinspireArmy(board.getFieldPlayerOne(), board.getGeneralPlayerOne());
+            board.deinspireArmy(board.getFieldPlayerOne());
             board.setArmyOneInspired(false);
         }
         if (!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()) {
-            board.deinspireArmy(board.getFieldPlayerTwo(), board.getGeneralPlayerTwo());
+            board.deinspireArmy(board.getFieldPlayerTwo());
             board.setArmyTwoInspired(false);
         }
 

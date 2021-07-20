@@ -1,8 +1,7 @@
 package heroes.clientserver;
 
-import com.googlecode.lanterna.graphics.TextGraphics;
-import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.commands.CommandFactory;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.player.BaseBot;

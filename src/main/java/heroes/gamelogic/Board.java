@@ -138,16 +138,16 @@ public class Board {
                 general.inspirationDamageBonus, general.inspirationAccuracyBonus)));
     }
 
-    public void deinspireArmy(final Unit[][] army, final General general){
-        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(u -> u.deinspire()));
+    public void deinspireArmy(final Unit[][] army){
+        Arrays.stream(army).forEach(x -> Arrays.stream(x).forEach(Unit::deinspire));
     }
 
     /**
      * Выполняется действие через фабрику
      *
-     * @param attacker
-     * @param defender
-     * @param act
+     * @param attacker - инициатор
+     * @param defender - цель
+     * @param act      - действие
      */
     public void doAction(final Unit attacker, final List<Unit> defender, final ActionTypes act) {
         CommandFactory cf = new CommandFactory();
@@ -180,7 +180,7 @@ public class Board {
         return Arrays.stream(units).mapToLong(x -> Arrays.stream(x).filter(Unit::isAlive).count()).sum();
     }
 
-    public void checkAliveLine(Fields fields) {
+    public void checkAliveLine(final Fields fields) {
         Unit[][] army = getUnits.get(fields);
         if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
             Unit[] temp = army[0];

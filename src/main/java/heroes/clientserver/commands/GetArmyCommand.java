@@ -1,9 +1,9 @@
 package heroes.clientserver.commands;
 
+import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
 import heroes.clientserver.Serializer;
-import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 public class GetArmyCommand extends Command{
     Logger logger = LoggerFactory.getLogger(GetArmyCommand.class);
 
-    public GetArmyCommand(Data data, BufferedWriter out, Client client) {
+    public GetArmyCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
     }
 

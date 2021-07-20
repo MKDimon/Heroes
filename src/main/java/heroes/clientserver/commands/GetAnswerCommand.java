@@ -1,10 +1,10 @@
 package heroes.clientserver.commands;
 
-import heroes.auxiliaryclasses.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
 import heroes.clientserver.Serializer;
-import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ import java.io.IOException;
 public class GetAnswerCommand extends Command {
     Logger logger = LoggerFactory.getLogger(GetAnswerCommand.class);
 
-    public GetAnswerCommand(Data data, BufferedWriter out, Client client) {
+    public GetAnswerCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
     }
 

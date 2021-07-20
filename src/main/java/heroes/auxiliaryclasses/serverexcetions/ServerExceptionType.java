@@ -17,7 +17,7 @@ public enum ServerExceptionType {
         return errorType;
     }
 
-    ServerExceptionType(String errorType) {
+    ServerExceptionType(final String errorType) {
         this.errorType = errorType;
     }
 }
