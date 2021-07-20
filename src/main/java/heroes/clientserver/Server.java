@@ -184,11 +184,11 @@ public class Server {
 
                         gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
-                        collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(),
+                        collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
                                 gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
-                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()),
+                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
                                 gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
-                                        - defenderHP);
+                                        - defenderHP));
                         // Отрисовка
                         data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
                         playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);

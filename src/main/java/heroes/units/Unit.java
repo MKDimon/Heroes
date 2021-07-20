@@ -16,6 +16,7 @@ import java.util.Objects;
 /**
  * Класс - игровой юнит
  */
+
 public class Unit {
     @JsonProperty
     private int defenseArmor;
@@ -132,13 +133,13 @@ public class Unit {
     }
 
     public void setCurrentHP(final int currentHP) {
+        this.currentHP = currentHP;
         if (currentHP > maxHP) {
             this.currentHP = maxHP;
         }
         if (currentHP <= 0) {
             isActive = false;
         }
-        this.currentHP = currentHP;
     }
 
     public void setPower(final int power) throws UnitException {

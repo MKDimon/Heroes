@@ -22,43 +22,45 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestStatisticsParser {
     @Test
     public void testParseGameLogInformation() throws UnitException, BoardException, IOException {
-        General generalPlayerOne = new General(GeneralTypes.SNIPER);
-        Unit[][] armyPlayerOne = new Unit[2][3];
-        armyPlayerOne[0][0] = new Unit(UnitTypes.MAGE); armyPlayerOne[1][0] = new Unit(UnitTypes.SWORDSMAN);
-        armyPlayerOne[0][1] = new Unit(UnitTypes.BOWMAN); armyPlayerOne[1][1] = new Unit(UnitTypes.MAGE);
-        armyPlayerOne[0][2] = generalPlayerOne; armyPlayerOne[1][2] = new Unit(UnitTypes.BOWMAN);
-        Army armyOne = new Army(armyPlayerOne, generalPlayerOne);
-        General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
+        final General generalPlayerOne = new General(GeneralTypes.ARCHMAGE);
+        final Unit[][] armyPlayerOne = new Unit[2][3];
+        armyPlayerOne[0][0] = new Unit(UnitTypes.HEALER); armyPlayerOne[1][0] = new Unit(UnitTypes.BOWMAN);
+        armyPlayerOne[0][1] = new Unit(UnitTypes.HEALER); armyPlayerOne[1][1] = generalPlayerOne;
+        armyPlayerOne[0][2] = new Unit(UnitTypes.BOWMAN); armyPlayerOne[1][2] = new Unit(UnitTypes.SWORDSMAN);
+        final Army armyOne = new Army(armyPlayerOne, generalPlayerOne);
+        final General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
         Unit[][] armyPlayerTwo = new Unit[2][3];
-        armyPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); armyPlayerTwo[1][0] = new Unit(UnitTypes.BOWMAN);
-        armyPlayerTwo[0][1] = new Unit(UnitTypes.MAGE); armyPlayerTwo[1][1] = new Unit(UnitTypes.MAGE);
-        armyPlayerTwo[0][2] = generalPlayerTwo; armyPlayerTwo[1][2] = new Unit(UnitTypes.BOWMAN);
-        Army armyTwo = new Army(armyPlayerTwo, generalPlayerTwo);
-        Fields winner = Fields.PLAYER_TWO;
-        int countOfRounds = 2;
-        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/statistics/teststatistics.csv"));
+        armyPlayerTwo[0][0] = new Unit(UnitTypes.BOWMAN); armyPlayerTwo[1][0] = new Unit(UnitTypes.BOWMAN);
+        armyPlayerTwo[0][1] = generalPlayerTwo; armyPlayerTwo[1][1] = new Unit(UnitTypes.MAGE);
+        armyPlayerTwo[0][2] = new Unit(UnitTypes.HEALER); armyPlayerTwo[1][2] = new Unit(UnitTypes.HEALER);
+        final Army armyTwo = new Army(armyPlayerTwo, generalPlayerTwo);
+        final Fields winner = Fields.PLAYER_TWO;
+        int countOfRounds = 3;
+        BufferedReader reader = new BufferedReader(new FileReader("src/main/resources/teststatistics.csv"));
         GameLogInformation gameLog = StatisticsParser.
                 parseGameLogInformation(reader);
-        LogInformation log1 = new LogInformation(new Position(0,2,Fields.PLAYER_ONE), new Position(1,0,Fields.PLAYER_TWO),
-                ActionTypes.RANGE_COMBAT, UnitTypes.BOWMAN, 50, UnitTypes.BOWMAN, 38, 20);
-        LogInformation log2 = new LogInformation(new Position(1,0,Fields.PLAYER_ONE), new Position(0,1,Fields.PLAYER_TWO),
-                ActionTypes.CLOSE_COMBAT, UnitTypes.SWORDSMAN, 3, UnitTypes.MAGE, -8, 27);
+        LogInformation log1 = new LogInformation(new Position(1,0,Fields.PLAYER_TWO),
+                new Position(1,0,Fields.PLAYER_ONE),
+                ActionTypes.RANGE_COMBAT, UnitTypes.BOWMAN, 70, UnitTypes.BOWMAN, 42, 28);
+        LogInformation log2 = new LogInformation(new Position(0,1,Fields.PLAYER_TWO),
+                new Position(0,2,Fields.PLAYER_ONE),
+                ActionTypes.AREA_DAMAGE, UnitTypes.MAGE, 64, UnitTypes.SWORDSMAN, 0, 18);
         assertAll(
                 ()-> assertEquals(armyOne, gameLog.getPlayerOneArmy()),
                 ()-> assertEquals(armyTwo, gameLog.getPlayerTwoArmy()),
-                ()-> assertEquals(winner, gameLog.getWinner()),
+                ()-> assertEquals(winner.toString(), gameLog.getWinner()),
                 ()-> assertEquals(countOfRounds, gameLog.getCountOfRounds()),
-                ()-> assertEquals(14, gameLog.getLogList().size()),
-                ()-> assertEquals(log1, gameLog.getLogList().get(2)),
-                ()-> assertEquals(log2, gameLog.getLogList().get(12))
+                ()-> assertEquals(21, gameLog.getLogList().size()),
+                ()-> assertEquals(log1, gameLog.getLogList().get(3)),
+                ()-> assertEquals(log2, gameLog.getLogList().get(20))
         );
         GameLogInformation gameLog2 = StatisticsParser.
                 parseGameLogInformation(reader);
         GameLogInformation gameLog3 = StatisticsParser.
                 parseGameLogInformation(reader);
-        List<GameLogInformation> fileInfo = StatisticsParser.parseLogFile("src/main/resources/statistics/teststatistics.csv");
+        final List<GameLogInformation> fileInfo = StatisticsParser.parseLogFile("src/main/resources/teststatistics.csv");
         assertEquals(gameLog2, fileInfo.get(1));
         assertEquals(gameLog3, fileInfo.get(2));
-        assertEquals(3, fileInfo.size());
+        assertEquals(4, fileInfo.size());
     }
 }
