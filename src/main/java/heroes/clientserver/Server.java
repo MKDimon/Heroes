@@ -2,6 +2,7 @@ package heroes.clientserver;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -15,6 +16,7 @@ import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -32,83 +34,37 @@ public class Server {
     public Server(final int PORT,final  int maxRooms) {
         this.maxRooms = maxRooms;
         this.PORT = PORT;
-        getRoom = new HashMap<>();
+        getRoom = new Hashtable<>();
     }
 
-    private final ConcurrentLinkedQueue<GUI> guiList = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<Rooms> serverList = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
 
-    /**
-     * GUI сервер, отвечает за прием ClientGUI
-     */
-    private class GUIThread extends Thread {
-        private final int PORT;
-        private final Server server;
+    private class RoomsClient extends Thread {
+        private int id;
+        public final Server server;
+        public final Socket socket;
+        public final BufferedWriter out;
+        public final BufferedReader in;
 
-        private GUIThread(final int PORT, final Server server) {
-            this.PORT = PORT;
+        private RoomsClient(Server server, Socket socket) throws IOException {
             this.server = server;
+            this.socket = socket;
+            this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
 
-        @SuppressWarnings("InfiniteLoopStatement")
         @Override
         public void run() {
-            System.out.println(String.format("Server started, port: %d", PORT));
-            try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-                while (true) {
-                    final Socket socket = serverSocket.accept();
-                    try {
-                        server.guiList.add(new GUI(socket, server));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            while (true) {
+                try {
+                    out.write(Serializer.serializeData(new Data(CommonCommands.GET_ROOM)) + '\n');
+                    out.flush();
+
+                    id = Integer.parseInt(in.readLine());
+                    break;
+                } catch (IOException e) {
+
                 }
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * GUI клиент установленный за комнатой
-     */
-    private class GUI {
-        private final Server server;
-        private final Socket socket;
-        private final BufferedWriter out;
-        private final BufferedReader in;
-
-        public final int id;
-
-        public GUI(final Socket socket,final Server server) throws IOException {
-            this.socket = socket;
-            this.server = server;
-
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-            out.write(Serializer.serializeData(new Data(CommonCommands.GET_ROOM)) + '\n');
-            out.flush();
-
-            id = Integer.parseInt(in.readLine());
-        }
-
-        public boolean send(final String message) throws IOException {
-            out.write(message + '\n');
-            out.flush();
-            return !CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine());
-        }
-
-        private void downService() {
-            try {
-                if (!socket.isClosed()) {
-                    send(CommonCommands.END_GAME.command);
-                    socket.close();
-                    in.close();
-                    out.close();
-                }
-                server.guiList.remove(this);
-            } catch (final IOException ignored) {
             }
         }
     }
@@ -117,126 +73,97 @@ public class Server {
      * Комната с игрой
      */
     private class Rooms extends Thread {
-        private int id;
+        private final int id;
+        private boolean findPlayers = true;
 
         private final Server server;
-        private final Socket socketOne;
-        private final Socket socketTwo;
 
-        private final BufferedReader inPlayerOne; // поток чтения из сокета
-        private final BufferedWriter outPlayerOne; // поток записи в сокет
-        private final BufferedReader inPlayerTwo; // поток чтения из сокета
-        private final BufferedWriter outPlayerTwo; // поток записи в сокет
+        private RoomsClient playerOne;
+        private RoomsClient playerTwo;
 
         private final GameLogic gameLogic;
-        private final Map<Fields, BufferedWriter> getOuter;
-        private final Map<Fields, BufferedReader> getReader;
+        private final Map<Fields, RoomsClient> getPlayer = new HashMap<>();
 
-        /**
-         * Для общения с клиентом необходим сокет (адресные данные)
-         *
-         * @param server сервер
-         * @param socketOne сокет
-         * @param socketTwo сокет
-         */
-        private Rooms(final Server server, final Socket socketOne, final Socket socketTwo) throws IOException {
-            for (int i = 1; i <= maxRooms; i++) {
-                if (getRoom.get(i) == null) {
-                    this.id = i;
-                    getRoom.put(i, this);
-                    break;
-                }
-            }
+        private Rooms() {
+            id = 0;
+            server = null;
+            gameLogic = null;
+        }
+
+        private Rooms(final Server server, final int id) {
             this.server = server;
-            this.socketOne = socketOne;
-            this.socketTwo = socketTwo;
-            this.getOuter = new HashMap<>();
-            this.getReader = new HashMap<>();
-
-            logger.warn(String.valueOf(socketOne));
-            logger.warn(socketTwo.toString());
-            logger.warn(String.valueOf(this.getThreadGroup()));
-
-            // если потоку ввода/вывода приведут к генерированию исключения, оно проброситься дальше
-            inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
-            outPlayerOne = new BufferedWriter(new OutputStreamWriter(socketOne.getOutputStream()));
-            inPlayerTwo = new BufferedReader(new InputStreamReader(socketTwo.getInputStream()));
-            outPlayerTwo = new BufferedWriter(new OutputStreamWriter(socketTwo.getOutputStream()));
-
-            getOuter.put(Fields.PLAYER_ONE, outPlayerOne);
-            getOuter.put(Fields.PLAYER_TWO, outPlayerTwo);
-            getReader.put(Fields.PLAYER_ONE, inPlayerOne);
-            getReader.put(Fields.PLAYER_TWO, inPlayerTwo);
-
             gameLogic = new GameLogic();
+            this.id = id;
         }
 
         @Override
         public void run() {
-            server.serverList.add(this);
             try {
-                if (countRooms >= maxRooms) {
-                    logger.warn("MAX ROOM");
-                    downService(CommonCommands.MAX_ROOMS);
-                    return;
+                while(findPlayers) {
+                    boolean playersReady = false;
+                    while (!playersReady) {
+                        for (RoomsClient rc : server.clients) {
+                            if (rc.id == id) {
+                                server.clients.remove(rc);
+                                if (playerOne == null) {
+                                    playerOne = rc;
+                                } else {
+                                    playerTwo = rc;
+                                    playersReady = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    getPlayer.put(Fields.PLAYER_ONE, playerOne);
+                    getPlayer.put(Fields.PLAYER_TWO, playerTwo);
+
+                    Data data;
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_ONE)), playerOne.out);
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_TWO)), playerTwo.out);
+
+                    // Выдача армий и отрисовка их на поле
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), playerOne.out);
+                    Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
+
+                    data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
+                    sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
+                    sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), playerTwo.out);
+                    Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
+
+                    gameLogic.gameStart(one, two);
+                    data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
+                    sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
+                    sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+
+                    // весь игровой процесс
+                    Answer answer;
+                    while (gameLogic.isGameBegun()) {
+                        data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
+                        sendAsk(Serializer.serializeData(data),
+                                getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).out
+                        );
+
+                        String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
+                        answer = Deserializer.deserializeData(str).answer;
+
+                        gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+                        data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
+                        sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
+                        sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+                    }
+
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerOne.out);
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerTwo.out);
+
+                    this.endGame(CommonCommands.END_GAME);
                 }
-                countRooms++;
-                Data data;
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_ONE)), outPlayerOne);
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_TWO)), outPlayerTwo);
-
-                // Выдача армий и отрисовка их на поле
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), outPlayerOne);
-                Army one = Deserializer.deserializeData(
-                        inPlayerOne.readLine()
-                ).army;
-
-                data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
-                //sendDraw(data);
-
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), outPlayerTwo);
-                Army two = Deserializer.deserializeData(inPlayerTwo.readLine()).army;
-
-
-                gameLogic.gameStart(one, two);
-                data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
-                sendDraw(data);
-
-                // весь игровой процесс
-                Answer answer;
-                while (gameLogic.isGameBegun()) {
-                    data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
-                    sendAsk(Serializer.serializeData(data),
-                            getOuter.get(gameLogic.getBoard().getCurrentPlayer())
-                    );
-
-                    String str = getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine();
-                    answer = Deserializer.deserializeData(str).answer;
-
-                    gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-                    data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
-                    sendDraw(data);
-                }
-
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerOne);
-                sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), outPlayerTwo);
-
-
-                sendDraw(new Data(CommonCommands.END_GAME, gameLogic.getBoard()));
-                this.downService(CommonCommands.END_GAME);
             } catch (final IOException | UnitException | BoardException e) {
                 this.downService(CommonCommands.END_GAME);
             }//*/
-        }
-
-        private void sendDraw(final Data data) throws IOException {
-            for (final GUI item: guiList) {
-                if (item.id == this.id) {
-                    if (!item.send(Serializer.serializeData(data))) {
-                        //downService(CommonCommands.END_GAME);
-                    }
-                }
-            }
         }
 
         /**
@@ -247,36 +174,40 @@ public class Server {
             out.flush();
         }
 
+        public void sendDraw(final String message, final BufferedWriter out, final BufferedReader in) throws IOException {
+            out.write(message + '\n');
+            out.flush();
+            if (CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine())) {
+                throw new IOException("Error drawing");
+            }
+        }
+
         /**
-         * закрытие сервера, удаление себя из списка нитей
-         * гуи остается следить за комнатой
+         * Закрытие комнаты
          */
         private void downService(final CommonCommands command) {
+            findPlayers = false;
+            endGame(command);
+        }
+
+        private void endGame(final CommonCommands command) {
             try {
-                getRoom.put(id, null);
-                if (!socketOne.isClosed()) {
-                    if (command == CommonCommands.MAX_ROOMS) {
-                        sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), outPlayerOne);
-                    }
-                    socketOne.close();
-                    inPlayerOne.close();
-                    outPlayerOne.close();
+                closePlayer(command, playerOne);
+                closePlayer(command, playerTwo);
+                playerOne = null;
+                playerTwo = null;
+            } catch (IOException e) {
+            }
+        }
+
+        private void closePlayer(CommonCommands command, RoomsClient player) throws IOException {
+            if (!player.socket   .isClosed()) {
+                if (command == CommonCommands.MAX_ROOMS) {
+                    sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), player.out);
                 }
-                if (!socketTwo.isClosed()) {
-                    if (command == CommonCommands.MAX_ROOMS) {
-                        sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), outPlayerTwo);
-                    }
-                    socketTwo.close();
-                    inPlayerTwo.close();
-                    outPlayerTwo.close();
-                }
-                if (server.serverList.contains(this)) {
-                    server.serverList.remove(this);
-                    if (command == CommonCommands.END_GAME) {
-                        countRooms--;
-                    }
-                }
-            } catch (final IOException ignored) {
+                player.socket.close();
+                player.in.close();
+                player.out.close();
             }
         }
     }
@@ -285,21 +216,16 @@ public class Server {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-            new GUIThread(Deserializer.getConfig().GUI_PORT, this).start();
-            for (int i = 0; i <= maxRooms; i++) {
-                getRoom.put(i, null);
+            for (int i = 1; i <= maxRooms; i++) {
+                Rooms room = new Rooms(this, i);
+                getRoom.put(i, room);
+                room.start();
             }
             while (true) {
-                // Блокируется до возникновения нового соединения
-                // Ждет первого игрока
-                final Socket socketOne = serverSocket.accept();
-                final Socket socketTwo = serverSocket.accept();
-                try {
-                    new Rooms(this, socketOne, socketTwo).start();
-                } catch (final IOException e) {
-                    socketTwo.close();
-                    socketOne.close();
-                }
+                final Socket socket = serverSocket.accept();
+                RoomsClient client = new RoomsClient(this, socket);
+                client.start();
+                clients.add(client);
             }
         } catch (final BindException e) {
             e.printStackTrace();

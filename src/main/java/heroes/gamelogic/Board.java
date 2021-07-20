@@ -93,12 +93,12 @@ public class Board {
         currentPlayer = board.currentPlayer;
         roundPlayer = board.roundPlayer;
         curNumRound = board.curNumRound;
-        fieldPlayerOne = new Army(board.fieldPlayerOne);
-        fieldPlayerTwo = new Army(board.fieldPlayerTwo);
+        fieldPlayerOne = (board.fieldPlayerOne != null)? new Army(board.fieldPlayerOne): null;
+        fieldPlayerTwo = (board.fieldPlayerTwo != null)? new Army(board.fieldPlayerTwo): null;
         getUnits = new HashMap<>();
         status = board.status;
-        getUnits.put(Fields.PLAYER_ONE, fieldPlayerOne.getPlayerUnits());
-        getUnits.put(Fields.PLAYER_TWO, fieldPlayerTwo.getPlayerUnits());
+        getUnits.put(Fields.PLAYER_ONE, (fieldPlayerOne != null)? fieldPlayerOne.getPlayerUnits(): null);
+        getUnits.put(Fields.PLAYER_TWO, (fieldPlayerTwo != null)? fieldPlayerTwo.getPlayerUnits(): null);
         isArmyOneInspired = board.isArmyOneInspired;
         isArmyTwoInspired = board.isArmyTwoInspired;
     }
@@ -156,7 +156,7 @@ public class Board {
     }
 
     public Unit[][] getArmy(final Fields fields) {
-        return getUnits.get(fields).clone();
+        return (getUnits.get(fields) != null)? getUnits.get(fields).clone(): null;
     }
 
     public Unit getUnitByCoordinate(final Position pair) {
