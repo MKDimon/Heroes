@@ -132,14 +132,14 @@ public class Unit {
         return actionType;
     }
 
-    public void setCurrentHP(int currentHP) {
+    public void setCurrentHP(final int currentHP) {
+        this.currentHP = currentHP;
         if (currentHP > maxHP) {
-            currentHP = maxHP;
+            this.currentHP = maxHP;
         }
         if (currentHP <= 0) {
             isActive = false;
         }
-        this.currentHP = currentHP;
     }
 
     public void setPower(final int power) throws UnitException {
