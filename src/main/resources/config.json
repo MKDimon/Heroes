@@ -1,5 +1,4 @@
 {
   "PORT":8081,
-  "GUI_PORT":8082,
-  "MAX_ROOMS":1
+  "MAX_ROOMS":2
 }
