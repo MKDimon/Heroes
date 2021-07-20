@@ -99,6 +99,7 @@ public class TerminalWrapper {
 
                 if (answer != null && board.getArmy(Fields.PLAYER_ONE) != null && board.getArmy(Fields.PLAYER_TWO) != null) {
                     TerminalAnswerDrawer.drawAnswer(this, answer);
+                    TerminalInformationDrawer.drawInfo(this, board);
                 }
             }
         }
