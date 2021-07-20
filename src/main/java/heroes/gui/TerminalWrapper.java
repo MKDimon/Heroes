@@ -76,7 +76,7 @@ public class TerminalWrapper {
                 //draw units of 1st army
                 if (board.getArmy(Fields.PLAYER_ONE) != null) {
                     General gen_one = board.getGeneralPlayerOne();
-                    TerminalGeneralDrawer.drawGeneral(this, gen_one.getActionType(), Side.LHS);
+                    TerminalGeneralDrawer.drawGeneral(this, gen_one, Side.LHS);
 
                     UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
@@ -88,7 +88,7 @@ public class TerminalWrapper {
                 //draw units of 2nd army
                 if (board.getArmy(Fields.PLAYER_TWO) != null) {
                     General gen_two = board.getGeneralPlayerTwo();
-                    TerminalGeneralDrawer.drawGeneral(this, gen_two.getActionType(), Side.RHS);
+                    TerminalGeneralDrawer.drawGeneral(this, gen_two, Side.RHS);
                     UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
                                     board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
@@ -99,6 +99,7 @@ public class TerminalWrapper {
 
                 if (answer != null && board.getArmy(Fields.PLAYER_ONE) != null && board.getArmy(Fields.PLAYER_TWO) != null) {
                     TerminalAnswerDrawer.drawAnswer(this, answer);
+                    TerminalInformationDrawer.drawInfo(this, board);
                 }
             }
         }
