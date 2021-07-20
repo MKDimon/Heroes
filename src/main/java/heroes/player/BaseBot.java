@@ -6,7 +6,13 @@ import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 
+/**
+ * Класс - базовый бот.
+ * @field - поле, к которому привязан бот.
+ **/
+
 public abstract class BaseBot {
+    private final Fields field;
 
     public abstract static class BaseBotFactory {
 
@@ -19,8 +25,6 @@ public abstract class BaseBot {
         }
         this.field = field;
     }
-
-    private final Fields field;
 
     public abstract Army getArmy();
 

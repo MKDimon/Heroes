@@ -18,9 +18,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Scanner;
 
+/**
+ * Класс - бот, управляемый игроком.
+ * Игрок через консоль задает армию и выбирает дейтсвия над юнитами.
+ **/
+
 public class PlayerBot extends BaseBot {
     private final Logger logger = LoggerFactory.getLogger(PlayerBot.class);
     private final Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Фабрика ботов.
+     **/
 
     public static class PlayerBotFactory extends BaseBotFactory {
 
@@ -115,8 +124,8 @@ public class PlayerBot extends BaseBot {
 
             }
         }
-        Position attacker = new Position(attackerX, attackerY, getField());
-        System.out.println(new StringBuffer().append("Choose action: ")
+        final Position attacker = new Position(attackerX, attackerY, getField());
+        System.out.println(new StringBuffer("Choose action: ")
                 .append(board.getUnitByCoordinate(attacker).getActionType().toString())
                 .append(", ").append(ActionTypes.DEFENSE));
         ActionTypes act;
