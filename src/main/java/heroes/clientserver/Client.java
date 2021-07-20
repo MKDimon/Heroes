@@ -1,6 +1,5 @@
 package heroes.clientserver;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;

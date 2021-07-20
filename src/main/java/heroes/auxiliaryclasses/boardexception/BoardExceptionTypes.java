@@ -14,7 +14,7 @@ public enum BoardExceptionTypes {
 
     private final String errorType;
 
-    BoardExceptionTypes(String errorType) {
+    BoardExceptionTypes(final String errorType) {
         this.errorType = errorType;
     }
 

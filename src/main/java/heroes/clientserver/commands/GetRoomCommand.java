@@ -1,8 +1,8 @@
 package heroes.clientserver.commands;
 
+import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
-import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class GetRoomCommand extends Command{
     Logger logger = LoggerFactory.getLogger(GetRoomCommand.class);
 
-    public GetRoomCommand(Data data, BufferedWriter out, Client client) {
+    public GetRoomCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
     }
 

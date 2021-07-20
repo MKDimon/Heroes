@@ -17,7 +17,7 @@ public enum CommonCommands {
     ;
     public final String command;
 
-    CommonCommands(String command) {
+    CommonCommands(final String command) {
         this.command = command;
     }
 }

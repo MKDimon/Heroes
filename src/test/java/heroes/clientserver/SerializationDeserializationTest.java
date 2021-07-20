@@ -56,8 +56,8 @@ public class SerializationDeserializationTest {
                 {new Unit(UnitTypes.BOWMAN), secondGeneral, new Unit(UnitTypes.HEALER)}
         };
         Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
-        board.deinspireArmy(firstArmy, firstGeneral);
-        board.deinspireArmy(secondArmy, secondGeneral);
+        board.deinspireArmy(firstArmy);
+        board.deinspireArmy(secondArmy);
         Board board1 = Deserializer.deserializeData(Serializer.serializeData(
                 new Data(null, null, board, null))
         ).board;

@@ -10,7 +10,7 @@ import java.io.BufferedWriter;
 public class MaxRoomsCommand extends Command {
     Logger logger = LoggerFactory.getLogger(FieldOneCommand.class);
 
-    public MaxRoomsCommand(Data data, BufferedWriter out, Client client) {
+    public MaxRoomsCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
     }
 

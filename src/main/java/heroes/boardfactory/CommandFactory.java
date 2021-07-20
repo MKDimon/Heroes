@@ -1,7 +1,6 @@
 package heroes.boardfactory;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.gamelogic.Fields;
 import heroes.units.Unit;
 
 import java.util.HashMap;

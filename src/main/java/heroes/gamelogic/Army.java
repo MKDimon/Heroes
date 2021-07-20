@@ -19,7 +19,8 @@ public class Army {
     private General general;
 
     @JsonCreator
-    public Army(@JsonProperty("playerUnits") Unit[][] playerUnits,@JsonProperty("general") General general)
+    public Army(@JsonProperty("playerUnits") final Unit[][] playerUnits,
+                @JsonProperty("general") final General general)
             throws BoardException, UnitException {
         Validator.checkNullPointer(playerUnits, general);
         if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
@@ -38,7 +39,7 @@ public class Army {
         this.general = general;
     }
 
-    public Army(Army army) throws UnitException, BoardException {
+    public Army(final Army army) throws UnitException, BoardException {
         if (army == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
@@ -69,7 +70,7 @@ public class Army {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Army army = (Army)o;

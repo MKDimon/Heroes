@@ -9,13 +9,13 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
-import heroes.gui.selectiondrawers.TerminalSelectionDrawer;
 import heroes.gui.utils.Side;
 import heroes.gui.utils.UnitDrawersMap;
 import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.units.General;
+
 import java.io.IOException;
 
 /**

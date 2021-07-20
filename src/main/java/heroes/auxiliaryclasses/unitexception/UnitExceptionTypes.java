@@ -11,7 +11,7 @@ public enum UnitExceptionTypes {
 
     private final String errorType;
 
-    UnitExceptionTypes(String errorType) {
+    UnitExceptionTypes(final String errorType) {
         this.errorType = errorType;
     }
 

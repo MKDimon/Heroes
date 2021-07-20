@@ -1,6 +1,5 @@
 package heroes.boardfactory;
 
-import heroes.statistics.StatisticsCollector;
 import heroes.units.Unit;
 
 import java.util.List;

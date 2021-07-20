@@ -1,9 +1,9 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
-import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
@@ -70,7 +70,7 @@ public class GameLogic {
      * @param act действие
      * @return успешная валидация - true / false иначе
      */
-    private ValidationUnits actionValidate(Position attacker, Position defender, ActionTypes act) {
+    private ValidationUnits actionValidate(final Position attacker, final Position defender, final ActionTypes act) {
         if (!gameBegun) {
             return ValidationUnits.INVALID_STEP;
         }

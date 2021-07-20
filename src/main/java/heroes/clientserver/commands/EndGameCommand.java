@@ -6,7 +6,7 @@ import heroes.clientserver.Data;
 import java.io.BufferedWriter;
 
 public class EndGameCommand extends Command{
-    public EndGameCommand(Data data, BufferedWriter out, Client client) {
+    public EndGameCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
     }
 

@@ -2,7 +2,6 @@ package heroes.gui;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gui.utils.GeneralDrawersMap;
-import heroes.gui.generaldrawers.IGeneralDrawer;
 import heroes.gui.utils.Side;
 
 import java.io.IOException;

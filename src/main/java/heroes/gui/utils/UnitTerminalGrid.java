@@ -1,6 +1,5 @@
 package heroes.gui.utils;
 
-import heroes.boardfactory.DamageCommand;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.mathutils.Pair;
