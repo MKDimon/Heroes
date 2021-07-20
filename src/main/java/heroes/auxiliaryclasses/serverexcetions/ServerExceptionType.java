@@ -1,4 +1,4 @@
-package heroes.clientserver.serverexcetions;
+package heroes.auxiliaryclasses.serverexcetions;
 
 public enum ServerExceptionType {
     ERROR_SERVER_ROOM_CHANGED("Error server room changed"),
@@ -7,6 +7,7 @@ public enum ServerExceptionType {
     ERROR_ROOM_RUNNING("Error room running"),
     ERROR_DRAWING("Error drawing"),
     ERROR_COMMAND_RUNNING("Error command running"),
+    ERROR_TIMEOUT("Timeout")
     ;
 
 

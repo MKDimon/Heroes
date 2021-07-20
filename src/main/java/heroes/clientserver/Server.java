@@ -3,8 +3,8 @@ package heroes.clientserver;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.commands.CommonCommands;
-import heroes.clientserver.serverexcetions.ServerException;
-import heroes.clientserver.serverexcetions.ServerExceptionType;
+import heroes.auxiliaryclasses.serverexcetions.ServerException;
+import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -186,11 +186,15 @@ public class Server {
                     sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerOne.out);
                     sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerTwo.out);
 
-                    this.endGame(CommonCommands.END_GAME);
+                    this.endGame();
                 }
-            } catch (final IOException | UnitException | BoardException | ServerException e) {
+            }
+            catch ( final ServerException e) {
+                logger.warn(ServerExceptionType.ERROR_TIMEOUT.getErrorType(), e);
+                this.endGame();
+            }catch (final IOException | UnitException | BoardException e) {
                 logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
-                this.downService(CommonCommands.END_GAME);
+                this.downService();
             }//*/
         }
 
@@ -213,15 +217,15 @@ public class Server {
         /**
          * Закрытие комнаты
          */
-        private void downService(final CommonCommands command) {
+        private void downService() {
             findPlayers = false;
-            endGame(command);
+            endGame();
         }
 
-        private void endGame(final CommonCommands command) {
+        private void endGame() {
             try {
-                closePlayer(command, playerOne);
-                closePlayer(command, playerTwo);
+                closePlayer(playerOne);
+                closePlayer(playerTwo);
                 playerOne = null;
                 playerTwo = null;
             } catch (IOException e) {
@@ -229,11 +233,8 @@ public class Server {
             }
         }
 
-        private void closePlayer(CommonCommands command, RoomsClient player) throws IOException {
+        private void closePlayer(RoomsClient player) throws IOException {
             if (!player.socket.isClosed()) {
-                if (command == CommonCommands.MAX_ROOMS) {
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.MAX_ROOMS)), player.out);
-                }
                 player.socket.close();
                 player.in.close();
                 player.out.close();
