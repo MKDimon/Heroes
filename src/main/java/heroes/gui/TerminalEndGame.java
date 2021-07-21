@@ -28,6 +28,14 @@ public class TerminalEndGame {
         tg.putString(x - 8, y - 8, "The game is over.");
         tg.putString(x - 10, y - 7, "Press ENTER to leave.");
         boolean isPressedEnter = false;
+        // cleaning input queue.
+        for (int i = 0; i < 100; i++) {
+            try {
+                tw.getScreen().pollInput();
+            } catch (IOException e) {
+                logger.error("Error in cleaning input queue", e);
+            }
+        }
         while (!isPressedEnter) {
             KeyStroke ks = new KeyStroke(KeyType.F19);
             try {
