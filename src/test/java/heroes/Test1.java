@@ -1,6 +1,7 @@
 package heroes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.googlecode.lanterna.gui2.DefaultTextGUIGraphics;
 import org.junit.Test;
 
 import java.io.FileOutputStream;
