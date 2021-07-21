@@ -30,7 +30,7 @@ public class SelfPlayClientServer {
 
     public static void main(final String[] args) throws InterruptedException {
         new PlayServer().start();
-        Thread.sleep(300); // Чтобы сервер успел запуститься
+        Thread.sleep(500); // Чтобы сервер успел запуститься
         new PlayClient().start();
         new PlayClient().start();
     }

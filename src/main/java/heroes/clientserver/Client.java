@@ -124,6 +124,7 @@ public class Client {
                     CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
+                tw.getScreen().pollInput();
             }
         } catch (IOException | NullPointerException e) {
             logger.error("Error client running", e);
