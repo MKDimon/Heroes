@@ -76,4 +76,6 @@ public class Data {
         this.board = null;
         this.answer = null;
     }
+
+
 }

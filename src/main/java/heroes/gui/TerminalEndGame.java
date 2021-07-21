@@ -3,6 +3,7 @@ package heroes.gui;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +14,19 @@ public class TerminalEndGame {
     private static final Logger logger = LoggerFactory.getLogger(TerminalEndGame.class);
     public static void endGame(final TerminalWrapper tw, final Data data) {
 
-        tw.getScreen().clear();
         TextGraphics tg = tw.getScreen().newTextGraphics();
         int x = 0, y = 0;
         try {
+            tw.update(data.answer, data.board);
             tw.getScreen().refresh();
             x = tw.getTerminal().getTerminalSize().getColumns() / 2;
-            y = tw.getTerminal().getTerminalSize().getRows() / 2;
-        } catch (IOException e) {
+            y = tw.getTerminal().getTerminalSize().getRows() ;
+        } catch (IOException | UnitException e) {
             logger.error("Cannot call TerminalSize from TerminalEndGame", e);
         }
-        tg.putString(x - 8, y, "The game is over.");
-        tg.putString(x - 10, y + 1, "Press ENTER to leave.");
+
+        tg.putString(x - 8, y - 4, "The game is over.");
+        tg.putString(x - 10, y - 3, "Press ENTER to leave.");
         boolean isPressedEnter = false;
         while (!isPressedEnter) {
             KeyStroke ks = new KeyStroke(KeyType.F19);

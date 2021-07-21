@@ -4,6 +4,7 @@ import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
+import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gui.TerminalEndGame;
@@ -51,8 +52,9 @@ public class SelfPlay {
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
             tw.update(answer, gl.getBoard());
-        }
 
-        TerminalEndGame.endGame(tw, new Data());
+        }
+        Data data = new Data(CommonCommands.DRAW ,gl.getBoard());
+        TerminalEndGame.endGame(tw, data);
     }
 }
