@@ -106,117 +106,120 @@ public class Server {
         public void run() {
             try {
                 while(findPlayers) {
-                    boolean playersReady = false;
-                    while (!playersReady) {
-                        for (RoomsClient rc : server.clients) {
-                            if (rc.id == id) {
-                                server.clients.remove(rc);
-                                if (playerOne == null) {
-                                    playerOne = rc;
-                                } else {
-                                    playerTwo = rc;
-                                    playersReady = true;
-                                    break;
+                    try {
+                        boolean playersReady = false;
+                        while (!playersReady) {
+                            for (RoomsClient rc : server.clients) {
+                                if (rc.id == id) {
+                                    server.clients.remove(rc);
+                                    if (playerOne == null) {
+                                        playerOne = rc;
+                                    } else {
+                                        playerTwo = rc;
+                                        playersReady = true;
+                                        break;
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    StatisticsCollector collector = new StatisticsCollector(id);
+                        StatisticsCollector collector = new StatisticsCollector(id);
 
-                    getPlayer.put(Fields.PLAYER_ONE, playerOne);
-                    getPlayer.put(Fields.PLAYER_TWO, playerTwo);
+                        getPlayer.put(Fields.PLAYER_ONE, playerOne);
+                        getPlayer.put(Fields.PLAYER_TWO, playerTwo);
 
-                    Data data;
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_ONE)), playerOne.out);
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_TWO)), playerTwo.out);
+                        Data data;
+                        sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_ONE)), playerOne.out);
+                        sendAsk(Serializer.serializeData(new Data(CommonCommands.FIELD_TWO)), playerTwo.out);
 
-                    // Выдача армий и отрисовка их на поле
-                    // Время ожидания
-                    playerOne.socket.setSoTimeout(RoomsClient.timeForArmy);
-                    playerTwo.socket.setSoTimeout(RoomsClient.timeForArmy);
+                        // Выдача армий и отрисовка их на поле
+                        // Время ожидания
+                        playerOne.socket.setSoTimeout(RoomsClient.timeForArmy);
+                        playerTwo.socket.setSoTimeout(RoomsClient.timeForArmy);
 
-                    // Первая армия
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), playerOne.out);
-                    Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
+                        // Первая армия
+                        sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), playerOne.out);
+                        Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
 
-                    // Отрисовка
-                    data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
-                    playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
-                    playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
-                    sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
-                    sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
-
-                    // Вторая армия
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), playerTwo.out);
-                    Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
-
-                    gameLogic.gameStart(one, two);
-
-                    collector.recordMessageToCSV("GAME START\n");
-                    collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
-                    collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
-
-                    // Отрисовка
-                    data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
-                    playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
-                    playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
-                    sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
-                    sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
-
-                    // весь игровой процесс
-                    Answer answer;
-                    while (gameLogic.isGameBegun()) {
-                        // Ожидание ответа
-                        playerOne.socket.setSoTimeout(RoomsClient.timeForAnswer);
-                        playerTwo.socket.setSoTimeout(RoomsClient.timeForAnswer);
-
-                        data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
-                        sendAsk(Serializer.serializeData(data),
-                                getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).out
-                        );
-
-                        String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
-                        answer = Deserializer.deserializeData(str).answer;
-
-                        //для статистики
-                        int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
-
-                        gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-
-                        collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
-                                gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
-                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
-                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
-                                        - defenderHP));
                         // Отрисовка
-                        data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
+                        data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
                         playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
                         playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
                         sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
                         sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+
+                        // Вторая армия
+                        sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), playerTwo.out);
+                        Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
+
+                        gameLogic.gameStart(one, two);
+
+                        collector.recordMessageToCSV("GAME START\n");
+                        collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
+                        collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
+
+                        // Отрисовка
+                        data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
+                        playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
+                        playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
+                        sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
+                        sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+
+                        // весь игровой процесс
+                        Answer answer;
+                        while (gameLogic.isGameBegun()) {
+                            // Ожидание ответа
+                            playerOne.socket.setSoTimeout(RoomsClient.timeForAnswer);
+                            playerTwo.socket.setSoTimeout(RoomsClient.timeForAnswer);
+
+                            data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
+                            sendAsk(Serializer.serializeData(data),
+                                    getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).out
+                            );
+
+                            String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
+                            answer = Deserializer.deserializeData(str).answer;
+
+                            //для статистики
+                            int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+
+                            gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+                            collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
+                                    gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                                    gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
+                                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                                    - defenderHP));
+                            // Отрисовка
+                            data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
+                            playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
+                            playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
+                            sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
+                            sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+                        }
+
+                        data = new Data(CommonCommands.END_GAME, gameLogic.getBoard());
+                        sendAsk(Serializer.serializeData(data), playerOne.out);
+                        sendAsk(Serializer.serializeData(data), playerTwo.out);
+
+                        GameStatus status = gameLogic.getBoard().getStatus();
+                        collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
+                                append(",").toString());
+                        switch (status) {
+                            case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                            case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                            case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+                        }
+                        collector.recordMessageToCSV("\nGAME OVER\n");
+
+                        this.endGame();
                     }
-
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerOne.out);
-                    sendAsk(Serializer.serializeData(new Data(CommonCommands.END_GAME)), playerTwo.out);
-
-                    GameStatus status = gameLogic.getBoard().getStatus();
-                    collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
-                            append(",").toString());
-                    switch(status){
-                        case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
-                        case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
-                        case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+                    catch ( final ServerException | SocketTimeoutException | UnitException | BoardException e) {
+                        logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
+                        this.endGame();
                     }
-                    collector.recordMessageToCSV("\nGAME OVER\n");
-
-                    this.endGame();
                 }
-            }
-            catch ( final ServerException e) {
-                logger.warn(ServerExceptionType.ERROR_TIMEOUT.getErrorType(), e);
-                this.endGame();
-            }catch (final IOException | UnitException | BoardException e) {
+            }catch (final IOException e) {
                 logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
                 this.downService();
             }

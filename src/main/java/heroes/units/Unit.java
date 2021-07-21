@@ -138,6 +138,7 @@ public class Unit {
             this.currentHP = maxHP;
         }
         if (currentHP <= 0) {
+            this.currentHP = 0;
             isActive = false;
         }
     }

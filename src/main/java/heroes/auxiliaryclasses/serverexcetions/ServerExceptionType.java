@@ -7,6 +7,7 @@ public enum ServerExceptionType {
     ERROR_ROOM_RUNNING("Error room running"),
     ERROR_DRAWING("Error drawing"),
     ERROR_COMMAND_RUNNING("Error command running"),
+    ERROR_GAME_RUNNING("Error game running"),
     ERROR_TIMEOUT("Timeout")
     ;
 

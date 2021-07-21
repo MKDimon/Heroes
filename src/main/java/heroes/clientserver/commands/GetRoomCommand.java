@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GetRoomCommand extends Command{
@@ -21,11 +22,15 @@ public class GetRoomCommand extends Command{
     @Override
     public void execute() {
         try {
-            int id, max = Deserializer.getConfig().MAX_ROOMS;
+            int id = 0;
+            int max = Deserializer.getConfig().MAX_ROOMS;
             Scanner scanner = new Scanner(System.in);
             do {
                 System.out.println("Change room id (max: " + max + "):");
-                id = scanner.nextInt();
+                try {
+                    id = Integer.parseInt(scanner.next());
+                } catch (final IllegalArgumentException ignored) {
+                }
             } while (id > max || id < 1);
             getOut().write( String.valueOf(id)+ '\n');
             getOut().flush();
