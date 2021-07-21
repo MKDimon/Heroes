@@ -3,8 +3,10 @@ package heroes;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.Data;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
+import heroes.gui.TerminalEndGame;
 import heroes.gui.TerminalWrapper;
 import heroes.player.*;
 import org.slf4j.Logger;
@@ -45,16 +47,12 @@ public class SelfPlay {
         tw.getScreen().readInput();
 
         while (gl.isGameBegun()) {
-            TimeUnit.MICROSECONDS.sleep(500000);
+            TimeUnit.MICROSECONDS.sleep(5000);
             Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
             tw.update(answer, gl.getBoard());
         }
 
-        tg.putString(55, tw.getTerminal().getTerminalSize().getRows() -
-                (int) ((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO LEAVE THIS MASSACRE...");
-        tw.getScreen().refresh();
-        tw.getScreen().readInput();
-        tw.stop();
+        TerminalEndGame.endGame(tw, new Data());
     }
 }
