@@ -134,21 +134,19 @@ public class Server {
 
                         // Выдача армий и отрисовка их на поле
                         // Время ожидания
-                        playerOne.socket.setSoTimeout(RoomsClient.timeForArmy);
-                        playerTwo.socket.setSoTimeout(RoomsClient.timeForArmy);
 
                         // Первая армия
+                        playerOne.socket.setSoTimeout(RoomsClient.timeForArmy);
                         sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY)), playerOne.out);
                         Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
 
                         // Отрисовка
                         data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
-                        playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
-                        playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
-                        sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
-                        sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+                        sendDraw(Serializer.serializeData(data), playerOne);
+                        sendDraw(Serializer.serializeData(data), playerTwo);
 
                         // Вторая армия
+                        playerTwo.socket.setSoTimeout(RoomsClient.timeForArmy);
                         sendAsk(Serializer.serializeData(new Data(CommonCommands.GET_ARMY, one)), playerTwo.out);
                         Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
 
@@ -160,10 +158,8 @@ public class Server {
 
                         // Отрисовка
                         data = new Data(CommonCommands.DRAW, gameLogic.getBoard());
-                        playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
-                        playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
-                        sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
-                        sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+                        sendDraw(Serializer.serializeData(data), playerOne);
+                        sendDraw(Serializer.serializeData(data), playerTwo);
 
                         // весь игровой процесс
                         Answer answer;
@@ -192,10 +188,8 @@ public class Server {
                                                     - defenderHP));
                             // Отрисовка
                             data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
-                            playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
-                            playerTwo.socket.setSoTimeout(RoomsClient.timeForDraw);
-                            sendDraw(Serializer.serializeData(data), playerOne.out, playerOne.in);
-                            sendDraw(Serializer.serializeData(data), playerTwo.out, playerTwo.in);
+                            sendDraw(Serializer.serializeData(data), playerOne);
+                            sendDraw(Serializer.serializeData(data), playerTwo);
                         }
 
                         data = new Data(CommonCommands.END_GAME, gameLogic.getBoard());
@@ -216,11 +210,15 @@ public class Server {
                     }
                     catch ( final ServerException | SocketTimeoutException | UnitException | BoardException e) {
                         logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
+                        gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
                         this.endGame();
                     }
                 }
             }catch (final IOException e) {
                 logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
+                if (gameLogic != null) {
+                    gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
+                }
                 this.downService();
             }
         }
@@ -233,10 +231,16 @@ public class Server {
             out.flush();
         }
 
-        public void sendDraw(final String message, final BufferedWriter out, final BufferedReader in) throws ServerException, IOException {
-            out.write(message + '\n');
-            out.flush();
-            if (CommonCommands.DRAW_UNSUCCESSFUL.command.equals(in.readLine())) {
+        /**
+         * Отправляет отрисовку и ждет ответ,
+         *
+         * МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
+         */
+        public void sendDraw(final String message, final RoomsClient player) throws ServerException, IOException {
+            player.socket.setSoTimeout(RoomsClient.timeForDraw);
+            player.out.write(message + '\n');
+            player.out.flush();
+            if (CommonCommands.DRAW_UNSUCCESSFUL.command.equals(player.in.readLine())) {
                 throw new ServerException(ServerExceptionType.ERROR_DRAWING);
             }
         }
