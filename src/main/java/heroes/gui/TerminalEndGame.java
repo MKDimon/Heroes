@@ -25,25 +25,27 @@ public class TerminalEndGame {
             logger.error("Cannot call TerminalSize from TerminalEndGame", e);
         }
 
-        tg.putString(x - 8, y - 4, "The game is over.");
-        tg.putString(x - 10, y - 3, "Press ENTER to leave.");
+        tg.putString(x - 8, y - 8, "The game is over.");
+        tg.putString(x - 10, y - 7, "Press ENTER to leave.");
         boolean isPressedEnter = false;
         while (!isPressedEnter) {
             KeyStroke ks = new KeyStroke(KeyType.F19);
             try {
                 tw.getScreen().refresh();
-                ks = tw.getScreen().readInput();
+                ks = tw.getScreen().pollInput();
             } catch (IOException e) {
                 logger.error("Cannot read input in TerminalEndGame", e);
             }
 
-            if (ks.getKeyType() == KeyType.Enter) {
-                isPressedEnter = true;
-                try {
-                    tw.getScreen().refresh();
-                    tw.stop();
-                } catch (IOException e) {
-                    logger.error("Cannot stop terminal in TerminalEndGame", e);
+            if (ks != null) {
+                if (ks.getKeyType() == KeyType.Enter) {
+                    isPressedEnter = true;
+                    try {
+                        tw.getScreen().refresh();
+                        tw.stop();
+                    } catch (IOException e) {
+                        logger.error("Cannot stop terminal in TerminalEndGame", e);
+                    }
                 }
             }
         }

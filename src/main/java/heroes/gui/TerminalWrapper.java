@@ -1,6 +1,13 @@
 package heroes.gui;
 
 import com.googlecode.lanterna.TerminalSize;
+import com.googlecode.lanterna.graphics.SimpleTheme;
+import com.googlecode.lanterna.gui2.Button;
+import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
+import com.googlecode.lanterna.gui2.Panel;
+import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialog;
+import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
@@ -10,6 +17,7 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
 import heroes.gui.utils.Side;
+import heroes.gui.utils.TextColorMap;
 import heroes.gui.utils.UnitDrawersMap;
 import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
@@ -17,6 +25,7 @@ import heroes.player.Answer;
 import heroes.units.General;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
@@ -56,6 +65,29 @@ public class TerminalWrapper {
      */
     public void start() throws IOException {
         screen.startScreen();
+    }
+
+    public int updateMenu() throws IOException {
+        final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
+        textGUI.setTheme(SimpleTheme.makeTheme(
+                false,
+                TextColorMap.getColor("white"),
+                TextColorMap.getColor("black"),
+                TextColorMap.getColor("white"),
+                TextColorMap.getColor("steelgray"),
+                TextColorMap.getColor("steelgray"),
+                TextColorMap.getColor("yellow"),
+                TextColorMap.getColor("black")));
+
+        String input = new TextInputDialogBuilder()
+                .setTitle("Title")
+                .setDescription("Enter a single number")
+                .setValidationPattern(Pattern.compile("[0-9]"), "You didn't enter a single number!")
+                .build()
+                .showDialog(textGUI);
+
+        refresh();
+        return 1;
     }
 
     /**

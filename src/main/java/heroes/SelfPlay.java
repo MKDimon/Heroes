@@ -34,18 +34,15 @@ public class SelfPlay {
         Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
-
+        tw.updateMenu();
+        tw.getScreen().readInput();
         GameLogic gl = new GameLogic();
 
         gl.gameStart(playerOne.getArmy(), playerTwo.getArmy());
 
         tw.update(null, gl.getBoard());
 
-        TextGraphics tg = tw.getScreen().newTextGraphics();
-        tg.putString(65, tw.getTerminal().getTerminalSize().getRows() -
-                (int) ((tw.getTerminal().getTerminalSize().getRows() - 1) * 0.3), "PRESS ENTER TO BEGIN");
-        tw.getScreen().refresh();
-        tw.getScreen().readInput();
+
 
         while (gl.isGameBegun()) {
             TimeUnit.MICROSECONDS.sleep(5000);
