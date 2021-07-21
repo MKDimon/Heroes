@@ -109,7 +109,6 @@ public class Client {
      * Третье сообщение - выбери армию
      * Далее приходит доска, если сервер требует сделать ход, или сообщение о конце игры
      */
-    @SuppressWarnings("InfiniteLoopStatement")
     private void start() {
         try {
             tw = new TerminalWrapper();
@@ -117,7 +116,7 @@ public class Client {
             String message;
             Data data;
 
-            while (true) {
+            while (!socket.isClosed()) {
                 if (in.ready()) {
                     message = in.readLine();
                     data = Deserializer.deserializeData(message);
@@ -125,6 +124,7 @@ public class Client {
                     CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
+                tw.getScreen().pollInput();
             }
         } catch (IOException | NullPointerException e) {
             logger.error("Error client running", e);

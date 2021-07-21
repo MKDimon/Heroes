@@ -32,20 +32,18 @@ public class TerminalEndGame {
             KeyStroke ks = new KeyStroke(KeyType.F19);
             try {
                 tw.getScreen().refresh();
-                ks = tw.getScreen().pollInput();
+                ks = tw.getScreen().readInput();
             } catch (IOException e) {
                 logger.error("Cannot read input in TerminalEndGame", e);
             }
 
-            if (ks != null) {
-                if (ks.getKeyType() == KeyType.Enter) {
-                    isPressedEnter = true;
-                    try {
-                        tw.getScreen().refresh();
-                        tw.stop();
-                    } catch (IOException e) {
-                        logger.error("Cannot stop terminal in TerminalEndGame", e);
-                    }
+            if (ks.getKeyType() == KeyType.Enter) {
+                isPressedEnter = true;
+                try {
+                    tw.getScreen().refresh();
+                    tw.stop();
+                } catch (IOException e) {
+                    logger.error("Cannot stop terminal in TerminalEndGame", e);
                 }
             }
         }

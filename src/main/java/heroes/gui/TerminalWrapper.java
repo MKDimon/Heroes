@@ -1,17 +1,18 @@
 package heroes.gui;
 
+import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.SimpleTheme;
-import com.googlecode.lanterna.gui2.Button;
-import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
-import com.googlecode.lanterna.gui2.Panel;
-import com.googlecode.lanterna.gui2.WindowBasedTextGUI;
+import com.googlecode.lanterna.graphics.TextGraphics;
+import com.googlecode.lanterna.graphics.TextGraphicsWriter;
+import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialog;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
 import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import heroes.SelfPlay;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -23,15 +24,18 @@ import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.units.General;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
  * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
  */
 public class TerminalWrapper {
-
+    final Logger logger = LoggerFactory.getLogger(TerminalWrapper.class);
     final private Screen screen;
     final private Terminal terminal;
 
@@ -67,7 +71,7 @@ public class TerminalWrapper {
         screen.startScreen();
     }
 
-    public int updateMenu() throws IOException {
+    public int updateMenu() {
         final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
         textGUI.setTheme(SimpleTheme.makeTheme(
                 false,
@@ -79,15 +83,31 @@ public class TerminalWrapper {
                 TextColorMap.getColor("yellow"),
                 TextColorMap.getColor("black")));
 
-        String input = new TextInputDialogBuilder()
-                .setTitle("Title")
-                .setDescription("Enter a single number")
+        TextInputDialog textInputDialog = new TextInputDialogBuilder()
+                .setTitle("Choose game room")
+                .setDescription("Enter a single number (0-9)")
                 .setValidationPattern(Pattern.compile("[0-9]"), "You didn't enter a single number!")
-                .build()
-                .showDialog(textGUI);
+                .setTextBoxSize(new TerminalSize(10, 1))
+                .build();
 
-        refresh();
-        return 1;
+        textInputDialog.setHints(List.of(Window.Hint.FIXED_POSITION));
+        textInputDialog.setPosition(new TerminalPosition(7, 10));
+
+        ImageComponent ic = new ImageComponent();
+        ic.setTextImage(TerminalMenuPictureDrawer.drawPicture(this));
+        Panel panel = new Panel();
+        panel.addComponent(ic);
+
+        Window win = new BasicWindow();
+        win.setComponent(ic);
+        win.setHints(List.of(Window.Hint.FIXED_POSITION, Window.Hint.FIXED_SIZE));
+        win.setPosition(new TerminalPosition(0, 0));
+        win.setFixedSize(new TerminalSize(148, 48));
+
+        textGUI.addWindow(win);
+        String input = textInputDialog.showDialog(textGUI);
+
+        return Integer.parseInt(input);
     }
 
     /**

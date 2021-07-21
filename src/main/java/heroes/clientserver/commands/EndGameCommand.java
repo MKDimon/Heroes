@@ -2,6 +2,7 @@ package heroes.clientserver.commands;
 
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
+import heroes.gui.TerminalEndGame;
 
 import java.io.BufferedWriter;
 
@@ -12,6 +13,7 @@ public class EndGameCommand extends Command{
 
     @Override
     public void execute() {
-        //TODO: возможность выбора комнаты заново
+        TerminalEndGame.endGame(getClient().getTw(), getData());
+        getClient().downService();
     }
 }
