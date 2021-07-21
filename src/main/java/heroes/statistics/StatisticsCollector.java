@@ -126,32 +126,4 @@ public class StatisticsCollector {
         }
     }
 
-    /**
-     * Далее набор классов, которые выводят обработанную статистику в файл
-     **/
-
-    public static void recordArmiesStatisticsToCSV(final Map<Army, Integer[]> armiesStatistics,
-                                                   final String filename) {
-        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
-            for (Army army : armiesStatistics.keySet()) {
-                final StringBuffer record = new StringBuffer();
-                Unit[][] unitArray = army.getPlayerUnits();
-                for (Unit[] units : unitArray) {
-                    for (Unit unit : units) {
-                        if (unit.equals(army.getGeneral())) {
-                            record.append(actToGeneralMap.get(unit.getActionType())).append(",");
-                        } else {
-                            record.append(actToUnitMap.get(unit.getActionType())).append(",");
-                        }
-                    }
-                }
-                record.append(armiesStatistics.get(army)[0]).append(",").
-                        append(armiesStatistics.get(army)[1]).append(",").
-                        append(armiesStatistics.get(army)[2]).append("\n");
-                writer.write(record.toString());
-            }
-        } catch (IOException | UnitException e) {
-            logger.error("Error armies statistics recording", e);
-        }
-    }
 }
