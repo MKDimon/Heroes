@@ -28,7 +28,7 @@ public class GetRoomCommand extends Command{
             do {
                 System.out.println("Change room id (max: " + max + "):");
                 try {
-                    id = Integer.parseInt(scanner.next());
+                    id = getClient().getTw().updateMenu();
                 } catch (final IllegalArgumentException ignored) {
                 }
             } while (id > max || id < 1);

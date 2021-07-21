@@ -72,8 +72,6 @@ public class TerminalWrapper {
     }
 
     public int updateMenu() {
-
-
         final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
         textGUI.setTheme(SimpleTheme.makeTheme(
                 false,
