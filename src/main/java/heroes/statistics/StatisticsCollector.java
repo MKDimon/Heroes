@@ -21,13 +21,13 @@ import java.util.Map;
  * Коллектор - собирает данные в файл
  * Парсер - разбирает данные
  * Анализатор - анализирует данные.
- * <p>
+ * Рекордер - записывает обработанные данные в соответтсвующие файлы
  * Логи одной игры имеют следующую структуру:
  * GAME START
  * PLAYER_ONE ARMY
  * PLAYER_TWO ARMY
  * ...
- * 0           1   2       3        4   5      6         7              8       9             10     11
+ *    0           1   2       3      4     5        6         7             8       9            10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,defX,defY,actionType,attackerUnitType,atHP,defenderUnitType,defHP,actionPower
  * ...
  * *пустая строка*
@@ -97,21 +97,18 @@ public class StatisticsCollector {
 
     public void recordActionToCSV(final Position attackPos, final Position defPos, ActionTypes actType,
                                   final Unit attacker, final Unit defender, int actPower) {
-        //Проверка на то, что дейтсвие корректно. Некорректное дейтсвие не выполнится => не должно попасть в лог
-        if(actType != ActionTypes.CLOSE_COMBAT || actPower != 0) {
-            if(actType == ActionTypes.DEFENSE){
-                actPower = defender.getArmor();
-            }
-            final StringBuffer record = new StringBuffer();
-            record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
-                    append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
-                    append(defPos.X()).append(",").append(defPos.Y()).append(",").append(actType.toString()).append(",").
-                    append(actToUnitMap.get(attacker.getActionType())).append(",").
-                    append(attacker.getCurrentHP()).append(",").
-                    append(actToUnitMap.get(defender.getActionType())).append(",").
-                    append(defender.getCurrentHP()).append(",").append(actPower).append("\n");
-            recordMessageToCSV(record.toString());
+        if(actType == ActionTypes.DEFENSE){
+            actPower = defender.getArmor();
         }
+        final StringBuffer record = new StringBuffer();
+        record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
+                append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
+                append(defPos.X()).append(",").append(defPos.Y()).append(",").append(actType.toString()).append(",").
+                append(actToUnitMap.get(attacker.getActionType())).append(",").
+                append(attacker.getCurrentHP()).append(",").
+                append(actToUnitMap.get(defender.getActionType())).append(",").
+                append(defender.getCurrentHP()).append(",").append(actPower).append("\n");
+        recordMessageToCSV(record.toString());
     }
 
     /**

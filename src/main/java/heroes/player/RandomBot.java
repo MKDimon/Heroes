@@ -108,6 +108,9 @@ public class RandomBot extends BaseBot {
         }
 
         Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
+        if(r.nextInt(5) < 2){
+            return new Answer(attackerPos, attackerPos, ActionTypes.DEFENSE);
+        }
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
             defField = getField();

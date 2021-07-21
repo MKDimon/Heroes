@@ -182,14 +182,15 @@ public class Server {
 
                             //для статистики
                             int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
-
-                            gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-
-                            collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
-                                    gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
-                                    gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
-                                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
-                                                    - defenderHP));
+                            boolean isActionSuccess = gameLogic.action(answer.getAttacker(),
+                                    answer.getDefender(), answer.getActionType());
+                            if(isActionSuccess){
+                                collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
+                                        gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                                        gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
+                                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                                        - defenderHP));
+                            }
                             // Отрисовка
                             data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
                             playerOne.socket.setSoTimeout(RoomsClient.timeForDraw);
