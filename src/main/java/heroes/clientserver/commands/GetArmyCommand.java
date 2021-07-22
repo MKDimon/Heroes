@@ -24,7 +24,7 @@ public class GetArmyCommand extends Command{
                     new Data(null, getClient().getPlayer().getArmy())
             ) + '\n');
             super.getOut().flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
         }
     }

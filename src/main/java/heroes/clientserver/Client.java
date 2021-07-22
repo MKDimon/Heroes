@@ -123,7 +123,7 @@ public class Client {
                 }
                 tw.getScreen().pollInput();
             }
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);
             downService();
         }

@@ -30,7 +30,7 @@ public class GetRoomCommand extends Command{
             } while (id > max || id < 1);
             getOut().write( String.valueOf(id)+ '\n');
             getOut().flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
         }
     }

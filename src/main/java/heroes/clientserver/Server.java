@@ -71,7 +71,7 @@ public class Server {
                 } catch (final SocketTimeoutException e) {
                     server.clients.remove(this);
                     logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
                 }
             }

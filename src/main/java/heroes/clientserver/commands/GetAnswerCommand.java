@@ -25,7 +25,7 @@ public class GetAnswerCommand extends Command {
                     new Data(getClient().getPlayer().getAnswer(getData().board))
             ) + '\n');
             getOut().flush();
-        } catch (IOException | GameLogicException e) {
+        } catch (final IOException | GameLogicException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
         }
     }
