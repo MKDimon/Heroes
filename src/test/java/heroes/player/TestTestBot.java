@@ -13,13 +13,13 @@ public class TestTestBot {
 
     @Test
     public void testBotGetAction() throws GameLogicException, UnitException {
-        BaseBot player = new TestBot(Fields.PLAYER_ONE);
-        BaseBot player1 = new TestBot(Fields.PLAYER_TWO);
+        final BaseBot player = new TestBot(Fields.PLAYER_ONE);
+        final BaseBot player1 = new TestBot(Fields.PLAYER_TWO);
 
-        GameLogic gl = new GameLogic();
+        final GameLogic gl = new GameLogic();
         gl.gameStart(player.getArmy(), player1.getArmy());
 
-        Answer answer = player.getAnswer(gl.getBoard());
+        final Answer answer = player.getAnswer(gl.getBoard());
 
         assertAll(
                 () -> assertDoesNotThrow(

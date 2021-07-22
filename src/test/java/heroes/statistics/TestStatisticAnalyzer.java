@@ -27,7 +27,7 @@ public class TestStatisticAnalyzer {
         armyPlayerTwo[0][0] = new Unit(UnitTypes.BOWMAN); armyPlayerTwo[1][0] = new Unit(UnitTypes.BOWMAN);
         armyPlayerTwo[0][1] = generalPlayerTwo; armyPlayerTwo[1][1] = new Unit(UnitTypes.MAGE);
         armyPlayerTwo[0][2] = new Unit(UnitTypes.HEALER); armyPlayerTwo[1][2] = new Unit(UnitTypes.HEALER);
-        Army armyTwo = new Army(armyPlayerTwo, generalPlayerTwo);
+        final Army armyTwo = new Army(armyPlayerTwo, generalPlayerTwo);
         final Integer[] testArr = testMap.get(armyTwo);
         assertAll(
                 ()-> assertEquals(2, testArr[0]),

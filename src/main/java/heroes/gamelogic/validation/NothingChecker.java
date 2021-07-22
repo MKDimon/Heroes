@@ -5,7 +5,8 @@ import heroes.mathutils.Position;
 
 public class NothingChecker extends Checker {
 
-    public NothingChecker(Position attacker, Position defender, ActionTypes action, int countLineAlive) {
+    public NothingChecker(final Position attacker, final Position defender, final ActionTypes action,
+                          final int countLineAlive) {
         super(attacker, defender, action, countLineAlive);
     }
 

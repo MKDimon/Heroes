@@ -51,10 +51,10 @@ public class GameLogInformation {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GameLogInformation that = (GameLogInformation) o;
+        final GameLogInformation that = (GameLogInformation) o;
         return countOfRounds == that.countOfRounds && Objects.equals(playerOneArmy, that.playerOneArmy)
                 && Objects.equals(playerTwoArmy, that.playerTwoArmy) &&
                 Objects.equals(logList, that.logList) && winner.equals(that.winner);

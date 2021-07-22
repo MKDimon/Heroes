@@ -2,7 +2,7 @@ package heroes.auxiliaryclasses.gamelogicexception;
 
 public class GameLogicException extends Exception {
 
-    public GameLogicException(GameLogicExceptionType error) {
+    public GameLogicException(final GameLogicExceptionType error) {
         super(error.getErrorType());
     }
 }

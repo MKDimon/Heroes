@@ -9,7 +9,7 @@ public abstract class Checker {
     private final ActionTypes action;
     private final int countLineAlive;
 
-    public Checker(Position attacker, Position defender, ActionTypes action, int countLineAlive) {
+    public Checker(final Position attacker, final Position defender, final ActionTypes action, final int countLineAlive) {
         this.attacker = attacker;
         this.defender = defender;
         this.action = action;

@@ -47,11 +47,14 @@ public class Board {
     private GameStatus status = GameStatus.GAME_PROCESS;
 
     @JsonCreator
-    public Board(@JsonProperty("curNumRound")int curNumRound, @JsonProperty("currentPlayer")Fields currentPlayer,
-                 @JsonProperty("roundPlayer")Fields roundPlayer, @JsonProperty("fieldPlayerOne")Army fieldPlayerOne,
-                 @JsonProperty("fieldPlayerTwo")Army fieldPlayerTwo, @JsonProperty("status") GameStatus status,
-                 @JsonProperty("isArmyOneInspired")boolean isArmyOneInspired,
-                 @JsonProperty("isArmyTwoInspired")boolean isArmyTwoInspired) {
+    public Board(@JsonProperty("curNumRound") final int curNumRound,
+                 @JsonProperty("currentPlayer") final Fields currentPlayer,
+                 @JsonProperty("roundPlayer") final Fields roundPlayer,
+                 @JsonProperty("fieldPlayerOne")final Army fieldPlayerOne,
+                 @JsonProperty("fieldPlayerTwo")final Army fieldPlayerTwo,
+                 @JsonProperty("status") final  GameStatus status,
+                 @JsonProperty("isArmyOneInspired") final boolean isArmyOneInspired,
+                 @JsonProperty("isArmyTwoInspired") final boolean isArmyTwoInspired) {
         this.curNumRound = curNumRound;
         this.currentPlayer = currentPlayer;
         this.roundPlayer = roundPlayer;
@@ -151,7 +154,7 @@ public class Board {
      * @param act      - действие
      */
     public void doAction(final Unit attacker, final List<Unit> defender, final ActionTypes act) {
-        CommandFactory cf = new CommandFactory();
+        final CommandFactory cf = new CommandFactory();
         cf.getCommand(attacker, defender, act).execute();
         attacker.setActive(false);
     }
@@ -182,9 +185,9 @@ public class Board {
     }
 
     public void checkAliveLine(final Fields fields) {
-        Unit[][] army = getUnits.get(fields);
+        final Unit[][] army = getUnits.get(fields);
         if (aliveLineCount(army[0]) == 0 && aliveLineCount(army[1]) != 0) {
-            Unit[] temp = army[0];
+            final Unit[] temp = army[0];
             army[0] = army[1];
             army[1] = temp;
         }
@@ -256,7 +259,7 @@ public class Board {
         return status;
     }
 
-    public void setStatus(GameStatus status) {
+    public void setStatus(final GameStatus status) {
         this.status = status;
     }
 }

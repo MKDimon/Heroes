@@ -10,9 +10,9 @@ public class Test1 {
 
     @Test
     public void test() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
 
-        FileOutputStream fileOutputStream = new FileOutputStream("src/test/java/heroes/config.json");
+        final FileOutputStream fileOutputStream = new FileOutputStream("src/test/java/heroes/config.json");
 
     }
 }

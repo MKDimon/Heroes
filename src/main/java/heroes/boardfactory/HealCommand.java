@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class HealCommand extends Command {
-    Logger logger = LoggerFactory.getLogger(HealCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(HealCommand.class);
 
     public HealCommand(final Unit att, final List<Unit> def) {
         super(att, def);

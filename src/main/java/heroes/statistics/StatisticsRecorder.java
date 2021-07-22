@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  **/
 
 public class StatisticsRecorder {
-    static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
+    private static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
 
     public static final String armiesStatisticsFilename = "src/main/resources/statistics/armiesStatistics";
 

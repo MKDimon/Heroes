@@ -17,7 +17,7 @@ public class Army {
     @JsonProperty
     private final Unit[][] playerUnits;
     @JsonProperty
-    private General general;
+    private final General general;
 
     @JsonCreator
     public Army(@JsonProperty("playerUnits") final Unit[][] playerUnits,
@@ -44,6 +44,7 @@ public class Army {
         if (army == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
+        general = new General(army.general);
         playerUnits = new Unit[2][3];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -51,7 +52,6 @@ public class Army {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
                 if (army.playerUnits[i][j] == army.general) {
-                    general = new General(army.general);
                     playerUnits[i][j] = general;
                 } else {
                     playerUnits[i][j] = new Unit(army.playerUnits[i][j]);
@@ -74,7 +74,7 @@ public class Army {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Army army = (Army)o;
+        final Army army = (Army)o;
         if(!this.general.equals(army.general)){
             return false;
         }
