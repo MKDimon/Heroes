@@ -9,7 +9,7 @@ import java.util.Random;
 
 
 public class DamageCommand extends Command {
-    Logger logger = LoggerFactory.getLogger(DamageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
     public DamageCommand(final Unit att, final List<Unit> def) {
         super(att, def);

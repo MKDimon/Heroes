@@ -180,10 +180,10 @@ public class Unit {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Unit unit = (Unit) o;
+        final Unit unit = (Unit) o;
         return defenseArmor == unit.defenseArmor && bonusArmor == unit.bonusArmor &&
                 bonusDamage == unit.bonusDamage && bonusAccuracy == unit.bonusAccuracy &&
                 maxHP == unit.maxHP && currentHP == unit.currentHP && power == unit.power &&

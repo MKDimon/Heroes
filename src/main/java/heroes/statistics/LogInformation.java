@@ -66,10 +66,10 @@ public class LogInformation {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LogInformation that = (LogInformation) o;
+        final LogInformation that = (LogInformation) o;
         return attackerHP == that.attackerHP && defenderHP == that.defenderHP && actPower == that.actPower &&
                 Objects.equals(attacker, that.attacker) && Objects.equals(defender, that.defender) &&
                 actionType == that.actionType && attackerType == that.attackerType &&

@@ -6,7 +6,7 @@ public enum GameLogicExceptionType {
 
     private final String errorType;
 
-    GameLogicExceptionType(String errorType) {
+    GameLogicExceptionType(final String errorType) {
         this.errorType = errorType;
     }
 

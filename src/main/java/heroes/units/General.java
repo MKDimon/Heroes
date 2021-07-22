@@ -53,10 +53,10 @@ public class General extends Unit {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        General general = (General) o;
+        final General general = (General) o;
         return inspirationArmorBonus == general.inspirationArmorBonus && inspirationDamageBonus == general.inspirationDamageBonus && inspirationAccuracyBonus == general.inspirationAccuracyBonus;
     }
 

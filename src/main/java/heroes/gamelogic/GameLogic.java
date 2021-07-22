@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
-    Logger logger = LoggerFactory.getLogger(GameLogic.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameLogic.class);
 
     private Board board;
     private boolean gameBegun;
@@ -39,7 +39,7 @@ public class GameLogic {
      * @param fieldPlayerTwo - армия игрока 2
      * @return - успешное начало игры true / ошибка false
      */
-    public boolean gameStart(Army fieldPlayerOne, Army fieldPlayerTwo) {
+    public boolean gameStart(final Army fieldPlayerOne, final Army fieldPlayerTwo) {
         try {
             if (fieldPlayerOne == fieldPlayerTwo
             || fieldPlayerOne.getPlayerUnits() == fieldPlayerTwo.getPlayerUnits()
@@ -56,7 +56,7 @@ public class GameLogic {
             board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
             return true;
-        } catch (NullPointerException | GameLogicException | UnitException exception) {
+        } catch (final NullPointerException | GameLogicException | UnitException exception) {
             logger.error(" Game Start failed ",exception);
             return false;
         }
@@ -88,14 +88,14 @@ public class GameLogic {
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
             int countAliveAtc = 0, x = attacker.X();
-            Unit[][] units = board.getArmy(attacker.F());
+            final Unit[][] units = board.getArmy(attacker.F());
             for (int i = 0; i < 3; i++) {
                 if (units[x][i].isAlive()) {
                     countAliveAtc++;
                 }
             }
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc);
-        } catch (NullPointerException | BoardException exception) {
+        } catch (final NullPointerException | BoardException exception) {
             logger.warn(exception.getMessage());
             return ValidationUnits.INVALID_STEP;
         }

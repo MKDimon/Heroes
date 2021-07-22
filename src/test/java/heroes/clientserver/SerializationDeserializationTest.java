@@ -23,42 +23,42 @@ public class SerializationDeserializationTest {
 
     @Test
     public void testSDAnswer1() throws GameLogicException, IOException {
-        Answer anw1 = new Answer(new Position(1,1, Fields.PLAYER_ONE),
+        final Answer anw1 = new Answer(new Position(1,1, Fields.PLAYER_ONE),
                 new Position(1,1 , Fields.PLAYER_ONE), ActionTypes.HEALING);
-        String jsonAnw1 = Serializer.serializeData(new Data(anw1));
+        final String jsonAnw1 = Serializer.serializeData(new Data(anw1));
         assertEquals("{\"command\":null,\"board\":null,\"answer\":{\"attacker\":{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
                 "{\"x\":1,\"y\":1,\"f\":\"PLAYER_ONE\"},\"actionType\":\"HEALING\"},\"army\":null}", jsonAnw1);
-        Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
+        final Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }
 
     @Test
     public void testSDAnswer2() throws GameLogicException, IOException {
-        Answer anw1 = new Answer(new Position(0,1, Fields.PLAYER_ONE),
+        final Answer anw1 = new Answer(new Position(0,1, Fields.PLAYER_ONE),
                 new Position(0,1, Fields.PLAYER_TWO), ActionTypes.CLOSE_COMBAT);
-        String jsonAnw1 = Serializer.serializeData(new Data(anw1));
+        final String jsonAnw1 = Serializer.serializeData(new Data(anw1));
         assertEquals("{\"command\":null,\"board\":null,\"answer\":{\"attacker\":{\"x\":0,\"y\":1,\"f\":\"PLAYER_ONE\"},\"defender\":" +
                 "{\"x\":0,\"y\":1,\"f\":\"PLAYER_TWO\"},\"actionType\":\"CLOSE_COMBAT\"},\"army\":null}", jsonAnw1);
-        Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
+        final Answer anw2 = Deserializer.deserializeData(jsonAnw1).answer;
         assertEquals(anw1, anw2);
     }
 
     @Test
     public void testSDBoard() throws BoardException, UnitException, IOException {
-        General firstGeneral = new General(GeneralTypes.ARCHMAGE);
-        General secondGeneral = new General(GeneralTypes.COMMANDER);
-        Unit[][] firstArmy = new Unit[][]{
+        final General firstGeneral = new General(GeneralTypes.ARCHMAGE);
+        final General secondGeneral = new General(GeneralTypes.COMMANDER);
+        final Unit[][] firstArmy = new Unit[][]{
                 {new Unit(UnitTypes.SWORDSMAN), new Unit(UnitTypes.SWORDSMAN), new Unit(UnitTypes.SWORDSMAN)},
                 {new Unit(UnitTypes.BOWMAN), firstGeneral, new Unit(UnitTypes.HEALER)}
         };
-        Unit[][] secondArmy = new Unit[][]{
+        final Unit[][] secondArmy = new Unit[][]{
                 {new Unit(UnitTypes.MAGE), new Unit(UnitTypes.MAGE), new Unit(UnitTypes.SWORDSMAN)},
                 {new Unit(UnitTypes.BOWMAN), secondGeneral, new Unit(UnitTypes.HEALER)}
         };
-        Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
+        final Board board = new Board(new Army(firstArmy, firstGeneral), new Army(secondArmy, secondGeneral));
         board.deinspireArmy(firstArmy);
         board.deinspireArmy(secondArmy);
-        Board board1 = Deserializer.deserializeData(Serializer.serializeData(
+        final Board board1 = Deserializer.deserializeData(Serializer.serializeData(
                 new Data(null, null, board, null))
         ).board;
         for(int i = 0; i < 2; i++){
@@ -71,19 +71,19 @@ public class SerializationDeserializationTest {
 
     @Test
     public void testSDArmy() throws UnitException, BoardException, IOException {
-        General general = new General(GeneralTypes.ARCHMAGE);
-        Unit[][] units = new Unit[][]{
+        final General general = new General(GeneralTypes.ARCHMAGE);
+        final Unit[][] units = new Unit[][]{
                 {new Unit(UnitTypes.SWORDSMAN), new Unit(UnitTypes.SWORDSMAN), new Unit(UnitTypes.SWORDSMAN)},
                 {new Unit(UnitTypes.BOWMAN), general, new Unit(UnitTypes.HEALER)}
         };
-        Army army = new Army(units, general);
+        final Army army = new Army(units, general);
         army.getPlayerUnits()[0][0].setArmor(55);
         army.getPlayerUnits()[0][1].setAccuracy(22);
         army.getPlayerUnits()[0][2].setCurrentHP(-4);
         army.getPlayerUnits()[1][0].setPower(11);
         army.getPlayerUnits()[1][1].setActive(false);
         army.getPlayerUnits()[1][2].setActive(false);
-        Army army1 = Deserializer.deserializeData(Serializer.serializeData(new Data(null, army))).army;
+        final Army army1 = Deserializer.deserializeData(Serializer.serializeData(new Data(null, army))).army;
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3; j++){
                 assertEquals(army.getPlayerUnits()[i][j], army.getPlayerUnits()[i][j]);

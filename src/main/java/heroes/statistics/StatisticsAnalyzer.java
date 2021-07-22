@@ -19,7 +19,7 @@ import java.util.Map;
  **/
 
 public class StatisticsAnalyzer {
-    static final Logger logger = LoggerFactory.getLogger(StatisticsAnalyzer.class);
+    private static final Logger logger = LoggerFactory.getLogger(StatisticsAnalyzer.class);
 
     /**
      * Метод собирает статистику по всем играм. Для каждой армии считает количетсво побед, поражений, ничьих.
@@ -36,7 +36,7 @@ public class StatisticsAnalyzer {
                 result.put(gameLog.getPlayerTwoArmy(), getArmyStatistics(gameLog.getPlayerTwoArmy(), games));
             }
             return result;
-        } catch (StatisticsException | BoardException | UnitException e) {
+        } catch (final StatisticsException |  BoardException | UnitException e) {
             logger.error("Error army statistics counting", e);
             throw new StatisticsException(e);
         }

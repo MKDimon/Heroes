@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  **/
 
 public class StatisticsParser {
-    static final Logger logger = LoggerFactory.getLogger(StatisticsParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(StatisticsParser.class);
 
     /**
      * Основной метод.
@@ -45,7 +45,7 @@ public class StatisticsParser {
                 result.add(parseGameLogInformation(reader));
             }
             return result.stream().filter(item -> item != null).collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Error statistics file parsing", e);
             return null;
         }
@@ -79,7 +79,7 @@ public class StatisticsParser {
             }
             return new GameLogInformation(armyPlayerOne, armyPlayerTwo, logList,
                     winnerPair.getX(), winnerPair.getY());
-        } catch (IOException | StatisticsException e) {
+        } catch (final IOException | StatisticsException e) {
             logger.error("Error game logs parsing", e);
             //Если встретился некорректно написанный лог, то метод передаст null.
             //Таким образом, отчистив результат от null`ов, получим набор распарсенных логов по всем играм.
@@ -112,7 +112,7 @@ public class StatisticsParser {
                 }
             }
             return new Army(units, general);
-        } catch (UnitException | BoardException e) {
+        } catch (final UnitException | BoardException e) {
             logger.error("Error army parsing", e);
             throw new StatisticsException(e);
         }
@@ -137,7 +137,7 @@ public class StatisticsParser {
                         Integer.parseInt(logString[11])));
             }
             return result;
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (final IOException | IllegalArgumentException e) {
             logger.error("Error log parsing", e);
             throw new StatisticsException(e);
         }
@@ -157,7 +157,7 @@ public class StatisticsParser {
             } else {
                 return new Pair<>("DEAD HEAT", 10);
             }
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (final IOException | IllegalArgumentException e) {
             logger.error("Error winner parsing", e);
             throw new StatisticsException(e);
         }

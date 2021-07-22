@@ -40,11 +40,8 @@ public class Position {
 
     @Override
     public String toString() {
-        return "{" +
-                "x=" + x +
-                ", y=" + y +
-                ", field=" + f +
-                '}';
+        return new StringBuilder("{x=").append(x).append(", y=").append(y).
+                append(", field=").append(f).append("}").toString();
     }
 
     @Override

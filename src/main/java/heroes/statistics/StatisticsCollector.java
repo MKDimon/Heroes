@@ -77,7 +77,7 @@ public class StatisticsCollector {
             }
             record.delete(record.length()-1,record.length()).append("\n");
             writer.write(record.toString());
-        } catch (IOException | UnitException e) {
+        } catch (final IOException | UnitException e) {
             logger.error("Error army recording", e);
         }
     }
@@ -118,7 +118,7 @@ public class StatisticsCollector {
     public void recordMessageToCSV(final String message) {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             writer.write(message);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error("Error action recording", e);
         }
     }

@@ -36,10 +36,10 @@ public class Validator {
     }
 
     public static void checkIndexOutOfBounds(final Position pair) throws BoardException {
-        int x = pair.X(),
-                y = pair.Y();
+        final int x = pair.X();
+        final int y = pair.Y();
         if (x > 1 || x < 0 || y > 2 || y < 0) {
-            throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS); //TODO: BoardException
+            throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS);
         }
     }
 
@@ -77,8 +77,8 @@ public class Validator {
      * @param countAlive - со стороны атакующего
      * @throws BoardException - ошибка в доске
      */
-    public static void checkTargetAction(final Position attacker, final Position defender, final ActionTypes actionType,
-                                         final int countAlive)
+    public static void checkTargetAction(final Position attacker, final Position defender,
+                                         final ActionTypes actionType, final int countAlive)
                                          throws BoardException {
         CheckerFactory checkerFactory = new CheckerFactory();
         if (!checkerFactory.getChecker(attacker, defender, actionType, countAlive).check()) {

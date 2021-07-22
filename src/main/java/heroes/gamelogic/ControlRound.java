@@ -12,7 +12,7 @@ import java.util.Arrays;
  * между ходами игроков и раундами
  */
 public class ControlRound {
-    static Logger logger = LoggerFactory.getLogger(DamageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
     private static final int maxRound = 10;
 
@@ -52,8 +52,8 @@ public class ControlRound {
 
         logger.info("\n[NEW STEP]\n");
 
-        long active = Board.activeCount(board.getFieldPlayerOne());
-        active += Board.activeCount(board.getFieldPlayerTwo());
+        final long active = Board.activeCount(board.getFieldPlayerOne()) +
+                Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
         if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
