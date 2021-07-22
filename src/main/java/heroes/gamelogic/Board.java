@@ -9,6 +9,7 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
+import heroes.gamelogic.validation.Validator;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;

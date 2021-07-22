@@ -1,14 +1,19 @@
-package heroes.gamelogic;
+package heroes.gamelogic.validation;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
+import heroes.gamelogic.Board;
+import heroes.gamelogic.validation.AreaDamageChecker;
+import heroes.gamelogic.validation.Checker;
+import heroes.gamelogic.validation.CheckerFactory;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Validator {
@@ -70,37 +75,14 @@ public class Validator {
      * @param defender - цель
      * @param actionType - тип действия
      * @param countAlive - со стороны атакующего
-     * @param countAliveDef - со стороны цели
      * @throws BoardException - ошибка в доске
-     * @throws UnitException  - ошибка с юнитом
      */
     public static void checkTargetAction(final Position attacker, final Position defender, final ActionTypes actionType,
-                                         final int countAlive,final  int countAliveDef)
-                                         throws BoardException, UnitException {
-
-        if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
+                                         final int countAlive)
+                                         throws BoardException {
+        CheckerFactory checkerFactory = new CheckerFactory();
+        if (!checkerFactory.getChecker(attacker, defender, actionType, countAlive).check()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-        }
-
-        if (actionType == ActionTypes.CLOSE_COMBAT) {
-            if (attacker.X() == 1) {
-                throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
-            }
-            if (!((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
-                    (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
-                if (countAliveDef > 1) {
-                    throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-                }
-                else {
-                    throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
-                }
-            }
-        }
-
-        if (actionType == ActionTypes.AREA_DAMAGE || actionType == ActionTypes.RANGE_COMBAT) {
-            if (attacker.F() == defender.F()) {
-                throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-            }
         }
     }
 
