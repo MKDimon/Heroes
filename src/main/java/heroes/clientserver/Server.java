@@ -61,7 +61,7 @@ public class Server {
         public void run() {
             while (true) {
                 try {
-                    Data data = new Data(CommonCommands.GET_ROOM);
+                    final Data data = new Data(CommonCommands.GET_ROOM);
                     socket.setSoTimeout(CommandsTime.getTime(data.command));
                     out.write(Serializer.serializeData(data) + '\n');
                     out.flush();
