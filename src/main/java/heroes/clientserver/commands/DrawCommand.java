@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class DrawCommand extends Command{
-    Logger logger = LoggerFactory.getLogger(DrawCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(DrawCommand.class);
 
     public DrawCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);

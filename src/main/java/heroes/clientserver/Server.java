@@ -26,13 +26,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Сервер
  */
 public class Server {
-    Logger logger = LoggerFactory.getLogger(Server.class);
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
     private final int PORT;
     private final int maxRooms;
     private final Map<Integer, Rooms> getRoom;
 
-    public Server(final int PORT,final  int maxRooms) {
+    public Server(final int PORT, final int maxRooms) {
         this.maxRooms = maxRooms;
         this.PORT = PORT;
         getRoom = new Hashtable<>();
@@ -50,7 +50,7 @@ public class Server {
         public final BufferedWriter out;
         public final BufferedReader in;
 
-        private RoomsClient(Server server, Socket socket) throws IOException {
+        private RoomsClient(final Server server, final Socket socket) throws IOException {
             this.server = server;
             this.socket = socket;
             this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -102,7 +102,7 @@ public class Server {
         private void waitPlayers() {
             boolean playersReady = false;
             while (!playersReady) {
-                for (RoomsClient rc : server.clients) {
+                for (final RoomsClient rc : server.clients) {
                     if (rc.id == id) {
                         server.clients.remove(rc);
                         if (playerOne == null) {
@@ -156,19 +156,19 @@ public class Server {
                 ServerException {
             // Ожидание ответа
             final Data data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
-            sendAsk(data,getPlayer.get(gameLogic.getBoard().getCurrentPlayer()));
+            sendAsk(data, getPlayer.get(gameLogic.getBoard().getCurrentPlayer()));
 
-            String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
+            final String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
             final Answer answer = Deserializer.deserializeData(str).answer;
 
             //для статистики
-            int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+            final int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
 
             // логика
-            boolean isActionSuccess = gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+            final boolean isActionSuccess = gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
             // статистика
-            if(isActionSuccess){
+            if (isActionSuccess) {
                 collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
                         gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
                         gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
@@ -186,7 +186,7 @@ public class Server {
             sendAsk(data, playerOne);
             sendAsk(data, playerTwo);
 
-            GameStatus status = gameLogic.getBoard().getStatus();
+            final GameStatus status = gameLogic.getBoard().getStatus();
             // статистика
             collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
                     append(",").toString());
@@ -203,11 +203,11 @@ public class Server {
         @Override
         public void run() {
             try {
-                while(findPlayers) {
+                while (findPlayers) {
                     try {
                         waitPlayers();
 
-                        StatisticsCollector collector = new StatisticsCollector(id);
+                        final StatisticsCollector collector = new StatisticsCollector(id);
 
                         gameStart(collector);
 
@@ -217,14 +217,13 @@ public class Server {
                         }
 
                         gameEnding(collector);
-                    }
-                    catch ( final ServerException | SocketTimeoutException | UnitException | BoardException e) {
+                    } catch (final ServerException | SocketTimeoutException | UnitException | BoardException e) {
                         logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
                         gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
                         this.endGame();
                     }
                 }
-            }catch (final IOException e) {
+            } catch (final IOException e) {
                 logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
                 if (gameLogic != null) {
                     gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
@@ -234,9 +233,9 @@ public class Server {
         }
 
         /**
-         *  Отправляет сериализованное сообщение клиенту
-         *
-         *  МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
+         * Отправляет сериализованное сообщение клиенту
+         * <p>
+         * МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
          */
         private void sendAsk(final Data data, final RoomsClient player) throws IOException {
             player.socket.setSoTimeout(CommandsTime.getTime(data.command));
@@ -246,7 +245,7 @@ public class Server {
 
         /**
          * Отправляет отрисовку и ждет ответ,
-         *
+         * <p>
          * МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
          */
         public void sendDraw(final Data data, final RoomsClient player) throws ServerException, IOException {
@@ -275,7 +274,7 @@ public class Server {
             }
         }
 
-        private void closePlayer(RoomsClient player) throws IOException {
+        private void closePlayer(final RoomsClient player) throws IOException {
             if (!player.socket.isClosed()) {
                 player.socket.close();
                 player.in.close();
@@ -290,18 +289,17 @@ public class Server {
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
             serverSocket.setSoTimeout(1000);
             for (int i = 1; i <= maxRooms; i++) {
-                Rooms room = new Rooms(this, i);
+                final Rooms room = new Rooms(this, i);
                 getRoom.put(i, room);
                 room.start();
             }
             while (true) {
                 try {
                     final Socket socket = serverSocket.accept();
-                    RoomsClient client = new RoomsClient(this, socket);
+                    final RoomsClient client = new RoomsClient(this, socket);
                     client.start();
                     clients.add(client);
-                }
-                catch (final SocketTimeoutException e) {
+                } catch (final SocketTimeoutException e) {
                     logger.debug("Socket is not accept((", e);
                 }
             }
@@ -311,7 +309,7 @@ public class Server {
     }
 
     public static void main(final String[] args) throws IOException {
-        ServersConfigs sc = Deserializer.getConfig();
+        final ServersConfigs sc = Deserializer.getConfig();
         final Server server = new Server(sc.PORT, sc.MAX_ROOMS);
         server.startServer();
     }

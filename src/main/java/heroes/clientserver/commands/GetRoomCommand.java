@@ -13,7 +13,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GetRoomCommand extends Command{
-    Logger logger = LoggerFactory.getLogger(GetRoomCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(GetRoomCommand.class);
 
     public GetRoomCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);

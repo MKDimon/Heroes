@@ -11,7 +11,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class GetArmyCommand extends Command{
-    Logger logger = LoggerFactory.getLogger(GetArmyCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(GetArmyCommand.class);
 
     public GetArmyCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);

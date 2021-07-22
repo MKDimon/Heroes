@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class GetAnswerCommand extends Command {
-    Logger logger = LoggerFactory.getLogger(GetAnswerCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(GetAnswerCommand.class);
 
     public GetAnswerCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
