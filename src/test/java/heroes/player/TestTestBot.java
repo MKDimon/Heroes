@@ -4,7 +4,7 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.Validator;
+import heroes.gamelogic.validation.Validator;
 import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

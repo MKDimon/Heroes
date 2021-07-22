@@ -1,7 +1,6 @@
-package heroes.gamelogic;
+package heroes.gamelogic.validation;
 
 public enum ValidationUnits {
-    UNIT_CANT_STEP,
     INVALID_STEP,
     SUCCESSFUL_STEP,
 }

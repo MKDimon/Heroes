@@ -5,6 +5,8 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.validation.ValidationUnits;
+import heroes.gamelogic.validation.Validator;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 import org.slf4j.Logger;
@@ -97,13 +99,10 @@ public class GameLogic {
                     countAliveDef++;
                 }
             }
-            Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
+            Validator.checkTargetAction(attacker, defender, act, countAliveAtc);
         } catch (NullPointerException | BoardException exception) {
             logger.warn(exception.getMessage());
             return ValidationUnits.INVALID_STEP;
-        } catch (UnitException exception) {
-            logger.info(exception.getMessage());
-            return ValidationUnits.UNIT_CANT_STEP;
         }
         return ValidationUnits.SUCCESSFUL_STEP;
     }

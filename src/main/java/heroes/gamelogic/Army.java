@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.validation.Validator;
 import heroes.units.General;
 import heroes.units.Unit;
 
