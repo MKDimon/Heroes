@@ -146,6 +146,7 @@ public class Server {
 
                         gameLogic.gameStart(one, two);
 
+                        //статистика
                         collector.recordMessageToCSV("GAME START\n");
                         collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
                         collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
@@ -169,14 +170,16 @@ public class Server {
                             int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
 
                             // логика
-                            gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+                            boolean isActionSuccess = gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
                             // статистика
-                            collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
-                                    gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
-                                    gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
-                                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
-                                                    - defenderHP));
+                            if(isActionSuccess){
+                                collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
+                                        gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                                        gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
+                                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                                        - defenderHP));
+                            }
                             // Отрисовка
                             data = new Data(CommonCommands.DRAW, one, gameLogic.getBoard(), answer);
                             sendDraw(data, playerOne);

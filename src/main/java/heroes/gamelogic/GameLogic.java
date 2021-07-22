@@ -102,6 +102,7 @@ public class GameLogic {
             logger.warn(exception.getMessage());
             return ValidationUnits.INVALID_STEP;
         } catch (UnitException exception) {
+            logger.info(exception.getMessage());
             return ValidationUnits.UNIT_CANT_STEP;
         }
         return ValidationUnits.SUCCESSFUL_STEP;
@@ -141,10 +142,9 @@ public class GameLogic {
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
         logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, act);
         ValidationUnits result = actionValidate(attacker, defender, act);
-        if (result != ValidationUnits.INVALID_STEP) {
+        if (result == ValidationUnits.SUCCESSFUL_STEP) {
             logger.info(result.toString());
-            ActionTypes type = (result == ValidationUnits.SUCCESSFUL_STEP)? act: ActionTypes.DEFENSE;
-            board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, type), type);
+            board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;
         }
