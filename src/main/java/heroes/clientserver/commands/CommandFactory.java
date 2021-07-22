@@ -23,11 +23,10 @@ public class CommandFactory {
         commandMap.put(CommonCommands.FIELD_ONE, new FieldOneCommand(data, out, client));
         commandMap.put(CommonCommands.FIELD_TWO, new FieldTwoCommand(data, out, client));
         commandMap.put(CommonCommands.MAX_ROOMS, new MaxRoomsCommand(data, out, client));
-        commandMap.put(null, null);
     }
 
     public Command getCommand(final Data data, final BufferedWriter out, final Client client) {
         initialize(data, out, client);
-        return commandMap.get(data.command);
+        return commandMap.getOrDefault(data.command, new DoNothingCommand(data, out, client));
     }
 }

@@ -26,11 +26,7 @@ public class GetRoomCommand extends Command{
             int max = Deserializer.getConfig().MAX_ROOMS;
             Scanner scanner = new Scanner(System.in);
             do {
-                System.out.println("Change room id (max: " + max + "):");
-                try {
-                    id = getClient().getTw().updateMenu();
-                } catch (final IllegalArgumentException ignored) {
-                }
+                id = getClient().getTw().updateMenu();
             } while (id > max || id < 1);
             getOut().write( String.valueOf(id)+ '\n');
             getOut().flush();
