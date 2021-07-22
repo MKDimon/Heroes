@@ -87,16 +87,11 @@ public class GameLogic {
             Validator.checkCorrectAttacker(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
-            int countAliveAtc = 0, x = attacker.X(),
-                    countAliveDef = 0, xD = defender.X();
+            int countAliveAtc = 0, x = attacker.X();
             Unit[][] units = board.getArmy(attacker.F());
-            Unit[][] unitsD = board.getArmy(defender.F());
             for (int i = 0; i < 3; i++) {
                 if (units[x][i].isAlive()) {
                     countAliveAtc++;
-                }
-                if (unitsD[xD][i].isAlive()) {
-                    countAliveDef++;
                 }
             }
             Validator.checkTargetAction(attacker, defender, act, countAliveAtc);

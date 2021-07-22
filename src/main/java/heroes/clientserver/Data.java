@@ -31,6 +31,13 @@ public class Data {
         this.answer = answer;
     }
 
+    public Data(final CommonCommands command, final Board board, final Answer answer) {
+        this.command = command;
+        this.army = null;
+        this.board = board;
+        this.answer = answer;
+    }
+
     /**
      * Вспомогательный для снятия команды
      * @param data - данные
