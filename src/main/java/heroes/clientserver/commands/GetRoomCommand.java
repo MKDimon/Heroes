@@ -13,7 +13,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GetRoomCommand extends Command{
-    Logger logger = LoggerFactory.getLogger(GetRoomCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(GetRoomCommand.class);
 
     public GetRoomCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
@@ -30,7 +30,7 @@ public class GetRoomCommand extends Command{
             } while (id > max || id < 1);
             getOut().write( String.valueOf(id)+ '\n');
             getOut().flush();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
         }
     }

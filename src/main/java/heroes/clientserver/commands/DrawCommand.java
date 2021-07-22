@@ -12,7 +12,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class DrawCommand extends Command{
-    Logger logger = LoggerFactory.getLogger(DrawCommand.class);
+    private final Logger logger = LoggerFactory.getLogger(DrawCommand.class);
 
     public DrawCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
@@ -23,18 +23,18 @@ public class DrawCommand extends Command{
         try {
             getClient().getTw().update(getData().answer, getData().board);
             getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_SUCCESSFUL)) + '\n');
-        } catch (IOException | UnitException e) {
+        } catch (final IOException | UnitException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
             try {
                 getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_UNSUCCESSFUL)) + '\n');
-            } catch (IOException ioException) {
+            } catch (final IOException ioException) {
                 logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), ioException);
             }
         }
         finally {
             try {
                 getOut().flush();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
             }
         }

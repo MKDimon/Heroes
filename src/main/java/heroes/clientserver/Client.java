@@ -37,11 +37,10 @@ public class Client {
 
     public static void main(String[] args) {
         try {
-            ServersConfigs sc = Deserializer.getConfig();
-            Client client = new Client(IP, sc.PORT, null);
+            final ServersConfigs sc = Deserializer.getConfig();
+            final Client client = new Client(IP, sc.PORT, null);
             client.startClient();
-        }
-        catch (IOException ignore) {}
+        } catch (IOException ignore) {}
     }
 
     private Client(final String ip, final int port,final BaseBot player) {
@@ -62,15 +61,15 @@ public class Client {
     }
 
     public void chooseBot(final Fields field) {
-        Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
+        final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
         System.out.println("Choose your bot: Test, Random, Player");
-        Scanner scanner = new Scanner(System.in);
+        final Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-                String botTypeString = scanner.next();
+                final String botTypeString = scanner.next();
                 if(!botFactoryMap.containsKey(botTypeString)){
                     throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
                 }
@@ -113,20 +112,18 @@ public class Client {
         try {
             tw = new TerminalWrapper();
             tw.start();
-            String message;
-            Data data;
 
             while (!socket.isClosed()) {
                 if (in.ready()) {
-                    message = in.readLine();
-                    data = Deserializer.deserializeData(message);
+                    final String message = in.readLine();
+                    final Data data = Deserializer.deserializeData(message);
 
-                    CommandFactory commandFactory = new CommandFactory();
+                    final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
                 tw.getScreen().pollInput();
             }
-        } catch (IOException | NullPointerException e) {
+        } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);
             downService();
         }

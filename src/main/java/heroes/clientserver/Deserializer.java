@@ -17,9 +17,9 @@ public class Deserializer {
      * @throws IOException json
      */
     public static ServersConfigs getConfig() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.json");
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.json");
 
-        ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+        final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
         fileInputStream.close();
         return sc;
     }
