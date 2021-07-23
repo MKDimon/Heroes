@@ -9,12 +9,11 @@ import java.io.IOException;
 public class SniperDrawer implements IGeneralDrawer {
     @Override
     public void draw(final TerminalWrapper tw, final Side s) throws IOException {
-        int y_start = 1;
+        int y_start = - 1;
         int x_start = (s == Side.RHS) ? tw.getTerminal().getTerminalSize().getColumns() - 34 : 2;
 
         TextGraphics tg = tw.getScreen().newTextGraphics();
-        tg.putString(x_start, y_start + 1, "       -\\");
-        tg.putString(x_start, y_start + 2, "         \\\\");
+        tg.putString(x_start, y_start + 2, "        -\\\\");
         tg.putString(x_start, y_start + 3, "           \\\\");
         tg.putString(x_start, y_start + 4, "            \\|");
         tg.putString(x_start, y_start + 5, "              \\#####\\");
@@ -35,6 +34,5 @@ public class SniperDrawer implements IGeneralDrawer {
         tg.putString(x_start, y_start + 20, "             ##       _'");
         tg.putString(x_start, y_start + 21, "            ###=======]");
         tg.putString(x_start, y_start + 22, "           ///        |");
-        tg.putString(x_start, y_start + 23, "           //         |");
     }
 }

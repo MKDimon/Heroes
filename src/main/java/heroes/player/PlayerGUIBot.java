@@ -13,8 +13,12 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
+import heroes.gui.menudrawers.MenuBoardDrawer;
 import heroes.gui.menudrawers.MenuGeneralDrawer;
+import heroes.gui.menudrawers.MenuTitleDrawers;
+import heroes.gui.menudrawers.MenuUnitDrawer;
 import heroes.gui.menudrawers.generalmenudrawers.SelectedGeneralMap;
+import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.gui.utils.TerminalArmyDrawer;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
@@ -67,9 +71,9 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
         while (true) {
             tw.getScreen().clear();
             MenuGeneralDrawer.drawGenerals(tw, selector.getSelectedNumber());
+            MenuTitleDrawers.drawChooseGeneral(tw, new TerminalPosition(14, 2));
             try {
                 tw.getScreen().refresh();
-                System.out.println("refresh");
             } catch (IOException e) {
                 logger.error("Error refreshing terminal in playerGUIbot", e);
             }
@@ -91,18 +95,24 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
     private Pair<Integer, Integer> getGeneralPosition(final Controls controls, final Army firstPlayerArmy) {
-        Selector selector = new Selector(2, 3);
+        Selector selector = new Selector(3, 2);
 
         while (true) {
             tw.getScreen().clear();
 
             if (firstPlayerArmy != null) {
-                TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy, true);
+                TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
+                        false, Fields.PLAYER_ONE);
             }
 
+            MenuTitleDrawers.drawGeneralPosition(tw, new TerminalPosition(10, 2));
+
+            MenuBoardDrawer.drawBorders(tw, new TerminalPosition(110, 10),
+                    new TerminalPosition(137, 46));
+            MenuBoardDrawer.drawUnitBorders(tw, new TerminalPosition(110, 10),
+                    new TerminalPosition(137, 46), selector.getSelectedNumber());
             try {
                 tw.getScreen().refresh();
-                System.out.println("refresh");
             } catch (IOException e) {
                 logger.error("Error refreshing terminal in playerGUIbot", e);
             }
@@ -112,12 +122,90 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
                 kt = controls.update();
             }
             selector.updateSelection(kt);
-            System.out.println(selector.getCurrentSelection().getX() + "   " + selector.getCurrentSelection().getY());
+            System.out.println(selector.getCurrentSelection().getY() + "   " + selector.getCurrentSelection().getX());
             if(kt == KeyType.Enter) {
                 return selector.getCurrentSelection();
             }
 
         }
+    }
+
+    private Unit selectUnit(final Controls controls) {
+        Selector selector = new Selector(4, 1);
+        while (true) {
+            // tw.getScreen().clear();
+            MenuUnitDrawer.drawUnits(tw, selector.getSelectedNumber());
+            try {
+                tw.getScreen().refresh();
+            } catch (IOException e) {
+                logger.error("Error refreshing terminal in playerGUIbot", e);
+            }
+
+            KeyType kt = controls.update();
+            while(kt == null) {
+                kt = controls.update();
+            }
+            selector.updateSelection(kt);
+
+            if(kt == KeyType.Enter) {
+                return UnitMenuMap.getDrawer(selector.getSelectedNumber());
+            }
+        }
+    }
+
+    private Unit[][] selectArmy(final Controls controls, final General general, final Army firstPlayerArmy)
+            throws BoardException, UnitException {
+
+        final Pair<Integer, Integer> genPos = getGeneralPosition(controls, firstPlayerArmy);
+        Selector selector = new Selector(3, 2);
+        try {
+            tw.getScreen().refresh();
+        } catch (IOException e) {
+            logger.error("Error refreshing terminal in playerGUIbot", e);
+        }
+
+        final Unit[][] units = new Unit[2][3];
+        units[genPos.getY()][genPos.getX()] = general;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+
+                tw.getScreen().clear();
+
+                if (firstPlayerArmy != null) {
+                    TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
+                            false, Fields.PLAYER_ONE);
+                }
+
+                MenuBoardDrawer.drawBorders(tw, new TerminalPosition(110, 10),
+                        new TerminalPosition(137, 46));
+                MenuBoardDrawer.drawUnitBorders(tw, new TerminalPosition(110, 10),
+                        new TerminalPosition(137, 46), selector.getSelectedNumber());
+
+                TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0,0), units, general,
+                        true, Fields.PLAYER_TWO);
+
+                if (units[i][j] == null) {
+                    MenuBoardDrawer.drawUnitBorders(tw, new TerminalPosition(110, 10),
+                            new TerminalPosition(137, 46), selector.getSelectedNumber(j, i));
+
+                    units[i][j] = selectUnit(controls);
+
+                    try {
+                        tw.getScreen().refresh();
+                    } catch (IOException e) {
+                        logger.error("Error refreshing terminal in playerGUIbot", e);
+                    }
+
+                }
+
+                try {
+                    tw.getScreen().refresh();
+                } catch (IOException e) {
+                    logger.error("Error refreshing terminal in playerGUIbot", e);
+                }
+            }
+        }
+        return units;
     }
 
     @Override
@@ -126,29 +214,8 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
 
         final General general = selectGeneralWindowDraw(controls);
 
-        final Pair<Integer, Integer> genPos = getGeneralPosition(controls, firstPlayerArmy);
-
-        Unit[][] units = new Unit[2][3];
-        units[genPos.getX()][genPos.getY()] = general;
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (units[i][j] == null) {
-                    System.out.println(String.format("Choose unit at (%d, %d): ", i, j));
-                    while (true) {
-                        try {
-                            String unitTypeString = scanner.next();
-                            units[i][j] = new Unit(UnitTypes.valueOf(unitTypeString));
-                            break;
-                        } catch (IllegalArgumentException | UnitException e) {
-                            System.out.println("Incorrect unit!!!");
-                            System.out.println(String.format("Choose unit at (%d, %d): ", i, j));
-                        }
-                    }
-                }
-            }
-        }
         try {
-            return new Army(units, general);
+            return new Army(selectArmy(controls, general, firstPlayerArmy), general);
         } catch (BoardException | UnitException e) {
             logger.error("Error army creating");
             return null;

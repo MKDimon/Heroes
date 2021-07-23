@@ -42,6 +42,7 @@ public class Selector {
         int x = fromMap.getX() + currentSelection.getX();
         int y = fromMap.getY() + currentSelection.getY();
 
+        //TODO: лучше %
         if (x > rows-1) {
             x = 0;
         } else if (x < 0){
@@ -59,6 +60,10 @@ public class Selector {
 
     public int getSelectedNumber() {
         return selectionMatrix[currentSelection.getX()][currentSelection.getY()];
+    }
+
+    public int getSelectedNumber(final int x, final int y) {
+        return  selectionMatrix[x][y];
     }
 
     public Pair<Integer, Integer> getCurrentSelection() {

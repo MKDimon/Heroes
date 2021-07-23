@@ -30,7 +30,7 @@ public class SelfPlay {
 
         List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), new PlayerGUIBot.PlayerGUIBotFactory());
-        BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
+        BaseBot playerOne = factories.get(3).createBot(Fields.PLAYER_ONE);
         playerOne.setTerminal(tw);
         BaseBot playerTwo = factories.get(1).createBot(Fields.PLAYER_TWO);
         playerTwo.setTerminal(tw);
