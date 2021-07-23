@@ -1,10 +1,10 @@
 package heroes;
 
-import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.clientserver.commands.CommonCommands;
+import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gui.TerminalEndGame;
@@ -27,18 +27,20 @@ public class SelfPlay {
         TerminalWrapper tw = new TerminalWrapper();
         tw.start();
 
+
         List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
-                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory());
+                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), new PlayerGUIBot.PlayerGUIBotFactory());
         BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
+        playerOne.setTerminal(tw);
         BaseBot playerTwo = factories.get(1).createBot(Fields.PLAYER_TWO);
+        playerTwo.setTerminal(tw);
         Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
         tw.updateMenu();
-        tw.getScreen().readInput();
         GameLogic gl = new GameLogic();
-
-        gl.gameStart(playerOne.getArmy(), playerTwo.getArmy());
+        final Army firstPlayerArmy = playerOne.getArmy(null);
+        gl.gameStart(firstPlayerArmy, playerTwo.getArmy(firstPlayerArmy));
 
         tw.update(null, gl.getBoard());
 

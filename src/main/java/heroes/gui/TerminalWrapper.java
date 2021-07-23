@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
  * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
  */
 public class TerminalWrapper {
-    final Logger logger = LoggerFactory.getLogger(TerminalWrapper.class);
     final private Screen screen;
     final private Terminal terminal;
 

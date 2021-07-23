@@ -5,10 +5,7 @@ import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
-import heroes.player.BaseBot;
-import heroes.player.PlayerBot;
-import heroes.player.RandomBot;
-import heroes.player.TestBot;
+import heroes.player.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +63,8 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
-        System.out.println("Choose your bot: Test, Random, Player");
+        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        System.out.println("Choose your bot: Test, Random, Player, PlayerGUI");
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {

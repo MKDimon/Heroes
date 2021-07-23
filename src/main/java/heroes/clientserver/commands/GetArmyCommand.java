@@ -21,7 +21,7 @@ public class GetArmyCommand extends Command{
     public void execute() {
         try {
             super.getOut().write(Serializer.serializeData(
-                    new Data(null, getClient().getPlayer().getArmy())
+                    new Data(null, getClient().getPlayer().getArmy(getData().army))
             ) + '\n');
             super.getOut().flush();
         } catch (IOException e) {

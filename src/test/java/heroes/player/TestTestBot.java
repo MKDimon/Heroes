@@ -2,6 +2,7 @@ package heroes.player;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.Validator;
@@ -17,7 +18,8 @@ public class TestTestBot {
         BaseBot player1 = new TestBot(Fields.PLAYER_TWO);
 
         GameLogic gl = new GameLogic();
-        gl.gameStart(player.getArmy(), player1.getArmy());
+        final Army firstPlayerArmy = player.getArmy(null);
+        gl.gameStart(firstPlayerArmy, player1.getArmy(firstPlayerArmy));
 
         Answer answer = player.getAnswer(gl.getBoard());
 

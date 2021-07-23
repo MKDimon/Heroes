@@ -7,6 +7,8 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.TerminalWrapper;
+import heroes.gui.Visualisable;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
@@ -24,8 +26,15 @@ import java.util.Random;
  * Случайнвм образом выбирает армию и случайно делает ходы.
  **/
 
-public class RandomBot extends BaseBot {
+public class RandomBot extends BaseBot implements Visualisable {
     Logger logger = LoggerFactory.getLogger(RandomBot.class);
+
+    protected TerminalWrapper tw = null;
+
+    @Override
+    public void setTerminal(TerminalWrapper tw) {
+        super.tw = tw;
+    }
 
     /**
      * Фабрика ботов
@@ -43,7 +52,7 @@ public class RandomBot extends BaseBot {
     }
 
     @Override
-    public Army getArmy() {
+    public Army getArmy(final Army firstPlayerArmy) {
         try {
             Random r = new Random();
             Unit[][] armyArr = new Unit[2][3];
