@@ -44,7 +44,7 @@ public class PlayerBot extends BaseBot {
     }
 
     @Override
-    public Army getArmy() {
+    public Army getArmy(final Army firstPlayerArmy) {
         System.out.println(new StringBuffer().append("Choose your general: ").append(GeneralTypes.COMMANDER)
                 .append(", ").append(GeneralTypes.ARCHMAGE).append(", ").append(GeneralTypes.SNIPER));
         General general;

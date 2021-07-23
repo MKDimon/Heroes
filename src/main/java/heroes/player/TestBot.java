@@ -7,6 +7,8 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.TerminalWrapper;
+import heroes.gui.Visualisable;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
@@ -23,8 +25,15 @@ import java.util.Random;
  * Тестовый бот. Имеет фиксированный состав армии. Дейвтсвия выбирает случайнвм образом.
  **/
 
-public class TestBot extends BaseBot {
+public class TestBot extends BaseBot implements Visualisable {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
+
+    protected TerminalWrapper tw;
+
+    @Override
+    public void setTerminal(TerminalWrapper tw) {
+        super.tw = tw;
+    }
 
     /**
      * Фабрика ботов
@@ -43,7 +52,7 @@ public class TestBot extends BaseBot {
     }
 
     @Override
-    public Army getArmy() {
+    public Army getArmy(final Army firstPlayerArmy) {
         try {
             if (getField() == Fields.PLAYER_ONE) {
                 General general = new General(GeneralTypes.COMMANDER);

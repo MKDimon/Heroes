@@ -1,5 +1,6 @@
 package heroes.gui;
 
+import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.SimpleTheme;
@@ -17,10 +18,7 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
-import heroes.gui.utils.Side;
-import heroes.gui.utils.TextColorMap;
-import heroes.gui.utils.UnitDrawersMap;
-import heroes.gui.utils.UnitTerminalGrid;
+import heroes.gui.utils.*;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.units.General;
@@ -28,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -35,7 +34,6 @@ import java.util.regex.Pattern;
  * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
  */
 public class TerminalWrapper {
-    final Logger logger = LoggerFactory.getLogger(TerminalWrapper.class);
     final private Screen screen;
     final private Terminal terminal;
 
@@ -69,6 +67,27 @@ public class TerminalWrapper {
      */
     public void start() throws IOException {
         screen.startScreen();
+    }
+
+    public void printPlayer(final Fields field) {
+        int x_start = 0;
+        try {
+            x_start = (field == Fields.PLAYER_TWO) ? this.getTerminal().getTerminalSize().getColumns() - 34 : 1;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int y_start = 25;
+        TextGraphics tg = this.getScreen().newTextGraphics();
+        tg.setForegroundColor(TextColorMap.getColor("gold"));
+        tg.setModifiers(EnumSet.of(SGR.ITALIC));
+        tg.putString(x_start + 10, y_start + 1, "(YOU ARE HERE)");
+        tg.setForegroundColor(TextColorMap.getColor("white"));
+
+        try {
+            refresh();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public int updateMenu() {
