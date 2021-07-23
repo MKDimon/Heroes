@@ -44,9 +44,12 @@ public class StatisticsParser {
             while (reader.ready()) {
                 result.add(parseGameLogInformation(reader));
             }
+            //Возвращаем отчищенный от null`ов список распарсенных логов.
             return result.stream().filter(item -> item != null).collect(Collectors.toList());
         } catch (final IOException e) {
             logger.error("Error statistics file parsing", e);
+            //Если файл с логами пуст, то вернется null => в рекордере
+            //будем собирать в итоговый список только не null`овые списки.
             return null;
         }
     }
@@ -152,11 +155,10 @@ public class StatisticsParser {
         try {
             final String[] logString = reader.readLine().split(",");
             final int countOfRounds = Integer.parseInt(logString[0]);
-            if (countOfRounds != 10) {
-                return new Pair<>(logString[1], countOfRounds);
-            } else {
-                return new Pair<>("DEAD HEAT", 10);
+            if(!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")){
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
+                return new Pair<>(logString[1], countOfRounds);
         } catch (final IOException | IllegalArgumentException e) {
             logger.error("Error winner parsing", e);
             throw new StatisticsException(e);

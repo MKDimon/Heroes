@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Класс, в котором происходит обработка всей статистики и запись ее в отдельынй файл.
@@ -27,6 +26,10 @@ public class StatisticsRecorder {
 
     public static final String armiesStatisticsFilename = "src/main/resources/statistics/armiesStatistics";
 
+    public static void main(String[] args) {
+        recordStatistics();
+    }
+
     /**
      * Основной метод.
      * Обрабатывает и записывает всю имеющуюся статистику.
@@ -35,16 +38,16 @@ public class StatisticsRecorder {
     public static void recordStatistics(){
         try {
             final ServersConfigs sc = new ServersConfigs(Deserializer.getConfig().PORT, Deserializer.getConfig().MAX_ROOMS);
-            List<GameLogInformation> games = new LinkedList<>();
+            final List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
             for(int id = 0; id < sc.MAX_ROOMS; id++){
                 final String filename = new StringBuilder(StatisticsCollector.filenameTemplate).append(id).
                         append(".csv").toString();
-                games.addAll(StatisticsParser.parseLogFile(filename));
+                final List<GameLogInformation> oneFileLogs = StatisticsParser.parseLogFile(filename);
+                if(oneFileLogs != null) {
+                    games.addAll(oneFileLogs);
+                }
             }
-            //Отчищаем итоговый список логов от null`ов, которые появляются,
-            //если соответствующий файл пуст или произошла ошибка
-            games = games.stream().filter(log -> log != null).collect(Collectors.toList());
             if(games.isEmpty()){
                 return;
             }
