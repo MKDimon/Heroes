@@ -39,21 +39,8 @@ public class Selector {
     public void updateSelection(final KeyType kt) {
         Pair<Integer, Integer> fromMap = keyTypePairMap.getOrDefault(kt, new Pair<>(0, 0));
 
-        int x = fromMap.getX() + currentSelection.getX();
-        int y = fromMap.getY() + currentSelection.getY();
-
-        //TODO: лучше %
-        if (x > rows-1) {
-            x = 0;
-        } else if (x < 0){
-            x = rows - 1;
-        }
-
-        if (y > cols-1) {
-            y = 0;
-        } else if (y < 0){
-            y = cols - 1;
-        }
+        int x = (fromMap.getX() + currentSelection.getX()) % rows;
+        int y = (fromMap.getY() + currentSelection.getY()) % cols;
 
         currentSelection = new Pair<>(x, y);
     }

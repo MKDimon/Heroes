@@ -70,7 +70,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
     private General selectGeneralWindowDraw(final Controls controls) {
-        Selector selector = new Selector(1, 3);
+        final Selector selector = new Selector(1, 3);
         while (true) {
             tw.getScreen().clear();
             MenuGeneralDrawer.drawGenerals(tw, selector.getSelectedNumber());
@@ -98,7 +98,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
     private Pair<Integer, Integer> getGeneralPosition(final Controls controls, final Army firstPlayerArmy) {
-        Selector selector = new Selector(3, 2);
+        final Selector selector = new Selector(3, 2);
 
         while (true) {
             tw.getScreen().clear();
@@ -134,7 +134,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
     private Unit selectUnit(final Controls controls) {
-        Selector selector = new Selector(4, 1);
+        final Selector selector = new Selector(4, 1);
         while (true) {
             // tw.getScreen().clear();
             MenuUnitDrawer.drawUnits(tw, selector.getSelectedNumber());
@@ -160,7 +160,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
             throws BoardException, UnitException {
 
         final Pair<Integer, Integer> genPos = getGeneralPosition(controls, firstPlayerArmy);
-        Selector selector = new Selector(3, 2);
+        final Selector selector = new Selector(3, 2);
         try {
             tw.getScreen().refresh();
         } catch (IOException e) {
