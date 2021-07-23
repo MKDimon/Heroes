@@ -30,11 +30,13 @@ public class Server {
 
     private final int PORT;
     private final int maxRooms;
+    private final int delay;
     private final Map<Integer, Rooms> getRoom;
 
-    public Server(final int PORT, final int maxRooms) {
+    public Server(final int PORT, final int maxRooms, final int delay) {
         this.maxRooms = maxRooms;
         this.PORT = PORT;
+        this.delay = delay;
         getRoom = new Hashtable<>();
     }
 
@@ -61,7 +63,7 @@ public class Server {
         public void run() {
             while (true) {
                 try {
-                    Data data = new Data(CommonCommands.GET_ROOM);
+                    final Data data = new Data(CommonCommands.GET_ROOM);
                     socket.setSoTimeout(CommandsTime.getTime(data.command));
                     out.write(Serializer.serializeData(data) + '\n');
                     out.flush();
@@ -214,10 +216,13 @@ public class Server {
                         // весь игровой процесс
                         while (gameLogic.isGameBegun()) {
                             gameRun(collector);
+                            //noinspection BusyWait
+                            Thread.sleep(server.delay);
                         }
 
                         gameEnding(collector);
-                    } catch (final ServerException | SocketTimeoutException | UnitException | BoardException e) {
+                    } catch (final ServerException | SocketTimeoutException | UnitException
+                            | BoardException | InterruptedException e) {
                         logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
                         gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
                         this.endGame();
@@ -310,7 +315,7 @@ public class Server {
 
     public static void main(final String[] args) throws IOException {
         final ServersConfigs sc = Deserializer.getConfig();
-        final Server server = new Server(sc.PORT, sc.MAX_ROOMS);
+        final Server server = new Server(sc.PORT, sc.MAX_ROOMS, sc.DELAY);
         server.startServer();
     }
 }

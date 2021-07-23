@@ -1,14 +1,18 @@
 package heroes.clientserver;
 
+import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
-import heroes.player.BaseBot;
-import heroes.player.PlayerBot;
-import heroes.player.RandomBot;
-import heroes.player.TestBot;
+import heroes.gui.menudrawers.MenuUnitDrawer;
+import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
+import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
+import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
+import heroes.player.*;
+import heroes.player.controlsystem.Controls;
+import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,20 +69,44 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
-        System.out.println("Choose your bot: Test, Random, Player");
-        final Scanner scanner = new Scanner(System.in);
+        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+
+        final Controls controls = new Controls(tw);
+        final Selector selector = new Selector(1 , 4);
+
         while (true) {
+            tw.getScreen().clear();
+            MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
             try {
-                final String botTypeString = scanner.next();
-                if(!botFactoryMap.containsKey(botTypeString)){
-                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
-                }
-                player = botFactoryMap.get(botTypeString).createBot(field);
-                break;
-            } catch (IllegalArgumentException | GameLogicException e) {
-                System.out.println("Incorrect bot type!!!");
-                System.out.println("Choose your bot: Test, Random, Player");
+                tw.getScreen().refresh();
+            } catch (IOException e) {
+                logger.error("Error refreshing terminal in playerGUIbot", e);
             }
+
+            KeyType kt = controls.update();
+            while(kt == null) {
+                kt = controls.update();
+            }
+            selector.updateSelection(kt);
+
+            if(kt == KeyType.Enter) {
+                try {
+                    player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
+                    player.setTerminal(tw);
+
+                    tw.getScreen().clear();
+                    MenuBotDrawer.drawWait(tw);
+                    try {
+                        tw.getScreen().refresh();
+                    } catch (IOException e) {
+                        logger.error("Error refreshing terminal in playerGUIbot", e);
+                    }
+                    break;
+                } catch (GameLogicException e) {
+                    logger.error("Error create bot", e);
+                }
+            }
+            tw.getScreen().clear();
         }
     }
 

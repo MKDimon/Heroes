@@ -22,6 +22,7 @@ public class DrawCommand extends Command{
     public void execute() {
         try {
             getClient().getTw().update(getData().answer, getData().board);
+            getClient().getTw().printPlayer(getClient().getPlayer().getField());
             getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_SUCCESSFUL)) + '\n');
         } catch (final IOException | UnitException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);

@@ -35,7 +35,7 @@ public class TerminalGeneralDrawer {
         TextGraphics tg = tw.getScreen().newTextGraphics();
         tg.setForegroundColor(TextColorMap.getColor("gold"));
         tg.setModifiers(EnumSet.of(SGR.ITALIC));
-        tg.putString(x_start, y_start - 2, GeneralNamesMap.getName(general.getActionType()));
+        tg.putString(x_start + 13, y_start - 2, GeneralNamesMap.getName(general.getActionType()));
         tg.setForegroundColor(TextColorMap.getColor("white"));
     }
 }
