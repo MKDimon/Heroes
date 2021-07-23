@@ -71,8 +71,8 @@ public class Client {
         botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
-        Controls controls = new Controls(tw);
-        Selector selector = new Selector(1 , 4);
+        final Controls controls = new Controls(tw);
+        final Selector selector = new Selector(1 , 4);
 
         while (true) {
             tw.getScreen().clear();
@@ -103,9 +103,8 @@ public class Client {
                     }
                     break;
                 } catch (GameLogicException e) {
-                    e.printStackTrace();
+                    logger.error("Error create bot", e);
                 }
-
             }
             tw.getScreen().clear();
         }
