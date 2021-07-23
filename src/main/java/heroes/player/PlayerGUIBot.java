@@ -106,6 +106,9 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
             if (firstPlayerArmy != null) {
                 TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
                         false, Fields.PLAYER_ONE);
+                MenuTitleDrawers.drawArmyHereDisclaimer(tw, new TerminalPosition(10, 10));
+            } else {
+                MenuTitleDrawers.drawArmyNotHereDisclaimer(tw, new TerminalPosition(10, 20));
             }
 
             MenuTitleDrawers.drawGeneralPosition(tw, new TerminalPosition(10, 2));
@@ -177,7 +180,12 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
                 if (firstPlayerArmy != null) {
                     TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
                             false, Fields.PLAYER_ONE);
+                    MenuTitleDrawers.drawArmyHereDisclaimer(tw, new TerminalPosition(10, 10));
+                } else {
+                    MenuTitleDrawers.drawArmyNotHereDisclaimer(tw, new TerminalPosition(10, 20));
                 }
+
+
 
                 MenuBoardDrawer.drawBorders(tw, new TerminalPosition(110, 10),
                         new TerminalPosition(137, 46));
@@ -186,6 +194,9 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
 
                 TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0,0), units, general,
                         true, Fields.PLAYER_TWO);
+
+                MenuTitleDrawers.drawChoose(tw, new TerminalPosition(5, 2));
+                MenuTitleDrawers.drawTroops(tw, new TerminalPosition(85, 2));
 
                 if (units[i][j] == null) {
                     MenuBoardDrawer.drawUnitBorders(tw, new TerminalPosition(110, 10),

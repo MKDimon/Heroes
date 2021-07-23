@@ -35,12 +35,12 @@ public class UnitMenuTerminalGrid {
 
         unitGrid = new HashMap<>();
 
-        unitGrid.put(new Position(1, 0, Fields.PLAYER_ONE), new Pair<>(x_start_1, 10));
-        unitGrid.put(new Position(1, 1, Fields.PLAYER_ONE), new Pair<>(x_start_1, 20));
-        unitGrid.put(new Position(1, 2, Fields.PLAYER_ONE), new Pair<>(x_start_1, 30));
-        unitGrid.put(new Position(0, 0, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 10));
-        unitGrid.put(new Position(0, 1, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 20));
-        unitGrid.put(new Position(0, 2, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 30));
+        unitGrid.put(new Position(1, 0, Fields.PLAYER_ONE), new Pair<>(x_start_1, 14));
+        unitGrid.put(new Position(1, 1, Fields.PLAYER_ONE), new Pair<>(x_start_1, 25));
+        unitGrid.put(new Position(1, 2, Fields.PLAYER_ONE), new Pair<>(x_start_1, 36));
+        unitGrid.put(new Position(0, 0, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 14));
+        unitGrid.put(new Position(0, 1, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 25));
+        unitGrid.put(new Position(0, 2, Fields.PLAYER_ONE), new Pair<>(x_start_1 + 13, 36));
 
         unitGrid.put(new Position(0, 0, Fields.PLAYER_TWO), new Pair<>(x_start_2 + 4, 14));
         unitGrid.put(new Position(0, 1, Fields.PLAYER_TWO), new Pair<>(x_start_2 + 4, 25));
