@@ -32,6 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -224,70 +227,49 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
 
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
-        int attackerX;
-        int attackerY;
-        System.out.println("Choose attacker position: ");
-        while (true) {
-            try {
-                System.out.print("X: ");
-                attackerX = scanner.nextInt();
-                System.out.print("Y: ");
-                attackerY = scanner.nextInt();
-                if (!board.getUnitByCoordinate(new Position(attackerX, attackerY, getField())).isActive()) {
-                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
-                }
-                break;
-            } catch (IllegalArgumentException | IndexOutOfBoundsException | GameLogicException e) {
-                System.out.println("Incorrect attacker position!");
-                System.out.println("Choose attacker position: ");
+        Random r = new Random();
 
-            }
-        }
-        final Position attacker = new Position(attackerX, attackerY, getField());
-        System.out.println(new StringBuffer("Choose action: ")
-                .append(board.getUnitByCoordinate(attacker).getActionType().toString())
-                .append(", ").append(ActionTypes.DEFENSE));
-        ActionTypes act;
-        while (true) {
-            try {
-                String actionTypeString = scanner.next();
-                act = ActionTypes.valueOf(actionTypeString);
-                if (act != board.getUnitByCoordinate(attacker).getActionType() && act != ActionTypes.DEFENSE) {
-                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
-                }
-                break;
-            } catch (IllegalArgumentException | GameLogicException e) {
-                System.out.println("Incorrect action!");
-                System.out.println("Choose action: ");
-            }
-        }
+
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
-        if (act == ActionTypes.DEFENSE) {
-            return new Answer(attacker, attacker, ActionTypes.DEFENSE);
-        }
-        if (act == ActionTypes.HEALING) {
-            defField = getField();
-        }
-        int defenderX;
-        int defenderY;
-        System.out.println("Choose defender position: ");
-        while (true) {
-            try {
-                System.out.print("X: ");
-                defenderX = scanner.nextInt();
-                System.out.print("Y: ");
-                defenderY = scanner.nextInt();
-                if (!board.getUnitByCoordinate(new Position(defenderX, defenderY, getField())).isAlive()) {
-                    throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+
+        List<Position> posAttack = new ArrayList<>();
+        List<Position> posDefend = new ArrayList<>();
+
+        Unit[][] armyAttack = board.getArmy(getField());
+        Unit[][] armyDefend = board.getArmy(defField);
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (armyAttack[i][j].isActive()) {
+                    posAttack.add(new Position(i, j, getField()));
                 }
-                break;
-            } catch (IllegalArgumentException | IndexOutOfBoundsException | GameLogicException e) {
-                System.out.println("Incorrect attacker position!");
-                System.out.println("Choose defender position: ");
+                if (armyDefend[i][j].isAlive()) {
+                    posDefend.add(new Position(i, j, defField));
+                }
             }
         }
-        Position defender = new Position(defenderX, defenderY, defField);
-        return new Answer(attacker, defender, act);
+
+        Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
+        if(r.nextInt(100) < 20){
+            return new Answer(attackerPos, attackerPos, ActionTypes.DEFENSE);
+        }
+        ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
+        if (attackType == ActionTypes.HEALING) {
+            defField = getField();
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, getField()))) {
+                        posAttack.add(new Position(i, j, getField()));
+                    }
+                }
+            }
+        }
+
+        Position defenderPos = (defField == getField()) ?
+                posAttack.get(r.nextInt(posAttack.size())) :
+                posDefend.get(r.nextInt(posDefend.size()));
+
+        return new Answer(attackerPos, defenderPos, attackType);
     }
 
 }
