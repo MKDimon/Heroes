@@ -34,7 +34,7 @@ public class StatisticsRecorder {
 
     public static void recordStatistics(){
         try {
-            final ServersConfigs sc = new ServersConfigs(Deserializer.getConfig().PORT, Deserializer.getConfig().MAX_ROOMS);
+            final ServersConfigs sc = Deserializer.getConfig();
             List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
             for(int id = 0; id < sc.MAX_ROOMS; id++){
