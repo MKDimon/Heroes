@@ -6,13 +6,14 @@ import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
+import heroes.gamelogic.Fields;
+import heroes.units.Unit;
+import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Класс для анализа статистики
@@ -78,6 +79,26 @@ public class StatisticsAnalyzer {
             }
         }
         return statistics;
+    }
+
+    /**
+     * Метод возвращает среднюю продолжительность игры (в раундах)
+     **/
+
+    public static double getAverageGameDuration(final List<GameLogInformation> games) throws StatisticsException {
+        try {
+        if(games == null || games.isEmpty()){
+                throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
+            }
+        int count = 0;
+        for(GameLogInformation game: games){
+            count += game.getCountOfRounds();
+        }
+        return (double)count/games.size();
+        } catch (final StatisticsException e) {
+            logger.error("Error average game duration analyzing",e);
+            throw new StatisticsException(e);
+        }
     }
 
 }
