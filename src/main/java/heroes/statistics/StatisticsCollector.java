@@ -24,8 +24,8 @@ import java.util.Map;
  * Рекордер - записывает обработанные данные в соответтсвующие файлы
  * Логи одной игры имеют следующую структуру:
  * GAME START
- * PLAYER_ONE ARMY
- * PLAYER_TWO ARMY
+ * PLAYER_ONE,ARMY
+ * PLAYER_TWO,ARMY
  * ...
  *    0           1   2       3      4     5        6         7             8       9            10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,defX,defY,actionType,attackerUnitType,atHP,defenderUnitType,defHP,actionPower
