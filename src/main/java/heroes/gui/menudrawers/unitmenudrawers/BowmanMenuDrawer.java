@@ -7,7 +7,7 @@ import com.googlecode.lanterna.graphics.BasicTextImage;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.TerminalLineDrawer;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 import heroes.mathutils.Pair;
 
 public class BowmanMenuDrawer implements IUnitMenuDrawer {
@@ -15,12 +15,12 @@ public class BowmanMenuDrawer implements IUnitMenuDrawer {
     public TextImage formTextImage(final boolean isSelected) {
         TextImage ti = new BasicTextImage(new TerminalSize(8, 8), TextCharacter.DEFAULT_CHARACTER.withCharacter(' '));
 
-        TextCharacter bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('(').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(')').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter sharp = TextCharacter.DEFAULT_CHARACTER.withCharacter('#').withForegroundColor(TextColorMap.getColor("green"));
-        TextCharacter underscore = TextCharacter.DEFAULT_CHARACTER.withCharacter('_').withForegroundColor(TextColorMap.getColor("brown"));
+        TextCharacter bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('(').withForegroundColor(Colors.BROWN.color());
+        TextCharacter bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(')').withForegroundColor(Colors.BROWN.color());
+        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.BROWN.color());
+        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(Colors.BROWN.color());
+        TextCharacter sharp = TextCharacter.DEFAULT_CHARACTER.withCharacter('#').withForegroundColor(Colors.GREEN.color());
+        TextCharacter underscore = TextCharacter.DEFAULT_CHARACTER.withCharacter('_').withForegroundColor(Colors.BROWN.color());
 
         ti.setCharacterAt(2, 0, bracket_left);
         ti.setCharacterAt(2, 7, bracket_left);
@@ -37,8 +37,8 @@ public class BowmanMenuDrawer implements IUnitMenuDrawer {
         ti.setCharacterAt(4, 3, underscore);
         ti.setCharacterAt(5, 3, underscore);
         ti.setCharacterAt(6, 3, underscore);
-        slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("red"));
-        backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(TextColorMap.getColor("red"));
+        slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.RED.color());
+        backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(Colors.RED.color());
         ti.setCharacterAt(7, 3, backslash);
         ti.setCharacterAt(7, 4, slash);
 
@@ -52,16 +52,16 @@ public class BowmanMenuDrawer implements IUnitMenuDrawer {
 
         if (isSelected) {
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() - 1, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "gold");
+                    topLeftCorner.getY() + 8, '|', Colors.GOLD);
 
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() + 8, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "gold");
+                    topLeftCorner.getY() + 8, '|', Colors.GOLD);
         } else {
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() - 1, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "white");
+                    topLeftCorner.getY() + 8, '|', Colors.WHITE);
 
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() + 8, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "white");
+                    topLeftCorner.getY() + 8, '|', Colors.WHITE);
         }
     }
 }

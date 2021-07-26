@@ -3,7 +3,7 @@ package heroes.gui;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 
 /**
  * Статический класс для отображения информации о ходе игры.
@@ -27,9 +27,9 @@ public class TerminalInformationDrawer {
     private static void drawRound(final TerminalWrapper tw, final Board board) {
         int center = tw.getTerminalSize().getColumns() / 2;
         TextGraphics tg = tw.newTG();
-        tg.setForegroundColor(TextColorMap.getColor("orange"));
+        tg.setForegroundColor(Colors.ORANGE.color());
         tg.putString(center, 1, "| Current round: " + board.getCurNumRound());
-        tg.setForegroundColor(TextColorMap.getColor("white"));
+        tg.setForegroundColor(Colors.WHITE.color());
     }
 
     /**
@@ -40,13 +40,13 @@ public class TerminalInformationDrawer {
     private static void drawTurn(final TerminalWrapper tw, final Board board) {
         int center = tw.getTerminalSize().getColumns() / 2;
         TextGraphics tg = tw.newTG();
-        tg.setForegroundColor(TextColorMap.getColor("orange"));
+        tg.setForegroundColor(Colors.ORANGE.color());
         if (board.getCurrentPlayer() == Fields.PLAYER_ONE) {
             tg.putString(center - 21, 1, "Turn of LEFT player");
         } else {
             tg.putString(center - 20, 1, "Turn of RIGHT player");
         }
-        tg.setForegroundColor(TextColorMap.getColor("white"));
+        tg.setForegroundColor(Colors.WHITE.color());
 
     }
 }

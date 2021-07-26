@@ -16,11 +16,12 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
-import heroes.gui.utils.*;
+import heroes.gui.utils.Colors;
+import heroes.gui.utils.Side;
+import heroes.gui.utils.UnitDrawersMap;
+import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
-import heroes.player.PlayerGUIBot;
-import heroes.units.General;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,10 +89,10 @@ public class TerminalWrapper {
         final int x_start = (field == Fields.PLAYER_TWO) ? terminalSize.getColumns() - 34 : 1;
         final int y_start = 25;
         final TextGraphics tg = this.newTG();
-        tg.setForegroundColor(TextColorMap.getColor("gold"));
+        tg.setForegroundColor(Colors.GOLD.color());
         tg.setModifiers(EnumSet.of(SGR.ITALIC));
         tg.putString(x_start + 10, y_start + 1, "(YOU ARE HERE)");
-        tg.setForegroundColor(TextColorMap.getColor("white"));
+        tg.setForegroundColor(Colors.WHITE.color());
 
         refresh();
     }
@@ -100,13 +101,13 @@ public class TerminalWrapper {
         final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
         textGUI.setTheme(SimpleTheme.makeTheme(
                 false,
-                TextColorMap.getColor("white"),
-                TextColorMap.getColor("black"),
-                TextColorMap.getColor("white"),
-                TextColorMap.getColor("steelgray"),
-                TextColorMap.getColor("steelgray"),
-                TextColorMap.getColor("yellow"),
-                TextColorMap.getColor("black")));
+                Colors.WHITE.color(),
+                Colors.BLACK.color(),
+                Colors.WHITE.color(),
+                Colors.STEELGRAY.color(),
+                Colors.STEELGRAY.color(),
+                Colors.WHITE.color(),
+                Colors.BLACK.color()));
 
         final TextInputDialog textInputDialog = new TextInputDialogBuilder()
                 .setTitle("Choose game room")

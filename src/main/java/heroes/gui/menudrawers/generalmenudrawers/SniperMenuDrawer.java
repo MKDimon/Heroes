@@ -4,8 +4,7 @@ import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.Side;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -18,21 +17,21 @@ public class SniperMenuDrawer implements IGeneralMenuDrawer {
 
         TextGraphics tg = tw.getScreen().newTextGraphics();
         if (isSelected) {
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 3, y_start + 26, "SNIPER");
-            tg.setForegroundColor(TextColorMap.getColor("lightblue"));
+            tg.setForegroundColor(Colors.LIGHTBLUE.color());
             tg.setModifiers(EnumSet.of(SGR.ITALIC));
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 27, y_start + 28,
                     "His Majesty's Jagermeister, skilled bowman and hunter.");
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 40, y_start + 29,
                     "Sniper is the best in archery. He trains his troops to be more accurate in fight.");
             tg.clearModifiers();
-            tg.setForegroundColor(TextColorMap.getColor("blue"));
+            tg.setForegroundColor(Colors.BLUE.color());
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 31,
                     "Inspiration: ");
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 7, y_start + 31,
                     "Accuracy +10% for all units.");
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
         }
         tg.putString(x_start, y_start + 2, "        -\\\\");
         tg.putString(x_start, y_start + 3, "           \\\\");
