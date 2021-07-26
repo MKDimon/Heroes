@@ -59,7 +59,6 @@ public class HealerDrawer implements IUnitDrawer {
 
     @Override
     public void draw(final TerminalWrapper tw, final Pair<Integer, Integer> topLeftCorner, final boolean isGeneral) {
-        tw.getScreen().newTextGraphics().drawImage(new TerminalPosition(topLeftCorner.getX(), topLeftCorner.getY()),
-                formTextImage(isGeneral));
+        tw.newTG().drawImage(new TerminalPosition(topLeftCorner.getX(), topLeftCorner.getY()), formTextImage(isGeneral));
     }
 }

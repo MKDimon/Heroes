@@ -29,10 +29,10 @@ public class TerminalGeneralDrawer {
         drawStatus(tw, general, side);
     }
 
-    private static void drawStatus(final TerminalWrapper tw, final General general, final Side side) throws IOException {
-        int x_start = (side == Side.RHS) ? tw.getTerminal().getTerminalSize().getColumns() - 34 : 1;
+    private static void drawStatus(final TerminalWrapper tw, final General general, final Side side) {
+        int x_start = (side == Side.RHS) ? tw.getTerminalSize().getColumns() - 34 : 1;
         int y_start = 25;
-        TextGraphics tg = tw.getScreen().newTextGraphics();
+        TextGraphics tg = tw.newTG();
         tg.setForegroundColor(TextColorMap.getColor("gold"));
         tg.setModifiers(EnumSet.of(SGR.ITALIC));
         tg.putString(x_start + 13, y_start - 2, GeneralNamesMap.getName(general.getActionType()));

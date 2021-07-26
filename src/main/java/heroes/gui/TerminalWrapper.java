@@ -5,7 +5,6 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.graphics.SimpleTheme;
 import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.graphics.TextGraphicsWriter;
 import com.googlecode.lanterna.gui2.*;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialog;
 import com.googlecode.lanterna.gui2.dialogs.TextInputDialogBuilder;
@@ -13,7 +12,6 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import heroes.SelfPlay;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -21,6 +19,7 @@ import heroes.gui.selectiondrawers.TerminalAnswerDrawer;
 import heroes.gui.utils.*;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
+import heroes.player.PlayerGUIBot;
 import heroes.units.General;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +33,11 @@ import java.util.regex.Pattern;
  * Обертка над Lanterna для сокращения кода, который управляет процессами запуска терминала.
  */
 public class TerminalWrapper {
+    private static final Logger logger = LoggerFactory.getLogger(TerminalWrapper.class);
     final private Screen screen;
     final private Terminal terminal;
+
+    final private TerminalSize terminalSize;
 
     /**
      * Конструктор по умолчанию вызывает DefaultTerminalFactory, задает некоторые начальные настройки
@@ -44,7 +46,9 @@ public class TerminalWrapper {
      */
     public TerminalWrapper() throws IOException {
         DefaultTerminalFactory defaultTerminalFactory = new DefaultTerminalFactory();
-        defaultTerminalFactory.setInitialTerminalSize(new TerminalSize(150, 50));
+        TerminalSize ts = new TerminalSize(150, 50);
+        terminalSize = ts;
+        defaultTerminalFactory.setInitialTerminalSize(ts);
         defaultTerminalFactory.setTerminalEmulatorTitle("Heroes");
         terminal = defaultTerminalFactory.createTerminal();
         screen = new TerminalScreen(terminal);
@@ -57,37 +61,39 @@ public class TerminalWrapper {
         screen.clear();
     }
 
-    private void refresh() throws IOException {
-        screen.refresh();
+    public void refresh() {
+        try {
+            screen.refresh();
+        } catch (IOException e) {
+            logger.error("Cannot refresh terminal.", e);
+        }
     }
 
     /**
      * Обертка над методом startScreen(). Запускает окно терминала.
-     * @throws IOException исключение из методов Лантерны пробрасывается выше.
      */
-    public void start() throws IOException {
-        screen.startScreen();
+    public void start() {
+        try {
+            screen.startScreen();
+        } catch (IOException e) {
+            logger.error("Cannot start terminal.", e);
+        }
+    }
+
+    public TextGraphics newTG() {
+        return screen.newTextGraphics();
     }
 
     public void printPlayer(final Fields field) {
-        int x_start = 0;
-        try {
-            x_start = (field == Fields.PLAYER_TWO) ? this.getTerminal().getTerminalSize().getColumns() - 34 : 1;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        int y_start = 25;
-        TextGraphics tg = this.getScreen().newTextGraphics();
+        final int x_start = (field == Fields.PLAYER_TWO) ? terminalSize.getColumns() - 34 : 1;
+        final int y_start = 25;
+        final TextGraphics tg = this.newTG();
         tg.setForegroundColor(TextColorMap.getColor("gold"));
         tg.setModifiers(EnumSet.of(SGR.ITALIC));
         tg.putString(x_start + 10, y_start + 1, "(YOU ARE HERE)");
         tg.setForegroundColor(TextColorMap.getColor("white"));
 
-        try {
-            refresh();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        refresh();
     }
 
     public int updateMenu() {
@@ -102,7 +108,7 @@ public class TerminalWrapper {
                 TextColorMap.getColor("yellow"),
                 TextColorMap.getColor("black")));
 
-        TextInputDialog textInputDialog = new TextInputDialogBuilder()
+        final TextInputDialog textInputDialog = new TextInputDialogBuilder()
                 .setTitle("Choose game room")
                 .setDescription("Enter a single number (0-9)")
                 .setValidationPattern(Pattern.compile("[0-9]"), "You didn't enter a single number!")
@@ -112,19 +118,19 @@ public class TerminalWrapper {
         textInputDialog.setHints(List.of(Window.Hint.FIXED_POSITION));
         textInputDialog.setPosition(new TerminalPosition(7, 10));
 
-        ImageComponent ic = new ImageComponent();
+        final ImageComponent ic = new ImageComponent();
         ic.setTextImage(TerminalMenuPictureDrawer.drawPicture(this));
-        Panel panel = new Panel();
+        final Panel panel = new Panel();
         panel.addComponent(ic);
 
-        Window win = new BasicWindow();
+        final Window win = new BasicWindow();
         win.setComponent(ic);
         win.setHints(List.of(Window.Hint.FIXED_POSITION, Window.Hint.FIXED_SIZE));
         win.setPosition(new TerminalPosition(0, 0));
-        win.setFixedSize(new TerminalSize(148, 48));
+        win.setFixedSize(new TerminalSize(terminalSize.getColumns() - 2, terminalSize.getRows() - 2));
 
         textGUI.addWindow(win);
-        String input = textInputDialog.showDialog(textGUI);
+        final String input = textInputDialog.showDialog(textGUI);
 
         return Integer.parseInt(input);
     }
@@ -141,13 +147,12 @@ public class TerminalWrapper {
         clean();
         TerminalBorderDrawer.drawBorders(this);
 
-        UnitTerminalGrid utg = new UnitTerminalGrid(this);
+        final UnitTerminalGrid utg = new UnitTerminalGrid(this);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 //draw units of 1st army
                 if (board.getArmy(Fields.PLAYER_ONE) != null) {
-                    General gen_one = board.getGeneralPlayerOne();
-                    TerminalGeneralDrawer.drawGeneral(this, gen_one, Side.LHS);
+                    TerminalGeneralDrawer.drawGeneral(this, board.getGeneralPlayerOne(), Side.LHS);
 
                     UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
@@ -158,8 +163,8 @@ public class TerminalWrapper {
                 }
                 //draw units of 2nd army
                 if (board.getArmy(Fields.PLAYER_TWO) != null) {
-                    General gen_two = board.getGeneralPlayerTwo();
-                    TerminalGeneralDrawer.drawGeneral(this, gen_two, Side.RHS);
+                    TerminalGeneralDrawer.drawGeneral(this, board.getGeneralPlayerTwo(), Side.RHS);
+
                     UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
                                     board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
@@ -192,5 +197,9 @@ public class TerminalWrapper {
 
     public Terminal getTerminal() {
         return terminal;
+    }
+
+    public TerminalSize getTerminalSize() {
+        return terminalSize;
     }
 }
