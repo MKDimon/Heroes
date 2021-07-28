@@ -27,12 +27,12 @@ import java.util.Random;
  **/
 
 public class RandomBot extends BaseBot implements Visualisable {
-    Logger logger = LoggerFactory.getLogger(RandomBot.class);
+    private static final Logger logger = LoggerFactory.getLogger(RandomBot.class);
 
     protected TerminalWrapper tw = null;
 
     @Override
-    public void setTerminal(TerminalWrapper tw) {
+    public void setTerminal(final TerminalWrapper tw) {
         super.tw = tw;
     }
 
@@ -54,16 +54,11 @@ public class RandomBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            Random r = new Random();
-            Unit[][] armyArr = new Unit[2][3];
-            UnitTypes[] unitTypes = UnitTypes.values();
-            General general = null;
-            try {
-                GeneralTypes[] generalTypes = GeneralTypes.values();
-                general = new General(generalTypes[r.nextInt(generalTypes.length)]);
-            } catch (UnitException e) {
-                logger.error("Error creating general in RandomBot", e);
-            }
+            final Random r = new Random();
+            final Unit[][] armyArr = new Unit[2][3];
+            final UnitTypes[] unitTypes = UnitTypes.values();
+            final GeneralTypes[] generalTypes = GeneralTypes.values();
+            final General general = new General(generalTypes[r.nextInt(generalTypes.length)]);
             armyArr[r.nextInt(2)][r.nextInt(3)] = general;
             try {
                 for (int i = 0; i < 2; i++) {
@@ -77,7 +72,7 @@ public class RandomBot extends BaseBot implements Visualisable {
                 logger.error("Error creating unit in RandomBot", e);
             }
             return new Army(armyArr, general);
-        } catch (BoardException | UnitException e) {
+        } catch (final BoardException | UnitException e) {
             logger.error("Error creating army in RandomBot", e);
             return null;
         }
@@ -99,11 +94,11 @@ public class RandomBot extends BaseBot implements Visualisable {
 
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
-        List<Position> posAttack = new ArrayList<>();
-        List<Position> posDefend = new ArrayList<>();
+        final List<Position> posAttack = new ArrayList<>(6);
+        final List<Position> posDefend = new ArrayList<>(6);
 
-        Unit[][] armyAttack = board.getArmy(getField());
-        Unit[][] armyDefend = board.getArmy(defField);
+        final Unit[][] armyAttack = board.getArmy(getField());
+        final Unit[][] armyDefend = board.getArmy(defField);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -116,11 +111,11 @@ public class RandomBot extends BaseBot implements Visualisable {
             }
         }
 
-        Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
+        final Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
         if(r.nextInt(100) < 20){
             return new Answer(attackerPos, attackerPos, ActionTypes.DEFENSE);
         }
-        ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
+        final ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
             defField = getField();
             for (int i = 0; i < 2; i++) {
@@ -132,7 +127,7 @@ public class RandomBot extends BaseBot implements Visualisable {
             }
         }
 
-        Position defenderPos = (defField == getField()) ?
+        final Position defenderPos = (defField == getField()) ?
                 posAttack.get(r.nextInt(posAttack.size())) :
                 posDefend.get(r.nextInt(posDefend.size()));
 

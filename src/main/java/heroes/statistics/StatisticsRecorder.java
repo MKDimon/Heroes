@@ -46,7 +46,7 @@ public class StatisticsRecorder {
             final ServersConfigs sc = Deserializer.getConfig();
             final List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
-            for(int id = 0; id < sc.MAX_ROOMS; id++){
+            for(int id = 1; id <= sc.MAX_ROOMS; id++){
                 final String filename = new StringBuilder(StatisticsCollector.filenameTemplate).append(id).
                         append(".csv").toString();
                 final List<GameLogInformation> oneFileLogs = StatisticsParser.parseLogFile(filename);

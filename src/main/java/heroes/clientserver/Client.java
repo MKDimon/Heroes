@@ -11,6 +11,7 @@ import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.player.*;
+import heroes.player.botgleb.SimulationBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -70,6 +71,7 @@ public class Client {
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        botFactoryMap.put("Simulation", new SimulationBot.SimulationBotFactory());
 
         final Controls controls = new Controls(tw);
         final Selector selector = new Selector(1 , 4);
