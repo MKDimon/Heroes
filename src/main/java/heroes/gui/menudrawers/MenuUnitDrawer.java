@@ -1,19 +1,11 @@
 package heroes.gui.menudrawers;
 
-import com.googlecode.lanterna.TerminalPosition;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.BowmanMenuDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.HealerMenuDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.MageMenuDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.SwordsmanMenuDrawer;
 import heroes.mathutils.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class MenuUnitDrawer {
     public static void drawUnits(final TerminalWrapper tw, final int selectedUnit) {

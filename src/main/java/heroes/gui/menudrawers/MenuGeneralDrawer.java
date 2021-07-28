@@ -5,7 +5,6 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
 import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
 import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
-import heroes.player.PlayerGUIBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -3,27 +3,28 @@ package heroes.gui.menudrawers;
 import com.googlecode.lanterna.TerminalPosition;
 import heroes.gui.TerminalLineDrawer;
 import heroes.gui.TerminalWrapper;
+import heroes.gui.utils.Colors;
 
 public class MenuBoardDrawer {
     public static void drawBorders(final TerminalWrapper tw, final TerminalPosition topLeft,
                                     final TerminalPosition botRight) {
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn(), topLeft.getRow(),
-                botRight.getRow(), '|', "white");
+                botRight.getRow(), '|', Colors.WHITE);
         TerminalLineDrawer.drawVerticalLine(tw, botRight.getColumn(), topLeft.getRow(),
-                botRight.getRow(), '|', "white");
+                botRight.getRow(), '|', Colors.WHITE);
         TerminalLineDrawer.drawHorizontalLine(tw, topLeft.getColumn(), botRight.getColumn(),
-                topLeft.getRow(), '=', "white");
+                topLeft.getRow(), '=', Colors.WHITE);
         TerminalLineDrawer.drawHorizontalLine(tw, topLeft.getColumn(), botRight.getColumn(),
-                botRight.getRow(), '=', "white");
+                botRight.getRow(), '=', Colors.WHITE);
     }
 
     public static void drawUnitBorders(final TerminalWrapper tw, final TerminalPosition topLeft,
                                        final TerminalPosition botRight, final int selectedPosition) {
-        String color;
+        Colors color;
         if (selectedPosition == 1)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 2, topLeft.getRow() + 2,
                 topLeft.getRow() + 12, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 12, topLeft.getRow() + 2,
@@ -34,9 +35,9 @@ public class MenuBoardDrawer {
                 topLeft.getRow() + 12, '=', color);
 
         if (selectedPosition == 2)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 15, topLeft.getRow() + 2,
                 topLeft.getRow() + 12, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 25, topLeft.getRow() + 2,
@@ -47,9 +48,9 @@ public class MenuBoardDrawer {
                 topLeft.getRow() + 12, '=', color);
 
         if (selectedPosition == 3)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 2, topLeft.getRow() + 13,
                 topLeft.getRow() + 23, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 12, topLeft.getRow() + 13,
@@ -60,9 +61,9 @@ public class MenuBoardDrawer {
                 topLeft.getRow() + 23, '=', color);
 
         if (selectedPosition == 4)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 15, topLeft.getRow() + 13,
                 topLeft.getRow() + 23, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 25, topLeft.getRow() + 13,
@@ -73,9 +74,9 @@ public class MenuBoardDrawer {
                 topLeft.getRow() + 23, '=', color);
 
         if (selectedPosition == 5)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 2, topLeft.getRow() + 24,
                 topLeft.getRow() + 34, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 12, topLeft.getRow() + 24,
@@ -86,9 +87,9 @@ public class MenuBoardDrawer {
                 topLeft.getRow() + 34, '=', color);
 
         if (selectedPosition == 6)
-            color = "gold";
+            color = Colors.GOLD;
         else
-            color = "white";
+            color = Colors.WHITE;
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 15, topLeft.getRow() + 24,
                 topLeft.getRow() + 34, '|', color);
         TerminalLineDrawer.drawVerticalLine(tw, topLeft.getColumn() + 25, topLeft.getRow() + 24,

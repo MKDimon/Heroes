@@ -1,5 +1,7 @@
 package heroes.gui;
 
+import heroes.gui.utils.Colors;
+
 import java.io.IOException;
 
 /**
@@ -11,10 +13,10 @@ public class TerminalBorderDrawer {
      * @param tw экземпляр класса TerminalWrapper для обращения непосредственно к Screen
      */
     public static void drawBorders(final TerminalWrapper tw) {
-        drawInnerBorders(tw, "white");
-        drawLogLine(tw, "orange");
-        drawGeneralZone(tw, "red");
-        drawBattlefield(tw, "grey");
+        drawInnerBorders(tw, Colors.WHITE);
+        drawLogLine(tw, Colors.ORANGE);
+        drawGeneralZone(tw, Colors.RED);
+        drawBattlefield(tw, Colors.GREEN);
     }
 
     /**
@@ -22,7 +24,7 @@ public class TerminalBorderDrawer {
      * @param tw экземпляр класса TerminalWrapper для обращения непосредственно к Screen
      * @param color цвет внешних границ.
      */
-    private static void drawInnerBorders(final TerminalWrapper tw, final String color) {
+    private static void drawInnerBorders(final TerminalWrapper tw, final Colors color) {
         TerminalLineDrawer.drawHorizontalLine(tw,1, tw.getTerminalSize().getColumns() - 2, 0, '=', color);
         TerminalLineDrawer.drawHorizontalLine(tw, 1, tw.getTerminalSize().getColumns() - 2,
                 tw.getTerminalSize().getRows() - 1, '=', color);
@@ -37,7 +39,7 @@ public class TerminalBorderDrawer {
      * @param tw экземпляр класса TerminalWrapper для обращения непосредственно к Screen
      * @param color цвет линии
      */
-    private static void drawLogLine(final TerminalWrapper tw, final String color) {
+    private static void drawLogLine(final TerminalWrapper tw, final Colors color) {
         TerminalLineDrawer.drawHorizontalLine(tw, 1, tw.getTerminalSize().getColumns() - 2,
                 tw.getTerminalSize().getRows() -
                         (int)((tw.getTerminalSize().getRows() - 1) * 0.3), '=', color);
@@ -49,7 +51,7 @@ public class TerminalBorderDrawer {
      * @param color цвет границ.
      * @throws IOException исключение из методов Лантерны пробрасывается выше.
      */
-    private static void drawGeneralZone(final TerminalWrapper tw, final String color) {
+    private static void drawGeneralZone(final TerminalWrapper tw, final Colors color) {
         TerminalLineDrawer.drawVerticalLine(tw, 35, 1, tw.getTerminalSize().getRows() -
                 (int)((tw.getTerminalSize().getRows() - 1) * 0.3) - 1, '|', color);
         TerminalLineDrawer.drawHorizontalLine(tw, 1, 34, 25, '=', color);
@@ -65,7 +67,7 @@ public class TerminalBorderDrawer {
      * @param tw экземпляр класса TerminalWrapper для обращения непосредственно к Screen
      * @param color цвет границ.
      */
-    private static void drawBattlefield(final TerminalWrapper tw, final String color) {
+    private static void drawBattlefield(final TerminalWrapper tw, final Colors color) {
         final int center = tw.getTerminalSize().getColumns() / 2;
         TerminalLineDrawer.drawHorizontalLine(tw,  center - 35,center + 35, 3, '=', color);
         TerminalLineDrawer.drawHorizontalLine(tw,  center - 35,center + 35, 34, '=', color);
