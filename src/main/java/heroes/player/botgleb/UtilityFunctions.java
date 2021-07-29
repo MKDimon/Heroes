@@ -1,12 +1,14 @@
 package heroes.player.botgleb;
 
-import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.units.Unit;
 
 import java.util.Arrays;
 
 public class UtilityFunctions {
+
+    public static final double MAX_VALUE = 999999d;
+    public static final double MIN_VALUE = -999999d;
 
     /**
      * Простая функция полезности. Получает доску и игрока, для которого вычисляется
@@ -19,26 +21,24 @@ public class UtilityFunctions {
         double playersHealth = Arrays.stream(board.getArmy(player)).mapToInt(line -> Arrays.stream(line).
                 mapToInt(Unit::getCurrentHP).sum()).sum();
 
-        double playersAverageArmor = ((double)Arrays.stream(board.getArmy(player)).
+        double playersAverageArmor = Arrays.stream(board.getArmy(player)).
                 mapToInt(line -> Arrays.stream(line).
-                filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum() /
-                Board.activeCount(board.getArmy(defField)));
+                        filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
 
-        if(playersHealth == 0){
-            return -10000;
+        if (playersHealth == 0) {
+            return MIN_VALUE;
         }
 
         double enemiesHealth = Arrays.stream(board.getArmy(defField)).mapToInt(line -> Arrays.stream(line).
                 mapToInt(Unit::getCurrentHP).sum()).sum();
 
-        double enemiesAverageArmor = ((double)Arrays.stream(board.getArmy(defField)).
+        double enemiesAverageArmor = Arrays.stream(board.getArmy(defField)).
                 mapToInt(line -> Arrays.stream(line).
-                filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum() /
-                Board.activeCount(board.getArmy(defField)));
-        if(enemiesHealth == 0){
-            return 10000;
+                        filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
+        if (enemiesHealth == 0) {
+            return MAX_VALUE;
         }
 
-        return playersAverageArmor/100 * playersHealth - enemiesAverageArmor/100 * enemiesHealth;
+        return (playersAverageArmor * playersHealth - enemiesAverageArmor - enemiesHealth) / 6d;
     };
 }

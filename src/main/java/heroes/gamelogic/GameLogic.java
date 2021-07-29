@@ -177,4 +177,16 @@ public class GameLogic {
         }
         return result;
     }
+
+    public GameLogic simulateAction(final Answer answer) throws BoardException, UnitException {
+        final GameLogic result = new GameLogic(board);
+        if(actionValidate(answer.getAttacker(), answer.getDefender(), answer.getActionType()) ==
+                ValidationUnits.SUCCESSFUL_STEP){
+            result.board.getUnitByCoordinate(answer.getAttacker()).setPower((int)(board.getUnitByCoordinate(
+                    answer.getAttacker()).getPower() * (double)board.getUnitByCoordinate(answer.getAttacker()).getAccuracy()/100));
+            result.board.getUnitByCoordinate(answer.getAttacker()).setAccuracy(100);
+            result.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+        }
+        return result;
+    }
 }
