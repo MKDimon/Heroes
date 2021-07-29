@@ -38,23 +38,13 @@ public class MinMaxBot extends BaseBot implements Visualisable {
 
     private class Decomposition {
         private final Map<Answer, Double> answerToWinMap;
-        private final GameLogic gl;
 
         private Decomposition(final Board board) throws BoardException, UnitException, GameLogicException {
-            answerToWinMap = new HashMap<>();
-            gl = new GameLogic(board);
-            for (final Answer answer : gl.getAvailableMoves(board.getCurrentPlayer())) {
-                final GameLogic currentGL = gl.simulateAction(answer);
-                double win = utilityFunction.compute(currentGL.getBoard(), board.getCurrentPlayer());
-                if (gl.getBoard().getCurrentPlayer() != getField()) {
-                    win = -win;
-                }
-                answerToWinMap.put(answer, win);
-            }
+            answerToWinMap = makeDecomposition(board);
         }
 
         private void addToRootDecomposition(final Decomposition decomposition, final Answer rootAnswer) {
-            if (decomposition.gl.getBoard().getCurrentPlayer() == getField()) {
+            if (rootAnswer.getAttacker().F() != getField()) {
                 answerToWinMap.put(rootAnswer, decomposition.answerToWinMap.get(decomposition.findMax()));
             } else {
                 answerToWinMap.put(rootAnswer, decomposition.answerToWinMap.get(decomposition.findMin()));
@@ -63,7 +53,7 @@ public class MinMaxBot extends BaseBot implements Visualisable {
 
         private Answer findMin() {
             Answer result = null;
-            double minUtilityFunctionValue = 10000000d;
+            double minUtilityFunctionValue = 100000000d;
             for (final Answer answer : answerToWinMap.keySet()) {
                 if (answerToWinMap.get(answer).compareTo(minUtilityFunctionValue) < 0) {
                     result = answer;
@@ -75,7 +65,7 @@ public class MinMaxBot extends BaseBot implements Visualisable {
 
         private Answer findMax() {
             Answer result = null;
-            double maxUtilityFunctionValue = -10000000d;
+            double maxUtilityFunctionValue = -100000000d;
             for (final Answer answer : answerToWinMap.keySet()) {
                 if (answerToWinMap.get(answer).compareTo(maxUtilityFunctionValue) > 0) {
                     result = answer;
@@ -118,19 +108,17 @@ public class MinMaxBot extends BaseBot implements Visualisable {
 
     private Decomposition computeTree(final Board board, final int recLevel)
             throws BoardException, UnitException, GameLogicException {
-        if (recLevel > maxRecLevel) {
+        if (recLevel >= maxRecLevel) {
             return new Decomposition(board);
         }
         final Decomposition rootDecomposition = new Decomposition(board);
+        final GameLogic gl = new GameLogic(board);
         for (final Answer answer : rootDecomposition.answerToWinMap.keySet()) {
-            final GameLogic implGL = rootDecomposition.gl.simulateAction(answer);
+            final GameLogic implGL = gl.simulateAction(answer);
             if (!implGL.isGameBegun()) {
                 rootDecomposition.answerToWinMap.put(answer, getTerminalStateValue(implGL));
             } else {
                 rootDecomposition.addToRootDecomposition(computeTree(implGL.getBoard(), recLevel + 1), answer);
-            }
-            if (rootDecomposition.answerToWinMap.isEmpty()) {
-                throw new NullPointerException("NO KEY IN TREE");
             }
         }
         return rootDecomposition;
@@ -149,6 +137,24 @@ public class MinMaxBot extends BaseBot implements Visualisable {
         } else {
             return UtilityFunctions.MIN_VALUE;
         }
+    }
+
+    private Map<Answer, Double> makeDecomposition(final Board board) throws BoardException, UnitException, GameLogicException {
+        final Map<Answer, Double> result = new HashMap<>();
+        final GameLogic gl = new GameLogic(board);
+        for (final Answer answer : gl.getAvailableMoves(board.getCurrentPlayer())) {
+            final GameLogic currentGL = gl.simulateAction(answer);
+            if (!currentGL.isGameBegun()) {
+                result.put(answer, getTerminalStateValue(currentGL));
+            } else {
+                double win = utilityFunction.compute(currentGL.getBoard(), board.getCurrentPlayer());
+                if (gl.getBoard().getCurrentPlayer() != getField()) {
+                    win = -win;
+                }
+                result.put(answer, win);
+            }
+        }
+        return result;
     }
 
 }

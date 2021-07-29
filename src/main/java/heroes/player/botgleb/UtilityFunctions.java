@@ -25,20 +25,13 @@ public class UtilityFunctions {
                 mapToInt(line -> Arrays.stream(line).
                         filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
 
-        if (playersHealth == 0) {
-            return MIN_VALUE;
-        }
-
         double enemiesHealth = Arrays.stream(board.getArmy(defField)).mapToInt(line -> Arrays.stream(line).
                 mapToInt(Unit::getCurrentHP).sum()).sum();
 
         double enemiesAverageArmor = Arrays.stream(board.getArmy(defField)).
                 mapToInt(line -> Arrays.stream(line).
                         filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
-        if (enemiesHealth == 0) {
-            return MAX_VALUE;
-        }
 
-        return (playersAverageArmor * playersHealth - enemiesAverageArmor - enemiesHealth) / 6d;
+        return playersAverageArmor/6d + playersHealth - enemiesAverageArmor /6d - enemiesHealth;
     };
 }

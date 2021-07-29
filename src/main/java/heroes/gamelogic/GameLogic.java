@@ -152,9 +152,9 @@ public class GameLogic {
         return gameBegun;
     }
 
-    public Set<Answer> getAvailableMoves(final Fields player) throws GameLogicException {
+    public List<Answer> getAvailableMoves(final Fields player) throws GameLogicException {
         final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
-        final Set<Answer> result = new HashSet<>();
+        final List<Answer> result = new LinkedList<>();
         final List<Position> attackers = board.getActiveUnitsPositions(player);
         final List<Position> defenders = board.getAliveUnitsPositions(defField);
         final List<Position> aliveAttackers = board.getAliveUnitsPositions(player);
@@ -171,6 +171,10 @@ public class GameLogic {
                     if(actionValidate(curAnswer.getAttacker(), curAnswer.getDefender(), curAnswer.getActionType()) ==
                             ValidationUnits.SUCCESSFUL_STEP){
                         result.add(curAnswer);
+                        //Если встрелся маг, то прекращаем искать ему новые цели, чтобы не плодить одинаковые ветки
+                        if(curAnswer.getActionType() == ActionTypes.AREA_DAMAGE){
+                            break;
+                        }
                     }
                 }
             }
