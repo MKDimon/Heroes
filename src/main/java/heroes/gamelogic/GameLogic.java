@@ -152,6 +152,10 @@ public class GameLogic {
         return gameBegun;
     }
 
+    /**
+     * Метод возвращает список возмодных для игрока player ходов.
+     **/
+
     public List<Answer> getAvailableMoves(final Fields player) throws GameLogicException {
         final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
         final List<Answer> result = new LinkedList<>();
@@ -182,15 +186,11 @@ public class GameLogic {
         return result;
     }
 
-    public GameLogic simulateAction(final Answer answer) throws BoardException, UnitException {
-        final GameLogic result = new GameLogic(board);
-        if(actionValidate(answer.getAttacker(), answer.getDefender(), answer.getActionType()) ==
-                ValidationUnits.SUCCESSFUL_STEP){
-            result.board.getUnitByCoordinate(answer.getAttacker()).setPower((int)(board.getUnitByCoordinate(
-                    answer.getAttacker()).getPower() * (double)board.getUnitByCoordinate(answer.getAttacker()).getAccuracy()/100));
-            result.board.getUnitByCoordinate(answer.getAttacker()).setAccuracy(100);
-            result.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-        }
-        return result;
+    /**
+     * Метод симулирует действие, вызываемое answer`ом, возвращает новый экзмепляр класса GameLogic.
+     **/
+
+    public GameLogic simulateAction(final Answer answer) throws BoardException, UnitException, GameLogicException {
+        return new GameLogic(board.copy(answer));
     }
 }

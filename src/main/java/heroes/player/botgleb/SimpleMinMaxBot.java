@@ -10,6 +10,7 @@ import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ import java.util.function.ToDoubleFunction;
 
 public class SimpleMinMaxBot extends BaseBot implements Visualisable {
 
-    private static final int maxRecLevel = 4;
+    private static final int maxRecLevel = 2;
     private static final UtilityFunction utilityFunction = UtilityFunctions.simpleUtilityFunction;
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
@@ -64,22 +65,25 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            return new RandomBot(getField()).getArmy(firstPlayerArmy);
+            return new TestBot(getField()).getArmy(firstPlayerArmy); //RandomBot(getField()).getArmy(firstPlayerArmy);
         } catch (GameLogicException e) {
-            e.printStackTrace();
+            logger.error("Error creating army by SimpleMinMaxbot", e);
             return null;
         }
     }
 
+    /**
+     * Получение ответа от бота. В методе строится дерево возсожных ходов и
+     **/
+
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         try {
-            final GameLogic simulationGL = new GameLogic(board);
-            final List<Answer> actions = simulationGL.getAvailableMoves(getField());
+            final List<Answer> actions = board.getPossibleMoves();
             final List<AnswerAndWin> awList = new ArrayList<>();
             for(final Answer answer : actions){
-                final GameLogic implGL = simulationGL.simulateAction(answer);
-                final double win = getWinByGameTree(implGL.getBoard(), 1);
+                final Board implBoard = board.copy(answer);
+                final double win = getWinByGameTree(implBoard, 1);
                 awList.add(new AnswerAndWin(answer, win));
             }
             return getGreedyDecision(awList, aw -> aw.win).answer;
@@ -89,29 +93,58 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         }
     }
 
+    /**
+     * ВОПРОС: состояние игры нужно всегда оценивать с точки зрения агента, и потом довешивать минус,
+     * если ход сделан соперником? Или Оценивать ход с точки зрения текущего игрока? Тогда, ход полезный
+     * сопенику, будет вреден агенту?
+     **/
+
+    /**
+     * Метод рекурсивно строит дерево ходов.
+     * Если узел терминальный, или достигнута максимальная глубина рекурсии,
+     * возвращает максимальное (или минимальное) значение функции оценки узла.
+     * Таким образом, на верхний уровень пробрасывается нужная оценка состояний из нижних уровней.
+     **/
+
     private double getWinByGameTree(final Board implBoard, final int recLevel) throws BoardException, UnitException, GameLogicException {
         final ToDoubleFunction<AnswerAndWin> winCalculator;
+        //Если сейчас ход агента, то функция полезности будет исходной,
+        //если ход противника - домножим функцию на -1.
         if (implBoard.getCurrentPlayer() == getField()) {
             winCalculator = aw -> aw.win;
         } else {
             winCalculator = aw -> -aw.win;
         }
+        // Если состояние терминальное, и победил агент, то возвращает +большое число,
+        // если победил соперник, возвращает -большое число.
         if(implBoard.getStatus() != GameStatus.GAME_PROCESS){
             return getTerminalStateValue(implBoard);
         }
         if(recLevel >= maxRecLevel){
-            return utilityFunction.compute(implBoard, implBoard.getCurrentPlayer());
+            // функция полезности вычисляется для агента.
+            // Показывает, насколько поелзно будет ему это действие
+            return utilityFunction.compute(implBoard, getField());
         }
-        final GameLogic implGL = new GameLogic(implBoard);
-        final List<Answer> actions = implGL.getAvailableMoves(implBoard.getCurrentPlayer());
+        // Если состояние не терминальное, и не достигнут максимлаьынй уровень рекурсии,
+        // то начинаем строить дерево из текущего состояния.
+        final List<Answer> actions = implBoard.getPossibleMoves();
         final List<AnswerAndWin> awList = new ArrayList<>();
         for (final Answer answer : actions){
-            final GameLogic simGL = implGL.simulateAction(answer);
-            final double win = getWinByGameTree(simGL.getBoard(), recLevel+1);
+            final Board simBoard = implBoard.copy(answer);
+            final double win = getWinByGameTree(simBoard, recLevel+1);
             awList.add(new AnswerAndWin(answer, win));
         }
+        // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому, так сказать,
+        // корневому ответу сопоставляется значение из нижнего состяния.
         return getGreedyDecision(awList, winCalculator).win;
     }
+
+    /**
+     * Метод находит в списке awList элемент с максимальным полем win.
+     * Если поиск происходит среди ответов соперника, то на поле win вешается минус. Таким образом,
+     * метод находит ответ с максимальной ценностью, если ходит агент, и ответ с минимальной (для агента)
+     * ценностью, если ходит соперник.
+     **/
 
     private AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList,
                                                      final ToDoubleFunction<AnswerAndWin> winCalculator){
@@ -127,6 +160,11 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         }
         return bestAW;
     }
+
+    /**
+     * Метод вычисляет тип терминального состояния и выдает в соответствии с ним значение функции полезности
+     * (+- условная бесконечность, либо 0, если ничья).
+     **/
 
     private double getTerminalStateValue(final Board board) throws GameLogicException {
         if (board.getStatus() == GameStatus.GAME_PROCESS) {
