@@ -299,14 +299,15 @@ public class Board {
 
     /**
      * Возвращает копию текущей доски, к которой применили действие, вызываемое answer`ом.
+     * Причем, наносимый урон высчитывается как матожидание (точность*макисмлаьный урон).
      **/
 
     public Board copy(final Answer answer) throws GameLogicException {
         try {
             final GameLogic gl = new GameLogic(this);
             gl.getBoard().getUnitByCoordinate(answer.getAttacker()).setPower(
-                    gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getPower() *
-                            gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getAccuracy());
+                    (int)(gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getPower() *
+                            (double)gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getAccuracy() / 100));
             gl.getBoard().getUnitByCoordinate(answer.getAttacker()).setAccuracy(100);
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
             return gl.getBoard();

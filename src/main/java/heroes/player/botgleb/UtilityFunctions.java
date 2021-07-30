@@ -12,7 +12,7 @@ public class UtilityFunctions {
 
     /**
      * Простая функция полезности. Получает доску и игрока, для которого вычисляется
-     * величина, равная playersHP * armor - enemiesHP * armor
+     * величина, равная playersHP + armor/6 - enemiesHP - armor/6
      **/
 
     public static final UtilityFunction simpleUtilityFunction = (board, player) -> {
