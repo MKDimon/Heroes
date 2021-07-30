@@ -1,10 +1,5 @@
 package heroes.gui.menudrawers.botchoicedrawers;
 
-import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.IGeneralMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
-
 import java.util.Map;
 
 /**
@@ -18,7 +13,7 @@ public class BotMenuMap {
         botMap = Map.of(
                 1, "Test",
                 2, "Random",
-                3, "Player",
+                3, "Dimon",
                 4, "PlayerGUI"
         );
     }

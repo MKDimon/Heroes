@@ -2,58 +2,125 @@ package heroes;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.clientserver.Data;
-import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
-import heroes.gui.TerminalEndGame;
-import heroes.gui.TerminalWrapper;
-import heroes.player.*;
+import heroes.gamelogic.GameStatus;
+import heroes.player.Answer;
+import heroes.player.BaseBot;
+import heroes.player.RandomBot;
+import heroes.player.TestBot;
+import heroes.player.botdimon.AntiDimon;
+import heroes.player.botdimon.Dimon;
+import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class SelfPlay {
     static Logger logger = LoggerFactory.getLogger(SelfPlay.class);
 
-    public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException, UnitException {
-        TerminalWrapper tw = new TerminalWrapper();
-        tw.start();
+    private class Game extends Thread {
+        private final int id;
 
-
-        List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
-                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), new PlayerGUIBot.PlayerGUIBotFactory());
-        BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
-        playerOne.setTerminal(tw);
-        BaseBot playerTwo = factories.get(3).createBot(Fields.PLAYER_TWO);
-        playerTwo.setTerminal(tw);
-        Map<Fields, BaseBot> getPlayer = new HashMap<>();
-        getPlayer.put(Fields.PLAYER_ONE, playerOne);
-        getPlayer.put(Fields.PLAYER_TWO, playerTwo);
-        tw.updateMenu();
-        GameLogic gl = new GameLogic();
-        final Army firstPlayerArmy = playerOne.getArmy(null);
-        gl.gameStart(firstPlayerArmy, playerTwo.getArmy(firstPlayerArmy));
-
-        tw.update(null, gl.getBoard());
-
-
-
-        while (gl.isGameBegun()) {
-            TimeUnit.MICROSECONDS.sleep(5000);
-            Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
-            gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-            tw.update(answer, gl.getBoard());
-
+        private Game(int id) {
+            this.id = id;
         }
-        Data data = new Data(CommonCommands.DRAW ,gl.getBoard());
-        TerminalEndGame.endGame(tw, data);
+
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 5000; i++) {
+                try {
+                    final BaseBot bot1 = new RandomBot.RandomBotFactory().createBot(Fields.PLAYER_ONE);
+                    final BaseBot bot2 = new RandomBot.RandomBotFactory().createBot(Fields.PLAYER_TWO);
+                    final StatisticsCollector collector = new StatisticsCollector(id);
+
+                    final GameLogic gameLogic = new GameLogic();
+                    final Army one = bot1.getArmy(null);
+                    final Army two = bot2.getArmy(one);
+                    gameLogic.gameStart(one, two);
+                    //статистика
+                    collector.recordMessageToCSV("GAME START\n");
+                    collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
+                    collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
+
+                    final Map<Fields, BaseBot> getPlayer = new HashMap<>();
+                    getPlayer.put(Fields.PLAYER_ONE, bot1);
+                    getPlayer.put(Fields.PLAYER_TWO, bot2);
+
+                    while (gameLogic.isGameBegun()) {
+                        final Answer answer = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).getAnswer(gameLogic.getBoard());
+                        //для статистики
+                        final int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+
+                        // логика
+                        final boolean isActionSuccess = gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+                        // статистика
+                        if (isActionSuccess) {
+                            collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
+                                    gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                                    gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
+                                            gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                                    - defenderHP));
+                        }
+                    }
+
+                    final GameStatus status = gameLogic.getBoard().getStatus();
+                    // статистика
+                    collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
+                            append(",").toString());
+                    switch (status) {
+                        case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                        case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                        case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+                    }
+                    collector.recordMessageToCSV("\nGAME OVER\n");
+                } catch (final UnitException | GameLogicException ignore) {
+
+                }
+            }
+        }
+    }
+
+    public void starter() {
+        for (int i = 0; i < 20; i++) {
+            new Game(i).start();
+        }
+    }
+
+    public static void main(String[] args) throws GameLogicException, UnitException {
+        int countWin = 0;
+        int countDefeat = 0;
+        System.out.println(LocalDateTime.now());
+        for (int i = 0; i < 100; i++) {
+            final BaseBot bot1 = new Dimon.DimonFactory().createBot(Fields.PLAYER_ONE);
+            final BaseBot bot2 = new TestBot.TestBotFactory().createBot(Fields.PLAYER_TWO);
+
+            final GameLogic gameLogic = new GameLogic();
+            final Army one = bot1.getArmy(null);
+            final Army two = bot2.getArmy(one);
+            gameLogic.gameStart(one, two);
+
+            final Map<Fields, BaseBot> getPlayer = new HashMap<>();
+            getPlayer.put(Fields.PLAYER_ONE, bot1);
+            getPlayer.put(Fields.PLAYER_TWO, bot2);
+
+            while (gameLogic.isGameBegun()) {
+                final Answer answer = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).getAnswer(gameLogic.getBoard());
+                gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+            }
+            if (gameLogic.getBoard().getStatus() == GameStatus.PLAYER_ONE_WINS) countWin++;
+            if (gameLogic.getBoard().getStatus() == GameStatus.PLAYER_TWO_WINS) countDefeat++;
+        }
+        System.out.println(LocalDateTime.now());
+        System.out.println("Player One wins: " + countWin);
+        System.out.println("Player Two wins: " + countDefeat);
     }
 }

@@ -4,7 +4,6 @@ import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.Side;
 import heroes.gui.utils.TextColorMap;
 
 import java.io.IOException;

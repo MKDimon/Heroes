@@ -1,16 +1,18 @@
 package heroes.clientserver;
 
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
-import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.commands.CommandFactory;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.menudrawers.MenuUnitDrawer;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
-import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
-import heroes.player.*;
+import heroes.player.BaseBot;
+import heroes.player.PlayerGUIBot;
+import heroes.player.RandomBot;
+import heroes.player.TestBot;
+import heroes.player.botdimon.AntiDimon;
+import heroes.player.botdimon.Dimon;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -68,7 +69,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
+        botFactoryMap.put("Dimon", new Dimon.DimonFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);
