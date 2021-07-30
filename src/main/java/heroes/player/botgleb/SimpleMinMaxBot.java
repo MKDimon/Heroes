@@ -83,7 +83,8 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
             final List<AnswerAndWin> awList = new ArrayList<>();
             for(final Answer answer : actions){
                 final Board implBoard = board.copy(answer);
-                final double win = getWinByGameTree(implBoard, 1);
+                final double win = getWinByGameTree(implBoard, 1, UtilityFunctions.MAX_VALUE,
+                        UtilityFunctions.MIN_VALUE);
                 awList.add(new AnswerAndWin(answer, win));
             }
             return getGreedyDecision(awList, aw -> aw.win).answer;
@@ -94,23 +95,19 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
     }
 
     /**
-     * ВОПРОС: состояние игры нужно всегда оценивать с точки зрения агента, и потом довешивать минус,
-     * если ход сделан соперником? Или Оценивать ход с точки зрения текущего игрока? Тогда, ход полезный
-     * сопенику, будет вреден агенту?
-     **/
-
-    /**
      * Метод рекурсивно строит дерево ходов.
      * Если узел терминальный, или достигнута максимальная глубина рекурсии,
      * возвращает максимальное (или минимальное) значение функции оценки узла.
      * Таким образом, на верхний уровень пробрасывается нужная оценка состояний из нижних уровней.
      **/
 
-    private double getWinByGameTree(final Board implBoard, final int recLevel) throws BoardException, UnitException, GameLogicException {
+    private double getWinByGameTree(final Board implBoard, final int recLevel,
+                                     double alpha, double beta) throws BoardException, UnitException, GameLogicException {
         final ToDoubleFunction<AnswerAndWin> winCalculator;
         //Если сейчас ход агента, то функция полезности будет исходной,
         //если ход противника - домножим функцию на -1.
-        if (implBoard.getCurrentPlayer() == getField()) {
+        final boolean isMax = implBoard.getCurrentPlayer() == getField();
+        if (isMax) {
             winCalculator = aw -> aw.win;
         } else {
             winCalculator = aw -> -aw.win;
@@ -131,7 +128,12 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         final List<AnswerAndWin> awList = new ArrayList<>();
         for (final Answer answer : actions){
             final Board simBoard = implBoard.copy(answer);
-            final double win = getWinByGameTree(simBoard, recLevel+1);
+            final double win = getWinByGameTree(simBoard, recLevel+1, alpha, beta);
+            if (isMax && win > beta || !isMax && win < alpha){
+                return win;
+            }
+            alpha = Math.max(alpha, win);
+            beta = Math.min(beta, win);
             awList.add(new AnswerAndWin(answer, win));
         }
         // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому, так сказать,
