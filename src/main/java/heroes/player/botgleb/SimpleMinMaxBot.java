@@ -10,13 +10,16 @@ import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
-import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToDoubleFunction;
+
+/**
+ * Бот по стратегии "минимакс".
+ **/
 
 public class SimpleMinMaxBot extends BaseBot implements Visualisable {
 
@@ -65,15 +68,15 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            return new TestBot(getField()).getArmy(firstPlayerArmy); //RandomBot(getField()).getArmy(firstPlayerArmy);
-        } catch (GameLogicException e) {
-            logger.error("Error creating army by SimpleMinMaxbot", e);
+            return new RandomBot(getField()).getArmy(firstPlayerArmy);
+        } catch (final GameLogicException e) {
+            logger.error("Error creating army by SimpleMinMaxBot", e);
             return null;
         }
     }
 
     /**
-     * Получение ответа от бота. В методе строится дерево возсожных ходов и
+     * Получение ответа от бота.
      **/
 
     @Override
@@ -83,13 +86,13 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
             final List<AnswerAndWin> awList = new ArrayList<>();
             for(final Answer answer : actions){
                 final Board implBoard = board.copy(answer);
-                final double win = getWinByGameTree(implBoard, 1, UtilityFunctions.MAX_VALUE,
-                        UtilityFunctions.MIN_VALUE);
+                final double win = getWinByGameTree(implBoard, 1, UtilityFunctions.MIN_VALUE,
+                        UtilityFunctions.MAX_VALUE);
                 awList.add(new AnswerAndWin(answer, win));
             }
             return getGreedyDecision(awList, aw -> aw.win).answer;
 
-        } catch (UnitException | BoardException | GameLogicException e) {
+        } catch (final UnitException | BoardException | GameLogicException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
     }
@@ -129,14 +132,21 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         for (final Answer answer : actions){
             final Board simBoard = implBoard.copy(answer);
             final double win = getWinByGameTree(simBoard, recLevel+1, alpha, beta);
-            if (isMax && win > beta || !isMax && win < alpha){
+
+            // Альфа-бета отсечения
+            if (isMax && win >= beta || isMax && win <= alpha){
                 return win;
             }
-            alpha = Math.max(alpha, win);
-            beta = Math.min(beta, win);
+            if (isMax) {
+                alpha = Math.max(alpha, win);
+            } else {
+                beta = Math.min(beta, win);
+            }
+
             awList.add(new AnswerAndWin(answer, win));
         }
-        // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому, так сказать,
+
+        // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
         // корневому ответу сопоставляется значение из нижнего состяния.
         return getGreedyDecision(awList, winCalculator).win;
     }

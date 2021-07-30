@@ -7,7 +7,6 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.GameStatus;
 import heroes.player.*;
-import heroes.player.botgleb.MinMaxBot;
 import heroes.player.botgleb.SimpleMinMaxBot;
 import heroes.player.botgleb.SimulationBot;
 import heroes.statistics.StatisticsCollector;
@@ -22,14 +21,14 @@ public class SelfPlayStatistics {
     public static void main(final String[] args) throws GameLogicException, UnitException {
         final List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(),
-                new SimulationBot.SimulationBotFactory(), new MinMaxBot.MinMaxBotFactory(),
+                new SimulationBot.SimulationBotFactory(),
                 new SimpleMinMaxBot.SimpleMinMaxBotFactory());
         int playerOneCount = 0;
         int playerTwoCount = 0;
         int drawCount = 0;
         for(int i = 0; i < 100; i++) {
-        final BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
-        final BaseBot playerTwo = factories.get(5).createBot(Fields.PLAYER_TWO);
+        final BaseBot playerOne = factories.get(0).createBot(Fields.PLAYER_ONE);
+        final BaseBot playerTwo = factories.get(4).createBot(Fields.PLAYER_TWO);
         final Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
