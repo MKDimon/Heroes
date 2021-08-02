@@ -11,6 +11,7 @@ import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.player.*;
+import heroes.player.botgleb.SimpleMinMaxBot;
 import heroes.player.botgleb.SimulationBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
@@ -26,7 +27,7 @@ import java.util.Scanner;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "127.0.0.1";
+    private static final String IP = "192.168.7.159";//"127.0.0.1";
 
     private final String ip;
     private final int port;
@@ -69,7 +70,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
+        botFactoryMap.put("Player", new SimpleMinMaxBot.SimpleMinMaxBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
         botFactoryMap.put("Simulation", new SimulationBot.SimulationBotFactory());
 

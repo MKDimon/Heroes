@@ -1,14 +1,16 @@
 package heroes.player.botgleb;
 
+import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.units.General;
 import heroes.units.Unit;
 
 import java.util.Arrays;
 
 public class UtilityFunctions {
 
-    public static final double MAX_VALUE = 999999d;
-    public static final double MIN_VALUE = -999999d;
+    public static final double MAX_VALUE = 9999999999d;
+    public static final double MIN_VALUE = -9999999999d;
 
     /**
      * Простая функция полезности. Получает доску и игрока, для которого вычисляется
@@ -34,4 +36,26 @@ public class UtilityFunctions {
 
         return playersAverageArmor/6d + playersHealth - enemiesAverageArmor /6d - enemiesHealth;
     };
+
+    public static final UtilityFunction HPUtilityFunction = (board, player) -> {
+        final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
+        return HPOnePlayerUtilityFunction(board,player) - HPOnePlayerUtilityFunction(board, defField);
+    };
+
+    private static final double HPOnePlayerUtilityFunction(final Board board, final Fields player) {
+      final Unit[][] playerArmy = board.getArmy(player);
+      final General playerGen = board.getGeneral(player);
+      double result = 0;
+      for(final Unit[] units : playerArmy){
+          for(final Unit unit : units){
+              if(unit.isAlive()) {
+                  result += unit.getCurrentHP()*100 + unit.getPower()/2;
+              }
+              if(playerGen.isAlive()){
+                  result += 1000;
+              }
+          }
+      }
+        return result;
+    }
 }

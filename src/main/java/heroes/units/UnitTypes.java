@@ -3,10 +3,10 @@ package heroes.units;
 import heroes.auxiliaryclasses.ActionTypes;
 
 public enum UnitTypes {
-    SWORDSMAN(100, 30, 85, 30, ActionTypes.CLOSE_COMBAT),
-    MAGE(70, 15, 85, 10, ActionTypes.AREA_DAMAGE),
-    BOWMAN(70, 25, 85, 20, ActionTypes.RANGE_COMBAT),
-    HEALER(60, 30, 100, 15, ActionTypes.HEALING);
+    SWORDSMAN(80, 30, 70, 25, ActionTypes.CLOSE_COMBAT),
+    MAGE(50, 5, 80, 10, ActionTypes.AREA_DAMAGE),
+    BOWMAN(60, 25, 85, 15, ActionTypes.RANGE_COMBAT),
+    HEALER(40, 30, 100, 10, ActionTypes.HEALING);
 
     public final ActionTypes actionType;
     public final int HP;

@@ -96,7 +96,7 @@ public class StatisticsRecorder {
                 writer.write(record.toString());
                 writer.flush();
             }
-        } catch (IOException | UnitException | StatisticsException e) {
+        } catch (IOException | StatisticsException e) {
             logger.error("Error armies statistics recording", e);
         }
     }

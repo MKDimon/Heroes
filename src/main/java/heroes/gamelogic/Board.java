@@ -214,12 +214,12 @@ public class Board {
     }
 
     @JsonIgnore
-    public General getGeneralPlayerOne() throws UnitException {
+    public General getGeneralPlayerOne() {
         return fieldPlayerOne.getGeneral();
     }
 
     @JsonIgnore
-    public General getGeneralPlayerTwo() throws UnitException {
+    public General getGeneralPlayerTwo() {
         return fieldPlayerTwo.getGeneral();
     }
 
@@ -326,6 +326,14 @@ public class Board {
             return new GameLogic(this).getAvailableMoves(currentPlayer);
         } catch (UnitException | BoardException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+        }
+    }
+
+    public General getGeneral(final Fields player) {
+        if(player == Fields.PLAYER_ONE){
+            return getGeneralPlayerOne();
+        } else {
+            return getGeneralPlayerTwo();
         }
     }
 

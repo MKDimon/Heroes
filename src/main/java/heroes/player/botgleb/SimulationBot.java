@@ -1,18 +1,17 @@
 package heroes.player.botgleb;
 
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +47,7 @@ public class SimulationBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            return new RandomBot(getField()).getArmy(firstPlayerArmy);
+            return new TestBot(getField()).getArmy(firstPlayerArmy);
         } catch (GameLogicException e) {
             logger.error("Error army creating", e);
             return null;
@@ -59,22 +58,21 @@ public class SimulationBot extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) throws GameLogicException {
         try {
             final Map<Answer, Double> decomposition = new HashMap<>();
-            final GameLogic GLCopy = new GameLogic(board);
-            for (final Answer answer : GLCopy.getAvailableMoves(getField())) {
-                final GameLogic simulationGL = GLCopy.simulateAction(answer);
+            for (final Answer answer : board.getPossibleMoves()) {
+                final Board simulationBoard = board.copy(answer);
                 decomposition.put(answer,
-                        utilityFunction.compute(simulationGL.getBoard(), getField()));
+                        utilityFunction.compute(simulationBoard, getField()));
             }
             return getBestAnswer(decomposition);
-        } catch (GameLogicException | UnitException | BoardException e) {
+        } catch (GameLogicException e) {
             logger.error("Error getting answer by simulation bot", e);
-            return null;
+            throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
     }
 
     private Answer getBestAnswer(final Map<Answer, Double> decomposition) {
         Answer result = null;
-        double maxUtilityFunctionValue = -1000000000d;
+        double maxUtilityFunctionValue = UtilityFunctions.MIN_VALUE;
         for (final Answer answer : decomposition.keySet()) {
             if (decomposition.get(answer).compareTo(maxUtilityFunctionValue) > 0) {
                 result = answer;

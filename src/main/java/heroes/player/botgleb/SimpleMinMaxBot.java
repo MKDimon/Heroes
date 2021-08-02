@@ -9,12 +9,13 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
-import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RecursiveTask;
 import java.util.function.ToDoubleFunction;
 
 /**
@@ -23,8 +24,8 @@ import java.util.function.ToDoubleFunction;
 
 public class SimpleMinMaxBot extends BaseBot implements Visualisable {
 
-    private static final int maxRecLevel = 2;
-    private static final UtilityFunction utilityFunction = UtilityFunctions.simpleUtilityFunction;
+    private static final int maxRecLevel = 3;
+    private static final UtilityFunction utilityFunction = UtilityFunctions.HPUtilityFunction;
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
 
@@ -68,7 +69,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            return new RandomBot(getField()).getArmy(firstPlayerArmy);
+            return new TestBot(getField()).getArmy(firstPlayerArmy);
         } catch (final GameLogicException e) {
             logger.error("Error creating army by SimpleMinMaxBot", e);
             return null;
@@ -82,6 +83,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         try {
+            final long startTime = System.currentTimeMillis();
             final List<Answer> actions = board.getPossibleMoves();
             final List<AnswerAndWin> awList = new ArrayList<>();
             for(final Answer answer : actions){
@@ -90,9 +92,10 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
                         UtilityFunctions.MAX_VALUE);
                 awList.add(new AnswerAndWin(answer, win));
             }
+            System.out.println(System.currentTimeMillis() - startTime);
             return getGreedyDecision(awList, aw -> aw.win).answer;
 
-        } catch (final UnitException | BoardException | GameLogicException e) {
+        } catch (final GameLogicException | BoardException | UnitException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
     }

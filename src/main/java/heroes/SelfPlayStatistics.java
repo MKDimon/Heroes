@@ -7,6 +7,8 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.GameStatus;
 import heroes.player.*;
+import heroes.player.botgleb.MonteCarloBot;
+import heroes.player.botgleb.MultithreadedMinMaxBot;
 import heroes.player.botgleb.SimpleMinMaxBot;
 import heroes.player.botgleb.SimulationBot;
 import heroes.statistics.StatisticsCollector;
@@ -22,13 +24,15 @@ public class SelfPlayStatistics {
         final List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(),
                 new SimulationBot.SimulationBotFactory(),
-                new SimpleMinMaxBot.SimpleMinMaxBotFactory());
+                new SimpleMinMaxBot.SimpleMinMaxBotFactory(),
+                new MonteCarloBot.MonteCarloBotFactory(),
+                new MultithreadedMinMaxBot.MultithreadedMinMaxBotFactory());
         int playerOneCount = 0;
         int playerTwoCount = 0;
         int drawCount = 0;
-        for(int i = 0; i < 100; i++) {
-        final BaseBot playerOne = factories.get(0).createBot(Fields.PLAYER_ONE);
-        final BaseBot playerTwo = factories.get(4).createBot(Fields.PLAYER_TWO);
+        for(int i = 0; i < 1; i++) {
+        final BaseBot playerOne = factories.get(3).createBot(Fields.PLAYER_ONE);
+        final BaseBot playerTwo = factories.get(6).createBot(Fields.PLAYER_TWO);
         final Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
@@ -67,6 +71,6 @@ public class SelfPlayStatistics {
 
 
         }
-        System.out.println("Random: " + playerOneCount + " Simulation: " + playerTwoCount + " draw: " + drawCount);
+        System.out.println("SimulationOneStep: " + playerOneCount + "MinMax: " + playerTwoCount + " draw: " + drawCount);
     }
 }
