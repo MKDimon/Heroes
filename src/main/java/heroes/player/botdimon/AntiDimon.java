@@ -12,9 +12,9 @@ import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.botdimon.simulationfeatures.functions.Functions;
 import heroes.player.botdimon.simulationfeatures.functions.UtilityFuncMap;
-import heroes.player.botdimon.simulationfeatures.trees.SimulationTree;
-import heroes.player.botdimon.simulationfeatures.trees.SimulationTreeFactory;
-import heroes.player.botdimon.simulationfeatures.trees.SimulationTrees;
+import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTree;
+import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTreeFactory;
+import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTrees;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;
@@ -69,7 +69,7 @@ public class AntiDimon extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) {
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.CUSTOM_STEP_SIMULATION,
-                UtilityFuncMap.getFunc(Functions.PARAMS_FUNCTION),
+                UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION),
                 getField(), 3
         );
         return tree.getAnswer(board);

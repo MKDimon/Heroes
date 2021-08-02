@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.trees;
+package heroes.player.botdimon.simulationfeatures.treesarmies;
 
 import heroes.gamelogic.Fields;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;

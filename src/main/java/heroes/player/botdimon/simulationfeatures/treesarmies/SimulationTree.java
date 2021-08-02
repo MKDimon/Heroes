@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.trees;
+package heroes.player.botdimon.simulationfeatures.treesarmies;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
@@ -41,6 +41,13 @@ public abstract class SimulationTree {
             this.board = board;
             this.answer = answer;
             this.value = value;
+        }
+
+        public Node(final Node node) throws UnitException, BoardException {
+            this.list.addAll(node.list);
+            this.board = new Board(node.board);
+            this.answer = new Answer(node.answer);
+            this.value = node.value;
         }
     }
 

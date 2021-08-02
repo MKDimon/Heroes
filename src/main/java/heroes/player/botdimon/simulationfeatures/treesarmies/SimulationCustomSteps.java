@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.trees;
+package heroes.player.botdimon.simulationfeatures.treesarmies;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;

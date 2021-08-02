@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.trees;
+package heroes.player.botdimon.simulationfeatures.treesarmies;
 
 public enum SimulationTrees {
     ONE_STEP_SIMULATION,

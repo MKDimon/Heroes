@@ -26,13 +26,20 @@ public class UtilityAnswerFuncFour implements IUtilityFunc {
     private static final double IS_DEATH_PRIORITY = 300;
     private static final double DEGREE_PRIORITY = 2.0;
 
-    private static final Map<ActionTypes, Double> valueActions = new HashMap<>();
+    private static final Map<ActionTypes, Double> valueActionsEnemy = new HashMap<>();
+    private static final Map<ActionTypes, Double> valueActionsAlly = new HashMap<>();
     static {
-        valueActions.put(ActionTypes.DEFENSE, 1.);
-        valueActions.put(ActionTypes.HEALING, 3.);
-        valueActions.put(ActionTypes.CLOSE_COMBAT, 2.);
-        valueActions.put(ActionTypes.RANGE_COMBAT, 2.5);
-        valueActions.put(ActionTypes.AREA_DAMAGE, 3.);
+        valueActionsEnemy.put(ActionTypes.DEFENSE, 1.);
+        valueActionsEnemy.put(ActionTypes.HEALING, 3.);
+        valueActionsEnemy.put(ActionTypes.CLOSE_COMBAT, 2.);
+        valueActionsEnemy.put(ActionTypes.RANGE_COMBAT, 2.);
+        valueActionsEnemy.put(ActionTypes.AREA_DAMAGE, 4.);
+
+        valueActionsAlly.put(ActionTypes.DEFENSE, 1.);
+        valueActionsAlly.put(ActionTypes.HEALING, 3.);
+        valueActionsAlly.put(ActionTypes.CLOSE_COMBAT, 2.);
+        valueActionsAlly.put(ActionTypes.RANGE_COMBAT, 2.);
+        valueActionsAlly.put(ActionTypes.AREA_DAMAGE, 4.);
     }
 
     private double checkGenerals(final Board board, final Fields field) {
@@ -48,10 +55,10 @@ public class UtilityAnswerFuncFour implements IUtilityFunc {
                 enemyGeneral = board.getGeneralPlayerOne();
             }
             if (general.isAlive()) {
-                result += 1000.;
+                result += 1500. * valueActionsAlly.get(general.getActionType());
             }
             if (enemyGeneral.isAlive()) {
-                result -= 1000.;
+                result -= 1500. * valueActionsEnemy.get(enemyGeneral.getActionType());
             }
         }
         catch(UnitException e){
@@ -71,7 +78,7 @@ public class UtilityAnswerFuncFour implements IUtilityFunc {
                 return Double.MAX_VALUE;
             }
         }
-        return 0;
+        return Double.MIN_VALUE;
     }
 
     @Override
@@ -88,19 +95,19 @@ public class UtilityAnswerFuncFour implements IUtilityFunc {
             for (int j = 0; j < 3; j++) {
                 if (enemiesArmy[i][j].isAlive()) {
                     result -= HP_PRIORITY * Math.pow(HP_RATE, Math.pow
-                            (1. + valueActions.get(enemiesArmy[i][j].getActionType()) *
+                            (1. + valueActionsEnemy.get(enemiesArmy[i][j].getActionType()) *
                             1. * enemiesArmy[i][j].getCurrentHP() / enemiesArmy[i][j].getMaxHP(), DEGREE_PRIORITY));
                 }
                 else {
-                    result += IS_DEATH_PRIORITY * valueActions.get(enemiesArmy[i][j].getActionType());
+                    result += IS_DEATH_PRIORITY * valueActionsEnemy.get(enemiesArmy[i][j].getActionType());
                 }
                 if (army[i][j].isAlive()) {
                     result += HP_PRIORITY * Math.pow(HP_RATE, Math.pow
-                            (1. + valueActions.get(army[i][j].getActionType()) *
+                            (1. + valueActionsAlly.get(army[i][j].getActionType()) *
                                     1. *  army[i][j].getCurrentHP() / army[i][j].getMaxHP(), DEGREE_PRIORITY));
                 }
                 else {
-                    result -= IS_DEATH_PRIORITY * valueActions.get(army[i][j].getActionType());
+                    result -= IS_DEATH_PRIORITY * valueActionsAlly.get(army[i][j].getActionType());
                 }
             }
         }

@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.trees;
+package heroes.player.botdimon.simulationfeatures.treesarmies;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
@@ -28,6 +28,7 @@ public class SimulationOneStep extends SimulationTree {
         Node maxNode = root;
         try {
             root.list.addAll(getAllSteps(root, field));
+            maxNode = root.list.get(0);
             for (final Node item : root.list) {
                 maxNode = (Double.compare(maxNode.value, item.value) < 0) ? item : maxNode;
             }
