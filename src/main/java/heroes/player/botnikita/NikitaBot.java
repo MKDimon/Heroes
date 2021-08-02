@@ -13,7 +13,10 @@ import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.PlayerBot;
 import heroes.player.RandomBot;
+import heroes.player.botnikita.decisionalgorythms.IDecisionAlgorythm;
+import heroes.player.botnikita.decisionalgorythms.MiniMaxAlgorythm;
 import heroes.player.botnikita.simulation.BoardSimulation;
+import heroes.player.botnikita.simulation.FieldsWrapper;
 import heroes.player.botnikita.utilityfunction.HealthUtilityFunction;
 import heroes.player.botnikita.utilityfunction.IMinMax;
 import heroes.player.botnikita.utilityfunction.IUtilityFunction;
@@ -25,9 +28,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class NikitaBot extends BaseBot implements Visualisable {
-    private final int recLevel = 2;
+    private final int recLevel = 1;
 
     private final IUtilityFunction utilityFunction = new HealthUtilityFunction();
+    private final IDecisionAlgorythm decisionAlgorythm = new MiniMaxAlgorythm();
 
     private static final Logger logger = LoggerFactory.getLogger(NikitaBot.class);
 
@@ -60,10 +64,12 @@ public class NikitaBot extends BaseBot implements Visualisable {
     private double computeWin(final GameStatus gs) {
         GameStatus currentPlayer =
                 super.getField() == Fields.PLAYER_ONE ? GameStatus.PLAYER_ONE_WINS : GameStatus.PLAYER_TWO_WINS;
-        if (gs == GameStatus.PLAYER_ONE_WINS) {
-            return 1;
-        } else if (gs == GameStatus.PLAYER_TWO_WINS) {
-            return -1;
+        GameStatus oppPlayer =
+                super.getField() == Fields.PLAYER_ONE ? GameStatus.PLAYER_TWO_WINS : GameStatus.PLAYER_ONE_WINS;
+        if (gs == currentPlayer) {
+            return 10.0;
+        } else if (gs == oppPlayer) {
+            return -10.0;
         } else {
             return 0.0;
         }
@@ -101,66 +107,39 @@ public class NikitaBot extends BaseBot implements Visualisable {
         if (currentRecLevel == recLevel) {
             return utilityFunction.evaluate(board, answer);
         }
-        Unit[][] firstArmy;
-        Unit[][] secondArmy;
+        final Fields playerField;
         if (board.getCurrentPlayer() == super.getField()) {
-            firstArmy = board.getArmy(super.getField());
-            secondArmy = board.getArmy(board.getCurrentPlayer());
+            playerField = super.getField();
         } else {
-            firstArmy = board.getArmy(board.getCurrentPlayer());
-            secondArmy = board.getArmy(super.getField());
+            playerField = FieldsWrapper.getOppField(super.getField());
         }
+        final Fields oppField = FieldsWrapper.getOppField(playerField);
 
         final LinkedList<AnswerWinHolder> answerList = new LinkedList<>();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (firstArmy[i][j].isActive() && firstArmy[i][j].getActionType() != ActionTypes.HEALING) {
-                    for (int i2 = 0; i < 2; i++) {
-                        for (int j2 = 0; j < 3; j++) {
-                            if (secondArmy[i][j].isAlive()) {
-                                final Answer newAnswer = new Answer(
-                                        new Position(i, j,
-                                                super.getField() == Fields.PLAYER_ONE ? Fields.PLAYER_ONE : Fields.PLAYER_TWO), // <- ???????
-                                        new Position(i2, j2,
-                                                super.getField() == Fields.PLAYER_ONE ? Fields.PLAYER_TWO : Fields.PLAYER_ONE),
-                                        firstArmy[i][j].getActionType());
-                                try {
-                                    GameLogic gl = new GameLogic(new Board(board));
-                                    if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), firstArmy[i][j].getActionType())) {
-                                        final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                                        final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
-                                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                                    }
-                                } catch (UnitException | BoardException e) {
-                                    e.printStackTrace();
-                                }
 
-                            }
-                        }
-                    }
-                } else {
-                    for (int i2 = 0; i < 2; i++) {
-                        for (int j2 = 0; j < 3; j++) {
-                            if (secondArmy[i][j].isAlive()) {
-                                final Answer newAnswer = new Answer(
-                                        new Position(i, j,
-                                                super.getField()), // <- ???????
-                                        new Position(i2, j2,
-                                                super.getField()),
-                                        firstArmy[i][j].getActionType());
-                                try {
-                                    GameLogic gl = new GameLogic(new Board(board));
-                                    if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), firstArmy[i][j].getActionType())) {
-                                        final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                                        final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
-                                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                                    }
-                                } catch (UnitException | BoardException e) {
-                                    e.printStackTrace();
-                                }
+        final List<PositionUnit> playerArmyActiveUnits =
+                BoardSimulation.getActiveUnits(board, playerField);
 
-                            }
+        for (PositionUnit pair : playerArmyActiveUnits) {
+            final List<PositionUnit> oppArmyUnits = (pair.getUnit().getActionType() == ActionTypes.HEALING)
+                    ? BoardSimulation.getAliveUnits(board, playerField)
+                    : BoardSimulation.getAliveUnits(board, oppField);
+
+            for (PositionUnit oppPair : oppArmyUnits) {
+                ActionTypes actionType;
+                for (int k = 0; k < 2; k++) {
+                    actionType = (k == 0) ? pair.getUnit().getActionType() : ActionTypes.DEFENSE;
+                    final Answer newAnswer = new Answer(pair.getPosition(),
+                            oppPair.getPosition(), actionType);
+                    try {
+                        GameLogic gl = new GameLogic(new Board(board));
+                        if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), newAnswer.getActionType())) {
+                            final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
+                            final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
+                            answerList.add(new AnswerWinHolder(newAnswer, win));
                         }
+                    } catch (UnitException | BoardException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -172,74 +151,43 @@ public class NikitaBot extends BaseBot implements Visualisable {
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         final int currentRecLevel = 0;
-
-        Unit[][] firstArmy;
-        Unit[][] secondArmy;
+        final Fields playerField;
         if (board.getCurrentPlayer() == super.getField()) {
-            firstArmy = board.getArmy(super.getField());
-            secondArmy = board.getArmy(board.getCurrentPlayer());
+            playerField = super.getField();
         } else {
-            firstArmy = board.getArmy(board.getCurrentPlayer());
-            secondArmy = board.getArmy(super.getField());
+            playerField = FieldsWrapper.getOppField(super.getField());
         }
+        final Fields oppField = FieldsWrapper.getOppField(playerField);
 
         final LinkedList<AnswerWinHolder> answerList = new LinkedList<>();
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (firstArmy[i][j].isActive() && firstArmy[i][j].getActionType() != ActionTypes.HEALING) {
-                    for (int i2 = 0; i < 2; i++) {
-                        for (int j2 = 0; j < 3; j++) {
-                            if (secondArmy[i][j].isAlive()) {
-                                final Answer newAnswer = new Answer(
-                                        new Position(i, j,
-                                                super.getField() == Fields.PLAYER_ONE ? Fields.PLAYER_ONE : Fields.PLAYER_TWO), // <- ???????
-                                        new Position(i2, j2,
-                                                super.getField() == Fields.PLAYER_ONE ? Fields.PLAYER_TWO : Fields.PLAYER_ONE),
-                                        firstArmy[i][j].getActionType());
-                                try {
-                                    GameLogic gl = new GameLogic(new Board(board));
-                                    if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), firstArmy[i][j].getActionType())) {
-                                        final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                                        final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
-                                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                                    }
-                                } catch (UnitException | BoardException e) {
-                                    //
-                                }
+        final List<PositionUnit> playerArmyActiveUnits =
+                            BoardSimulation.getActiveUnits(board, playerField);
 
-                            }
-                        }
-                    }
-                } else {
-                    for (int i2 = 0; i < 2; i++) {
-                        for (int j2 = 0; j < 3; j++) {
-                            if (secondArmy[i][j].isAlive()) {
-                                final Answer newAnswer = new Answer(
-                                        new Position(i, j,
-                                                super.getField()), // <- ???????
-                                        new Position(i2, j2,
-                                                super.getField()),
-                                        firstArmy[i][j].getActionType());
-                                try {
-                                    GameLogic gl = new GameLogic(new Board(board));
-                                    if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), firstArmy[i][j].getActionType())) {
-                                        final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                                        final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
-                                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                                    }
-                                } catch (UnitException | BoardException e) {
-                                    //
-                                }
+        for (PositionUnit pair : playerArmyActiveUnits) {
+            final List<PositionUnit> oppArmyUnits = (pair.getUnit().getActionType() == ActionTypes.HEALING)
+                                                ? BoardSimulation.getAliveUnits(board, playerField)
+                                                : BoardSimulation.getAliveUnits(board, oppField);
 
-                            }
+            for (PositionUnit oppPair : oppArmyUnits) {
+                ActionTypes actionType;
+                for (int k = 0; k < 2; k++) {
+                    actionType = (k == 0) ? pair.getUnit().getActionType() : ActionTypes.DEFENSE;
+                    final Answer newAnswer = new Answer(pair.getPosition(),
+                            oppPair.getPosition(), actionType);
+                    try {
+                        GameLogic gl = new GameLogic(new Board(board));
+                        if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), newAnswer.getActionType())) {
+                            final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
+                            final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
+                            answerList.add(new AnswerWinHolder(newAnswer, win));
                         }
+                    } catch (UnitException | BoardException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         }
-
-
 
         return getGreedyDecision(answerList, AnswerWinHolder::getWin).getAnswer();
     }

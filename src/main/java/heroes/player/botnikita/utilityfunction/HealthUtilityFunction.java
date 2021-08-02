@@ -28,10 +28,12 @@ public class HealthUtilityFunction implements IUtilityFunction {
             }
         }
 
-        if (hpSumOfFirstArmy > hpSumOfFirstArmySim || hpSumOfSecondArmy < hpSumOfSecondArmySim) {
-            return 1.0;
+        if (hpSumOfFirstArmy > hpSumOfFirstArmySim) {
+            return 5.0;
+        } else if (hpSumOfSecondArmy < hpSumOfSecondArmySim) {
+            return 3.0;
         } else if (hpSumOfFirstArmy == hpSumOfFirstArmySim) {
-            return 1.0;
+            return 0.0;
         } else {
             return -1.0;
         }
