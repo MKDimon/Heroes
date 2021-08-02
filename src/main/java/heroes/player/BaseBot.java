@@ -23,7 +23,6 @@ public abstract class BaseBot implements Visualisable {
     }
 
     public abstract static class BaseBotFactory {
-
         public abstract BaseBot createBot(final Fields fields) throws GameLogicException;
     }
 
