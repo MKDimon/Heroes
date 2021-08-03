@@ -71,6 +71,6 @@ public class SelfPlayStatistics {
 
 
         }
-        System.out.println("SimulationOneStep: " + playerOneCount + "MinMax: " + playerTwoCount + " draw: " + drawCount);
+        System.out.println("SimulationOneStep: " + playerOneCount + " MinMax: " + playerTwoCount + " draw: " + drawCount);
     }
 }

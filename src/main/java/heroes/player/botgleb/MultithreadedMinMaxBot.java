@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.RecursiveTask;
 import java.util.function.ToDoubleFunction;
 
@@ -62,16 +61,12 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
 
         private final Board implBoard;
         private final int recLevel;
-        private double alpha;
-        private double beta;
         private final Answer rootAnswer;
 
-        private WinCounter(Board implBoard, int recLevel, double alpha, double beta, Answer rootAnswer) {
+        private WinCounter(Board implBoard, int recLevel, Answer rootAnswer) {
             this.implBoard = implBoard;
 
             this.recLevel = recLevel;
-            this.alpha = alpha;
-            this.beta = beta;
             this.rootAnswer = rootAnswer;
         }
 
@@ -101,29 +96,25 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
                 // то начинаем строить дерево из текущего состояния.
                 final List<Answer> actions = implBoard.getPossibleMoves();
                 final List<AnswerAndWin> awList = new ArrayList<>();
-                final List<ForkJoinTask<AnswerAndWin>> subTasks = new LinkedList<>();
+                final List<WinCounter> subTasks = new LinkedList<>();
                 for (final Answer answer : actions) {
-                    final ForkJoinTask task = new WinCounter(implBoard.copy(answer), recLevel + 1, alpha, beta, answer);
-                    subTasks.add(task.fork());
+                    final Board simBoard = implBoard.copy(answer);
+                    final WinCounter task = new WinCounter(simBoard, recLevel + 1, answer);
+                    task.fork();
+                    subTasks.add(task);
                 }
-                for(final ForkJoinTask<AnswerAndWin> subTask : subTasks){
+                for(final WinCounter subTask : subTasks){
                     final AnswerAndWin aw = subTask.join();
-                    /*// Альфа-бета отсечения
-                    if (isMax && aw.win >= beta || isMax && aw.win <= alpha) {
-                        return aw;
-                    }
-                    if (isMax) {
-                        alpha = Math.max(alpha, aw.win);
-                    } else {
-                        beta = Math.min(beta, aw.win);
-                    }*/
                     awList.add(aw);
                 }
 
                 // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
                 // корневому ответу сопоставляется значение из нижнего состяния.
-                return getGreedyDecision(awList, winCalculator);
-
+                if(rootAnswer != null) {
+                    return new AnswerAndWin(rootAnswer, getGreedyDecision(awList, winCalculator).win);
+                } else {
+                    return getGreedyDecision(awList, winCalculator);
+                }
             } catch ( GameLogicException e){
                 return null;
             }
@@ -156,10 +147,9 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
             final long startTime = System.currentTimeMillis();
-            final ForkJoinPool resultForkJoinPool = new ForkJoinPool();
-            final Answer result = resultForkJoinPool.invoke(new WinCounter(board, 0,
-                    UtilityFunctions.MIN_VALUE, UtilityFunctions.MAX_VALUE, null)).answer;
-
+            final WinCounter startWinCounter = new WinCounter(board, 0, null);
+            final ForkJoinPool resultForkJoinPool = new ForkJoinPool(4);
+            final Answer result = resultForkJoinPool.invoke(startWinCounter).answer;
             System.out.println(System.currentTimeMillis() - startTime);
             return result;
 
