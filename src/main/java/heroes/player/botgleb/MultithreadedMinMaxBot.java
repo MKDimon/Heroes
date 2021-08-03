@@ -63,7 +63,7 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
         private final int recLevel;
         private final Answer rootAnswer;
 
-        private WinCounter(Board implBoard, int recLevel, Answer rootAnswer) {
+        private WinCounter(final Board implBoard, final int recLevel, final Answer rootAnswer) {
             this.implBoard = implBoard;
 
             this.recLevel = recLevel;
@@ -98,8 +98,7 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
                 final List<AnswerAndWin> awList = new ArrayList<>();
                 final List<WinCounter> subTasks = new LinkedList<>();
                 for (final Answer answer : actions) {
-                    final Board simBoard = implBoard.copy(answer);
-                    final WinCounter task = new WinCounter(simBoard, recLevel + 1, answer);
+                    final WinCounter task = new WinCounter(implBoard.copy(answer), recLevel + 1, answer);
                     task.fork();
                     subTasks.add(task);
                 }
@@ -150,7 +149,7 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
             final WinCounter startWinCounter = new WinCounter(board, 0, null);
             final ForkJoinPool resultForkJoinPool = new ForkJoinPool(4);
             final Answer result = resultForkJoinPool.invoke(startWinCounter).answer;
-            System.out.println(System.currentTimeMillis() - startTime);
+            System.out.println("MultithreadedMinMax time: " + (System.currentTimeMillis() - startTime));
             return result;
 
     }

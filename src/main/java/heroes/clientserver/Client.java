@@ -11,6 +11,8 @@ import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.player.*;
+import heroes.player.botgleb.MonteCarloBot;
+import heroes.player.botgleb.MultithreadedMinMaxBot;
 import heroes.player.botgleb.SimpleMinMaxBot;
 import heroes.player.botgleb.SimulationBot;
 import heroes.player.controlsystem.Controls;
@@ -70,7 +72,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new SimpleMinMaxBot.SimpleMinMaxBotFactory());
+        botFactoryMap.put("Player", new MultithreadedMinMaxBot.MultithreadedMinMaxBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
         botFactoryMap.put("Simulation", new SimulationBot.SimulationBotFactory());
 

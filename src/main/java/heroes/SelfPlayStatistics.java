@@ -31,8 +31,8 @@ public class SelfPlayStatistics {
         int playerTwoCount = 0;
         int drawCount = 0;
         for(int i = 0; i < 1; i++) {
-        final BaseBot playerOne = factories.get(3).createBot(Fields.PLAYER_ONE);
-        final BaseBot playerTwo = factories.get(6).createBot(Fields.PLAYER_TWO);
+        final BaseBot playerOne = factories.get(0).createBot(Fields.PLAYER_ONE);
+        final BaseBot playerTwo = factories.get(5).createBot(Fields.PLAYER_TWO);
         final Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);

@@ -54,11 +54,11 @@ public class TestBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-                General general = new General(GeneralTypes.ARCHMAGE);
+                General general = new General(GeneralTypes.SNIPER);
                 Unit[][] army = new Unit[2][3];
                 army[1][0] = new Unit(UnitTypes.BOWMAN);
                 army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+                army[0][0] = new Unit(UnitTypes.BOWMAN);
                 army[0][1] = new Unit(UnitTypes.SWORDSMAN);
                 army[1][2] = new Unit(UnitTypes.HEALER);
                 army[1][1] = general;

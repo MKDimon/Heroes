@@ -1,5 +1,6 @@
 package heroes.player.botgleb;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.units.General;
@@ -39,7 +40,7 @@ public class UtilityFunctions {
 
     public static final UtilityFunction HPUtilityFunction = (board, player) -> {
         final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
-        return HPOnePlayerUtilityFunction(board,player) - HPOnePlayerUtilityFunction(board, defField);
+        return HPOnePlayerUtilityFunction(board,player)- HPOnePlayerUtilityFunction(board, defField);
     };
 
     private static final double HPOnePlayerUtilityFunction(final Board board, final Fields player) {
@@ -49,7 +50,16 @@ public class UtilityFunctions {
       for(final Unit[] units : playerArmy){
           for(final Unit unit : units){
               if(unit.isAlive()) {
-                  result += unit.getCurrentHP()*100 + unit.getPower()/2;
+                  result += unit.getCurrentHP() + unit.getPower();
+                  if(unit.getActionType() == ActionTypes.HEALING) {
+                      result += 300;
+                  }
+                  if(unit.getActionType() == ActionTypes.CLOSE_COMBAT){
+                      result += 100;
+                  }
+                  if(unit.getActionType() == ActionTypes.RANGE_COMBAT){
+                      result += 200;
+                  }
               }
               if(playerGen.isAlive()){
                   result += 1000;

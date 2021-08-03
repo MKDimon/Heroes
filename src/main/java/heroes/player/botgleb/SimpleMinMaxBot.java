@@ -92,7 +92,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
                         UtilityFunctions.MAX_VALUE);
                 awList.add(new AnswerAndWin(answer, win));
             }
-            System.out.println(System.currentTimeMillis() - startTime);
+            System.out.println("SimpleMinMax time: " + (System.currentTimeMillis() - startTime));
             return getGreedyDecision(awList, aw -> aw.win).answer;
 
         } catch (final GameLogicException | BoardException | UnitException e) {
