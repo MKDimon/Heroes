@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.treesarmies;
+package heroes.player.botdimon.simulationfeatures.treesanswers;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
@@ -57,10 +57,16 @@ public abstract class SimulationTree {
         this.maxHeight = maxHeight;
     }
 
-    private boolean setAction(final GameLogic gameLogic, final Answer answer)
-            throws UnitException {
-
-        return gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+    private boolean setAction(final Board board, final Answer answer, final List<Node> result)
+            throws UnitException, BoardException {
+        boolean returns = false;
+        final GameLogic gameLogic = new GameLogic(board);
+        if (gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType())) {
+            final Board newBoard = gameLogic.getBoard();
+            result.add(new Node(newBoard, answer, func.getValue(newBoard, field)));
+            if (answer.getActionType() == ActionTypes.AREA_DAMAGE) { returns = true; }
+        }
+        return returns;
     }
 
     /**
@@ -111,15 +117,9 @@ public abstract class SimulationTree {
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                if (army[i][j].isActive()) {
-                    posAttack.add(new Position(i, j, field));
-                }
-                if (army[i][j].isAlive()) {
-                    posHealing.add(new Position(i, j, field));
-                }
-                if (enemies[i][j].isAlive()) {
-                    posDefend.add(new Position(i, j, enemyField));
-                }
+                if (army[i][j].isActive())      { posAttack.add(new Position(i, j, field));     }
+                if (army[i][j].isAlive())       { posHealing.add(new Position(i, j, field));    }
+                if (enemies[i][j].isAlive())    { posDefend.add(new Position(i, j, enemyField));}
             }
         }
 
@@ -129,24 +129,15 @@ public abstract class SimulationTree {
             final boolean isHealer = attackType.equals(ActionTypes.HEALING);
 
             for (final Position target : (isHealer) ? posHealing : posDefend) {
-                final GameLogic gameLogic = new GameLogic(board);
                 final Answer answer = new Answer(unit, target, attackType);
-                if (setAction(gameLogic, answer)) {
-                    final Board newBoard = gameLogic.getBoard();
-                    result.add(new Node(newBoard, answer, func.getValue(newBoard, field)));
-                }
+                if (setAction(board, answer, result)) { break; }
             }
 
-            final GameLogic defGL = new GameLogic(board);
-            final Board defBoard = defGL.getBoard();
             final Answer defAnswer = new Answer(unit, unit, ActionTypes.DEFENSE);
-            if (setAction(defGL, defAnswer)) {
-                result.add(new Node(defBoard, defAnswer, func.getValue(defBoard, field)));
-            }
+            setAction(board, defAnswer, result);
         }
         return result;
     }
 
     public abstract Answer getAnswer(final Board board);
-
 }

@@ -98,7 +98,7 @@ public class SelfPlay {
         int countWin = 0;
         int countDefeat = 0;
         System.out.println(LocalDateTime.now());
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             final BaseBot bot1 = new Dimon.DimonFactory().createBot(Fields.PLAYER_ONE);
             final BaseBot bot2 = new TestBot.TestBotFactory().createBot(Fields.PLAYER_TWO);
 

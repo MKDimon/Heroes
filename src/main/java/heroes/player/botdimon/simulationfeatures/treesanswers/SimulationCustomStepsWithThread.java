@@ -1,4 +1,4 @@
-package heroes.player.botdimon.simulationfeatures.treesarmies;
+package heroes.player.botdimon.simulationfeatures.treesanswers;
 
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
@@ -6,16 +6,12 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.mathutils.Pair;
 import heroes.player.Answer;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
-
-import static java.util.concurrent.ForkJoinPool.defaultForkJoinWorkerThreadFactory;
 
 /**
  * Дерево ну типа работает
