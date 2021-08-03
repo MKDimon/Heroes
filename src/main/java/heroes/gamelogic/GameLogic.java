@@ -1,10 +1,12 @@
 package heroes.gamelogic;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.validation.ValidationUnits;
+import heroes.gamelogic.validation.Validator;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 import org.slf4j.Logger;
@@ -15,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameLogic {
-    Logger logger = LoggerFactory.getLogger(GameLogic.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameLogic.class);
 
     private Board board;
     private boolean gameBegun;
@@ -37,7 +39,7 @@ public class GameLogic {
      * @param fieldPlayerTwo - армия игрока 2
      * @return - успешное начало игры true / ошибка false
      */
-    public boolean gameStart(Army fieldPlayerOne, Army fieldPlayerTwo) {
+    public boolean gameStart(final Army fieldPlayerOne, final Army fieldPlayerTwo) {
         try {
             if (fieldPlayerOne == fieldPlayerTwo
             || fieldPlayerOne.getPlayerUnits() == fieldPlayerTwo.getPlayerUnits()
@@ -54,7 +56,7 @@ public class GameLogic {
             board = new Board(fieldPlayerOne, fieldPlayerTwo);
             gameBegun = true;
             return true;
-        } catch (NullPointerException | GameLogicException | UnitException exception) {
+        } catch (final NullPointerException | GameLogicException | UnitException exception) {
             logger.error(" Game Start failed ",exception);
             return false;
         }
@@ -65,14 +67,14 @@ public class GameLogic {
      * Если при проверке пришла ошибка UnitException (UNIT_CANT_STEP)
      * меняет act на ActionTypes.DEFENSE
      *
-     * @param attacker
-     * @param defender
-     * @param act
-     * @return
+     * @param attacker инициатор
+     * @param defender цель
+     * @param act действие
+     * @return успешная валидация - true / false иначе
      */
-    private boolean actionValidate(Position attacker, Position defender, ActionTypes act) {
+    private ValidationUnits actionValidate(final Position attacker, final Position defender, final ActionTypes act) {
         if (!gameBegun) {
-            return false;
+            return ValidationUnits.INVALID_STEP;
         }
         try {
             Validator.checkNullPointer(attacker, defender, act);
@@ -85,29 +87,19 @@ public class GameLogic {
             Validator.checkCorrectAttacker(board.getUnitByCoordinate(attacker));
             Validator.checkCorrectDefender(board.getUnitByCoordinate(defender));
 
-            // можно через лямбду
-            int countAliveAtc = 0, x = attacker.X(),
-                    countAliveDef = 0, xD = defender.X();
-            Unit[][] units = board.getArmy(attacker.F());
-            Unit[][] unitsD = board.getArmy(defender.F());
+            int countAliveAtc = 0, x = attacker.X();
+            final Unit[][] units = board.getArmy(attacker.F());
             for (int i = 0; i < 3; i++) {
                 if (units[x][i].isAlive()) {
                     countAliveAtc++;
                 }
-                if (unitsD[x][i].isAlive()) {
-                    countAliveDef++;
-                }
             }
-            Validator.checkTargetAction(attacker, defender, act, countAliveAtc, countAliveDef);
-        } catch (NullPointerException | BoardException exception) {
+            Validator.checkTargetAction(attacker, defender, act, countAliveAtc);
+        } catch (final NullPointerException | BoardException exception) {
             logger.warn(exception.getMessage());
-            return false;
-        } catch (UnitException exception) {
-            act = ActionTypes.DEFENSE;
-            return true;
+            return ValidationUnits.INVALID_STEP;
         }
-
-        return true;
+        return ValidationUnits.SUCCESSFUL_STEP;
     }
 
     /**
@@ -128,8 +120,24 @@ public class GameLogic {
         return result;
     }
 
+    /**
+     * Запрашивает валидацию, далее смотрит по ситуации
+     * INVALID_STEP - действие не может быть выполнено
+     * UNIT_CANT_STEP - отправляет юнита в защиту, т.к. у него нет ходов
+     * SUCCESSFUL_STEP - выполняет действие
+     * после прогоняет шаг в ControlRound для смены шага
+     *
+     * @param attacker инициатор
+     * @param defender цель
+     * @param act действвие
+     * @return прошло или нет
+     * @throws UnitException у юнитов может что то пойти не так
+     */
     public boolean action(final Position attacker, final Position defender, final ActionTypes act) throws UnitException {
-        if (actionValidate(attacker, defender, act)) {
+        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, act);
+        ValidationUnits result = actionValidate(attacker, defender, act);
+        if (result == ValidationUnits.SUCCESSFUL_STEP) {
+            logger.info(result.toString());
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
             gameBegun = ControlRound.checkStep(board);
             return true;

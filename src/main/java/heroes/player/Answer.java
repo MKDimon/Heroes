@@ -3,14 +3,20 @@ package heroes.player;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
-import heroes.auxiliaryclasses.GameLogicExceptionType;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.mathutils.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Класс ответов игроков
+ * @attacker инициатор
+ * @defender цель
+ * @actionType тип действия инициатора (не обязательно над целью)
+ */
 public class Answer {
     Logger logger = LoggerFactory.getLogger(Answer.class);
     @JsonProperty
@@ -19,17 +25,31 @@ public class Answer {
     private final Position defender;
     @JsonProperty
     private final ActionTypes actionType;
+
     @JsonCreator
-    public Answer(@JsonProperty("attacker") Position attacker,
-                  @JsonProperty("defender") Position defender,
-                  @JsonProperty("actionType") ActionTypes actionType) throws GameLogicException {
+    public Answer(@JsonProperty("attacker") final Position attacker,
+                  @JsonProperty("defender") final Position defender,
+                  @JsonProperty("actionType") final ActionTypes actionType) throws GameLogicException {
         if (attacker == null || defender == null || actionType == null) {
             throw new GameLogicException(GameLogicExceptionType.NULL_POINTER);
         }
-        this.attacker = attacker;
-        this.defender = defender;
-        this.actionType = actionType;
-        logger.info("Attacker position = {}, defender position = {}, action type = {}", attacker, defender, actionType);
+        if(actionType == ActionTypes.DEFENSE){
+            this.attacker = attacker;
+            this.defender = attacker;
+            this.actionType = actionType;
+            logger.info("AttackPos = {}, action = {}", attacker, actionType);
+        } else {
+            this.attacker = attacker;
+            this.defender = defender;
+            this.actionType = actionType;
+            logger.info("AttackPos = {}, defPos = {}, action = {}", attacker, defender, actionType);
+        }
+    }
+
+    public Answer(final Answer answer) {
+        attacker = new Position(answer.attacker);
+        defender = new Position(answer.defender);
+        actionType = answer.actionType;
     }
 
     public Position getAttacker() {

@@ -20,6 +20,12 @@ public class Position {
         this.f = f;
     }
 
+    public Position(final Position pos) {
+        x = pos.x;
+        y = pos.y;
+        f = pos.f;
+    }
+
     public int X() {
         return x;
     }
@@ -34,11 +40,8 @@ public class Position {
 
     @Override
     public String toString() {
-        return "{" +
-                "x=" + x +
-                ", y=" + y +
-                ", field=" + f +
-                '}';
+        return new StringBuilder("{x=").append(x).append(", y=").append(y).
+                append(", field=").append(f).append("}").toString();
     }
 
     @Override

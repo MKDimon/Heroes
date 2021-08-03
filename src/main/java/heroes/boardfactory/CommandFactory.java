@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandFactory {
-
     private final Map<ActionTypes, Command> commands;
 
     public CommandFactory() {

@@ -7,8 +7,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+/**
+ * Класс с чисто статическими функциями для отслеживания действий
+ * между ходами игроков и раундами
+ */
 public class ControlRound {
-    static Logger logger = LoggerFactory.getLogger(DamageCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(DamageCommand.class);
 
     private static final int maxRound = 10;
 
@@ -20,31 +24,45 @@ public class ControlRound {
         }
     }
 
+    /**
+     * Проверяет последовательно на:
+     * - Смерть генералов
+     * - Смерть первой линии (если умерли, двигает заднюю вперед)
+     * - Смерть всей армии
+     * - Новый раунд
+     * Меняет ходящего игрока
+     *
+     * @param board состояние игры
+     * @return продолжается игра - true / false иначе
+     * @throws UnitException ошибка ;D
+     */
     public static boolean checkStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
-            board.deinspireArmy(board.getFieldPlayerOne(), board.getGeneralPlayerOne());
+            board.deinspireArmy(board.getFieldPlayerOne());
             board.setArmyOneInspired(false);
         }
         if (!board.getGeneralPlayerTwo().isAlive() && board.isArmyTwoInspired()) {
-            board.deinspireArmy(board.getFieldPlayerTwo(), board.getGeneralPlayerTwo());
+            board.deinspireArmy(board.getFieldPlayerTwo());
             board.setArmyTwoInspired(false);
         }
 
-        Board.checkAliveLine(board.getFieldPlayerOne());
-        Board.checkAliveLine(board.getFieldPlayerTwo());
+        board.checkAliveLine(Fields.PLAYER_ONE);
+        board.checkAliveLine(Fields.PLAYER_TWO);
 
-        logger.info("\n[NEW STAP]\n");
+        logger.info("\n[NEW STEP]\n");
 
-        long active = Board.activeCount(board.getFieldPlayerOne());
-        active += Board.activeCount(board.getFieldPlayerTwo());
+        final long active = Board.activeCount(board.getFieldPlayerOne()) +
+                Board.activeCount(board.getFieldPlayerTwo());
         ControlRound.nextPlayer(board);
 
-        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+        if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+            board.setStatus(GameStatus.PLAYER_ONE_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerOne\n", board.getCurNumRound());
             return false;
         }
-        if (Board.aliveCountInArmy(board.getFieldPlayerTwo()) == 0) {
+        if (Board.aliveCountInArmy(board.getFieldPlayerOne()) == 0) {
+            board.setStatus(GameStatus.PLAYER_TWO_WINS);
             logger.info("Конец на раунде: {} \nПобедил PlayerTwo\n", board.getCurNumRound());
             return false;
         }
@@ -55,8 +73,18 @@ public class ControlRound {
         return true;
     }
 
-    private static boolean newRound(final Board board) {
+    /**
+     * Проверка на достижение максимального количества раундов
+     * Меняет ходящего игрока в начале раунда
+     * Делает всех юнитов активными и убирает бонусную защиту (если ее кто то нажимал)
+     *
+     * @param board состояние игры
+     * @return продолжается игра - true / false иначе
+     */
+    public static boolean newRound(final Board board) {
         if (board.getCurNumRound() >= maxRound) {
+            board.setStatus(GameStatus.NO_WINNERS);
+            board.setStatus(GameStatus.NO_WINNERS);
             logger.info("Конец игры: НИЧЬЯ");
             return false;
         }
@@ -67,8 +95,8 @@ public class ControlRound {
 
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
         Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
-        Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
-        Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setBonusArmor(0)));
+        Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setDefenseArmor(0)));
+        Arrays.stream(board.getFieldPlayerTwo()).forEach(x -> Arrays.stream(x).forEach(t -> t.setDefenseArmor(0)));
         board.setCurNumRound(board.getCurNumRound() + 1);
 
         return true;

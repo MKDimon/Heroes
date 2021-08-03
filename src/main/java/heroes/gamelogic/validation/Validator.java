@@ -1,14 +1,19 @@
-package heroes.gamelogic;
+package heroes.gamelogic.validation;
 
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
+import heroes.gamelogic.Board;
+import heroes.gamelogic.validation.AreaDamageChecker;
+import heroes.gamelogic.validation.Checker;
+import heroes.gamelogic.validation.CheckerFactory;
 import heroes.mathutils.Position;
 import heroes.units.Unit;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Validator {
@@ -31,10 +36,10 @@ public class Validator {
     }
 
     public static void checkIndexOutOfBounds(final Position pair) throws BoardException {
-        int x = pair.X(),
-                y = pair.Y();
+        final int x = pair.X();
+        final int y = pair.Y();
         if (x > 1 || x < 0 || y > 2 || y < 0) {
-            throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS); //TODO: BoardException
+            throw new BoardException(BoardExceptionTypes.INDEX_OUT_OF_BOUNDS);
         }
     }
 
@@ -66,39 +71,18 @@ public class Validator {
      * Проверяет на корректность выбора цели
      * Если юнит не может ходить - возвращает ошибку UNIT_CANT_STEP
      *
-     * @param attacker
-     * @param defender
-     * @param actionType
+     * @param attacker - инициализатор
+     * @param defender - цель
+     * @param actionType - тип действия
      * @param countAlive - со стороны атакующего
-     * @param countAliveDef - со стороны цели
-     * @throws BoardException
-     * @throws UnitException
+     * @throws BoardException - ошибка в доске
      */
-    public static void checkTargetAction(final Position attacker, final Position defender, final ActionTypes actionType,
-                                         int countAlive, int countAliveDef) throws BoardException, UnitException {
-        if (actionType == ActionTypes.HEALING && attacker.F() != defender.F()) {
+    public static void checkTargetAction(final Position attacker, final Position defender,
+                                         final ActionTypes actionType, final int countAlive)
+                                         throws BoardException {
+        CheckerFactory checkerFactory = new CheckerFactory();
+        if (!checkerFactory.getChecker(attacker, defender, actionType, countAlive).check()) {
             throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-        }
-
-        if (actionType == ActionTypes.CLOSE_COMBAT) {
-            if (attacker.X() == 1) {
-                throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
-            }
-            if (!((attacker.F() != defender.F() && attacker.X() == 0 && defender.X() == 0) &&
-                    (Math.abs(attacker.Y() - defender.Y()) < 2 || countAlive == 1))) {
-                if (countAliveDef > 1) {
-                    throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-                }
-                else {
-                    throw new UnitException(UnitExceptionTypes.UNIT_CANT_STEP);
-                }
-            }
-        }
-
-        if (actionType == ActionTypes.AREA_DAMAGE || actionType == ActionTypes.RANGE_COMBAT) {
-            if (attacker.F() == defender.F()) {
-                throw new BoardException(BoardExceptionTypes.INCORRECT_TARGET);
-            }
         }
     }
 

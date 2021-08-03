@@ -1,12 +1,14 @@
 package heroes.player;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.GameLogicException;
 import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.TerminalWrapper;
+import heroes.gui.Visualisable;
 import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
@@ -19,16 +21,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomBot implements IPlayer{
-    Logger logger = LoggerFactory.getLogger(RandomBot.class);
-    private Fields field;
+/**
+ * Случайный бот.
+ * Случайнвм образом выбирает армию и случайно делает ходы.
+ **/
 
-    public RandomBot(Fields field){
-        this.field = field;
+public class RandomBot extends BaseBot implements Visualisable {
+    Logger logger = LoggerFactory.getLogger(RandomBot.class);
+
+    protected TerminalWrapper tw = null;
+
+    @Override
+    public void setTerminal(TerminalWrapper tw) {
+        super.tw = tw;
+    }
+
+    /**
+     * Фабрика ботов
+     **/
+
+    public static class RandomBotFactory extends BaseBotFactory {
+        @Override
+        public RandomBot createBot(final Fields fields) throws GameLogicException {
+            return new RandomBot(fields);
+        }
+    }
+
+    public RandomBot(final Fields field) throws GameLogicException {
+        super(field);
     }
 
     @Override
-    public Army getArmy() {
+    public Army getArmy(final Army firstPlayerArmy) {
         try {
             Random r = new Random();
             Unit[][] armyArr = new Unit[2][3];
@@ -49,7 +73,7 @@ public class RandomBot implements IPlayer{
                         }
                     }
                 }
-            } catch (UnitException e){
+            } catch (UnitException e) {
                 logger.error("Error creating unit in RandomBot", e);
             }
             return new Army(armyArr, general);
@@ -64,27 +88,27 @@ public class RandomBot implements IPlayer{
      * Из списка живых юнитов противника выбирает цель
      * Учитывает смену поля при ActionTypes.HEALING
      *
-     * @param board
-     * @return
-     * @throws GameLogicException
+     * @param board - состояние игры
+     * @return - ответ
+     * @throws GameLogicException ошибка логики
      */
     @Override
-    public Answer getAnswer(Board board) throws GameLogicException {
+    public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
 
 
-        Fields defField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
+        Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
         List<Position> posAttack = new ArrayList<>();
         List<Position> posDefend = new ArrayList<>();
 
-        Unit[][] armyAttack = board.getArmy(field);
+        Unit[][] armyAttack = board.getArmy(getField());
         Unit[][] armyDefend = board.getArmy(defField);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (armyAttack[i][j].isActive()) {
-                    posAttack.add(new Position(i, j, field));
+                    posAttack.add(new Position(i, j, getField()));
                 }
                 if (armyDefend[i][j].isAlive()) {
                     posDefend.add(new Position(i, j, defField));
@@ -93,27 +117,25 @@ public class RandomBot implements IPlayer{
         }
 
         Position attackerPos = posAttack.get(r.nextInt(posAttack.size()));
+        if(r.nextInt(100) < 20){
+            return new Answer(attackerPos, attackerPos, ActionTypes.DEFENSE);
+        }
         ActionTypes attackType = board.getUnitByCoordinate(attackerPos).getActionType();
         if (attackType == ActionTypes.HEALING) {
-            defField = field;
+            defField = getField();
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, field))) {
-                        posAttack.add(new Position(i, j, field));
+                    if (armyAttack[i][j].isAlive() && !posAttack.contains(new Position(i, j, getField()))) {
+                        posAttack.add(new Position(i, j, getField()));
                     }
                 }
             }
         }
 
-        Position defenderPos = (defField == field)?
-                posAttack.get(r.nextInt(posAttack.size())):
+        Position defenderPos = (defField == getField()) ?
+                posAttack.get(r.nextInt(posAttack.size())) :
                 posDefend.get(r.nextInt(posDefend.size()));
 
         return new Answer(attackerPos, defenderPos, attackType);
-    }
-
-    @Override
-    public Fields getField() {
-        return field;
     }
 }

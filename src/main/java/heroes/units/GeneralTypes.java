@@ -12,7 +12,8 @@ public enum GeneralTypes {
     public final int inspirationDamageBonus;
     public final int inspirationAccuracyBonus;
 
-    GeneralTypes(UnitTypes unitType, int inspirationArmorBonus, int inspirationDamageBonus, int inspirationAccuracyBonus) {
+    GeneralTypes(final UnitTypes unitType, final int inspirationArmorBonus,final int inspirationDamageBonus,
+                 final int inspirationAccuracyBonus) {
         this.unitType = unitType;
         this.inspirationArmorBonus = inspirationArmorBonus;
         this.inspirationDamageBonus = inspirationDamageBonus;

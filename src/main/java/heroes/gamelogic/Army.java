@@ -1,10 +1,12 @@
 package heroes.gamelogic;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.gamelogic.validation.Validator;
 import heroes.units.General;
 import heroes.units.Unit;
 
@@ -15,17 +17,18 @@ public class Army {
     @JsonProperty
     private final Unit[][] playerUnits;
     @JsonProperty
-    private General general;
+    private final General general;
 
     @JsonCreator
-    public Army(@JsonProperty("playerUnits") Unit[][] playerUnits,@JsonProperty("general") General general)
+    public Army(@JsonProperty("playerUnits") final Unit[][] playerUnits,
+                @JsonProperty("general") final General general)
             throws BoardException, UnitException {
-        if (playerUnits == null || general == null){
-            throw new BoardException(BoardExceptionTypes.NULL_POINTER);
-        }
+        Validator.checkNullPointer(playerUnits, general);
         if (Arrays.stream(playerUnits).noneMatch(x -> Arrays.asList(x).contains(general))) {
             throw new BoardException(BoardExceptionTypes.GENERAL_IS_NOT_IN_ARMY);
         }
+        Validator.checkNullPointerInArmy(playerUnits);
+
         this.playerUnits = playerUnits;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -37,10 +40,11 @@ public class Army {
         this.general = general;
     }
 
-    public Army(Army army) throws UnitException, BoardException {
+    public Army(final Army army) throws UnitException, BoardException {
         if (army == null) {
             throw new BoardException(BoardExceptionTypes.NULL_POINTER);
         }
+        general = new General(army.general);
         playerUnits = new Unit[2][3];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -48,7 +52,6 @@ public class Army {
                     throw new BoardException(BoardExceptionTypes.NULL_POINTER);
                 }
                 if (army.playerUnits[i][j] == army.general) {
-                    general = new General(army.general);
                     playerUnits[i][j] = general;
                 } else {
                     playerUnits[i][j] = new Unit(army.playerUnits[i][j]);
@@ -57,20 +60,32 @@ public class Army {
         }
     }
 
+    @JsonIgnore
     public Unit[][] getPlayerUnits() {
         return playerUnits;
     }
 
-    public General getGeneral() throws UnitException {
-        return new General(general);
+    @JsonIgnore
+    public final General getGeneral() throws UnitException {
+        return general;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Army army = (Army) o;
-        return Arrays.deepEquals(playerUnits, army.playerUnits) && Objects.equals(general, army.general);
+        final Army army = (Army)o;
+        if(!this.general.equals(army.general)){
+            return false;
+        }
+        for(int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++) {
+                if(!this.playerUnits[i][j].equals(army.playerUnits[i][j])){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

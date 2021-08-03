@@ -1,9 +1,9 @@
 package heroes.gamelogic;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.mathutils.Position;
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.units.General;
 import heroes.units.GeneralTypes;
 import heroes.units.Unit;
@@ -16,51 +16,52 @@ public class TestGameLogic {
 
     @Test
     public void testNewBoard() throws UnitException, BoardException {
-        General generalPlayerOne = new General(GeneralTypes.COMMANDER);
-        General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
+        final General generalPlayerOne = new General(GeneralTypes.COMMANDER);
+        final General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
 
-        Unit[][] fieldPlayerOne = new Unit[2][3];
+        final Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
-        Unit[][] fieldPlayerTwo = new Unit[2][3];
+        final Unit[][] fieldPlayerTwo = new Unit[2][3];
         fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
-        GameLogic gl = new GameLogic();
+        final GameLogic gl = new GameLogic();
         gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
-        GameLogic newGL = new GameLogic(gl.getBoard());
+        final GameLogic newGL = new GameLogic(gl.getBoard());
 
         assertNotSame(newGL.getBoard(), gl.getBoard());
     }
 
     @Test
     public void testIncorrectParams() throws UnitException, BoardException {
-        General generalPlayerOne = new General(GeneralTypes.COMMANDER);
-        General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
+        final General generalPlayerOne = new General(GeneralTypes.COMMANDER);
+        final General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
 
-        Unit[][] fieldPlayerOne = new Unit[2][3];
+        final Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerOne[0][1] = generalPlayerOne; fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
-        Unit[][] fieldPlayerTwo = new Unit[2][3];
+        final Unit[][] fieldPlayerTwo = new Unit[2][3];
         fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
-        GameLogic gl = new GameLogic();
+        final GameLogic gl = new GameLogic();
 
-        assertFalse(
-                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerOne, generalPlayerOne)));
+        final Army one = new Army(fieldPlayerOne, generalPlayerOne);
+        final Army two = new Army(fieldPlayerTwo, generalPlayerTwo);
+
+        assertFalse(gl.gameStart(one, one));
 
         fieldPlayerOne[0][2] = null;
 
-        assertFalse(
-                gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo)));
+        assertFalse(gl.gameStart(one, two));
     }
 
     @Test
@@ -68,20 +69,20 @@ public class TestGameLogic {
         /*
          *   Следить за очередью ходов игроков
          */
-        General generalPlayerOne = new General(GeneralTypes.COMMANDER);
-        General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
+        final General generalPlayerOne = new General(GeneralTypes.COMMANDER);
+        final General generalPlayerTwo = new General(GeneralTypes.ARCHMAGE);
 
-        Unit[][] fieldPlayerOne = new Unit[2][3];
+        final Unit[][] fieldPlayerOne = new Unit[2][3];
         fieldPlayerOne[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerOne[0][1] = generalPlayerOne;              fieldPlayerOne[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerOne[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerOne[1][2] = new Unit(UnitTypes.MAGE);
 
-        Unit[][] fieldPlayerTwo = new Unit[2][3];
+        final Unit[][] fieldPlayerTwo = new Unit[2][3];
         fieldPlayerTwo[0][0] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][0] = new Unit(UnitTypes.HEALER);
         fieldPlayerTwo[0][1] = generalPlayerTwo;              fieldPlayerTwo[1][1] = new Unit(UnitTypes.BOWMAN);
         fieldPlayerTwo[0][2] = new Unit(UnitTypes.SWORDSMAN); fieldPlayerTwo[1][2] = new Unit(UnitTypes.MAGE);
 
-        GameLogic gl = new GameLogic();
+        final GameLogic gl = new GameLogic();
         gl.gameStart(new Army(fieldPlayerOne, generalPlayerOne), new Army(fieldPlayerTwo, generalPlayerTwo));
 
 

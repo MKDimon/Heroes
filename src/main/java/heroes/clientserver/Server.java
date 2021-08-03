@@ -1,10 +1,14 @@
 package heroes.clientserver;
 
+import heroes.auxiliaryclasses.boardexception.BoardException;
+import heroes.auxiliaryclasses.serverexcetions.ServerException;
+import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
+import heroes.clientserver.commands.CommandsTime;
+import heroes.clientserver.commands.CommonCommands;
+import heroes.gamelogic.*;
 import heroes.player.Answer;
+import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +16,9 @@ import java.io.*;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -20,124 +26,264 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Сервер
  */
 public class Server {
-    Logger logger = LoggerFactory.getLogger(Server.class);
+    private static final Logger logger = LoggerFactory.getLogger(Server.class);
 
-    static final int PORT = 8081;
+    private final int PORT;
+    private final int maxRooms;
+    private final int delay;
+    private final Map<Integer, Rooms> getRoom;
 
-    private final ConcurrentLinkedQueue<ServerSomething> serverList = new ConcurrentLinkedQueue<>();
+    public Server(final int PORT, final int maxRooms, final int delay) {
+        this.maxRooms = maxRooms;
+        this.PORT = PORT;
+        this.delay = delay;
+        getRoom = new Hashtable<>();
+    }
 
-    private class ServerSomething extends Thread {
+    private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
 
-        private final Server server;
-        private final Socket socketOne;
-        private final Socket socketTwo;
+    /**
+     * Клиент комнаты
+     */
+    private class RoomsClient extends Thread {
+        private int id;
+        public final Server server;
+        public final Socket socket;
+        public final BufferedWriter out;
+        public final BufferedReader in;
 
-        private final BufferedReader inPlayerOne; // поток чтения из сокета
-        private final BufferedWriter outPlayerOne; // поток записи в сокет
-        private final BufferedReader inPlayerTwo; // поток чтения из сокета
-        private final BufferedWriter outPlayerTwo; // поток записи в сокет
-
-        private final GameLogic gameLogic;
-        private final Map<Fields, BufferedWriter> getOuter;
-        private final Map<Fields, BufferedReader> getReader;
-
-        /**
-         * Для общения с клиентом необходим сокет (адресные данные)
-         *
-         * @param server сервер
-         * @param socketOne сокет
-         * @param socketTwo сокет
-         */
-        private ServerSomething(final Server server, final Socket socketOne, final Socket socketTwo) throws IOException {
+        private RoomsClient(final Server server, final Socket socket) throws IOException {
             this.server = server;
-            this.socketOne = socketOne;
-            this.socketTwo = socketTwo;
-            this.getOuter = new HashMap<>();
-            this.getReader = new HashMap<>();
-
-            logger.warn(String.valueOf(socketOne));
-            logger.warn(socketTwo.toString());
-
-            // если потоку ввода/вывода приведут к генерированию исключения, оно проброситься дальше
-            inPlayerOne = new BufferedReader(new InputStreamReader(socketOne.getInputStream()));
-            outPlayerOne = new BufferedWriter(new OutputStreamWriter(socketOne.getOutputStream()));
-            inPlayerTwo = new BufferedReader(new InputStreamReader(socketTwo.getInputStream()));
-            outPlayerTwo = new BufferedWriter(new OutputStreamWriter(socketTwo.getOutputStream()));
-
-            getOuter.put(Fields.PLAYER_ONE, outPlayerOne);
-            getOuter.put(Fields.PLAYER_TWO, outPlayerTwo);
-            getReader.put(Fields.PLAYER_ONE, inPlayerOne);
-            getReader.put(Fields.PLAYER_TWO, inPlayerTwo);
-
-            gameLogic = new GameLogic();
+            this.socket = socket;
+            this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
 
         @Override
         public void run() {
-            serverList.add(this);
-            try {
-                sendAsk(CommonCommands.FIELD_ONE.command, outPlayerOne);
-                sendAsk(CommonCommands.FIELD_TWO.command, outPlayerTwo);
+            while (true) {
+                try {
+                    final Data data = new Data(CommonCommands.GET_ROOM);
+                    socket.setSoTimeout(CommandsTime.getTime(data.command));
+                    out.write(Serializer.serializeData(data) + '\n');
+                    out.flush();
 
-                sendAsk(CommonCommands.GET_ARMY.command, outPlayerOne);
-                Army one = Deserializer.deserializeArmy(inPlayerOne.readLine());
-                //sendDraw();
-
-                sendAsk(CommonCommands.GET_ARMY.command, outPlayerTwo);
-                Army two = Deserializer.deserializeArmy(inPlayerTwo.readLine());
-                //sendDraw();
-
-                gameLogic.gameStart(one, two);
-
-                // весь игровой процесс
-                while (gameLogic.isGameBegun()) {
-                    sendAsk(Serializer.serializeBoard(gameLogic.getBoard()),
-                            getOuter.get(gameLogic.getBoard().getCurrentPlayer())
-                    );
-
-                    String str = getReader.get(gameLogic.getBoard().getCurrentPlayer()).readLine();
-                    Answer answer = Deserializer.deserializeAnswer(
-                            str
-                    );
-
-                    gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-
-                    // sendDraw();
-                    // обработка draw
+                    id = Integer.parseInt(in.readLine());
+                    break;
+                } catch (final SocketTimeoutException e) {
+                    server.clients.remove(this);
+                    logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
+                } catch (final IOException e) {
+                    logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
                 }
+            }
+        }
+    }
 
-                sendAsk(CommonCommands.END_GAME.command, outPlayerOne);
-                sendAsk(CommonCommands.END_GAME.command, outPlayerTwo);
+    /**
+     * Комната с игрой
+     */
+    private class Rooms extends Thread {
+        private final int id;
+        private boolean findPlayers = true;
 
+        private final Server server;
+
+        private RoomsClient playerOne;
+        private RoomsClient playerTwo;
+
+        private final GameLogic gameLogic;
+        private final Map<Fields, RoomsClient> getPlayer = new HashMap<>();
+
+        private Rooms(final Server server, final int id) {
+            this.server = server;
+            gameLogic = new GameLogic();
+            this.id = id;
+        }
+
+        private void waitPlayers() {
+            boolean playersReady = false;
+            while (!playersReady) {
+                for (final RoomsClient rc : server.clients) {
+                    if (rc.id == id) {
+                        server.clients.remove(rc);
+                        if (playerOne == null) {
+                            playerOne = rc;
+                        } else {
+                            playerTwo = rc;
+                            playersReady = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void gameStart(final StatisticsCollector collector) throws IOException, ServerException,
+                UnitException, BoardException {
+            // выдача полей
+            getPlayer.put(Fields.PLAYER_ONE, playerOne);
+            getPlayer.put(Fields.PLAYER_TWO, playerTwo);
+
+            sendAsk(new Data(CommonCommands.FIELD_ONE), playerOne);
+            sendAsk(new Data(CommonCommands.FIELD_TWO), playerTwo);
+
+            // Первая армия
+            sendAsk(new Data(CommonCommands.GET_ARMY), playerOne);
+            final Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
+
+            // Отрисовка
+            final Data data = new Data(CommonCommands.DRAW, new Board(one, Fields.PLAYER_ONE));
+            sendDraw(data, playerOne);
+            sendDraw(data, playerTwo);
+
+            // Вторая армия
+            sendAsk(new Data(CommonCommands.GET_ARMY, one), playerTwo);
+            final Army two = Deserializer.deserializeData(playerTwo.in.readLine()).army;
+
+            gameLogic.gameStart(one, two);
+
+            //статистика
+            collector.recordMessageToCSV("GAME START\n");
+            collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
+            collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
+
+            // Отрисовка
+            final Data drawingData = new Data(CommonCommands.DRAW, gameLogic.getBoard());
+            sendDraw(drawingData, playerOne);
+            sendDraw(drawingData, playerTwo);
+        }
+
+        private void gameRun(final StatisticsCollector collector) throws IOException, UnitException,
+                ServerException {
+            // Ожидание ответа
+            final Data data = new Data(CommonCommands.GET_ANSWER, gameLogic.getBoard());
+            sendAsk(data, getPlayer.get(gameLogic.getBoard().getCurrentPlayer()));
+
+            final String str = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).in.readLine();
+            final Answer answer = Deserializer.deserializeData(str).answer;
+
+            //для статистики
+            final int defenderHP = gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP();
+
+            // логика
+            final boolean isActionSuccess = gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+
+            // статистика
+            if (isActionSuccess) {
+                collector.recordActionToCSV(answer.getAttacker(), answer.getDefender(), answer.getActionType(),
+                        gameLogic.getBoard().getUnitByCoordinate(answer.getAttacker()),
+                        gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()), Math.abs(
+                                gameLogic.getBoard().getUnitByCoordinate(answer.getDefender()).getCurrentHP()
+                                        - defenderHP));
+            }
+            // Отрисовка
+            final Data gameData = new Data(CommonCommands.DRAW, gameLogic.getBoard(), answer);
+            sendDraw(gameData, playerOne);
+            sendDraw(gameData, playerTwo);
+        }
+
+        private void gameEnding(final StatisticsCollector collector) throws IOException {
+            final Data data = new Data(CommonCommands.END_GAME, gameLogic.getBoard());
+            sendAsk(data, playerOne);
+            sendAsk(data, playerTwo);
+
+            final GameStatus status = gameLogic.getBoard().getStatus();
+            // статистика
+            collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
+                    append(",").toString());
+            switch (status) {
+                case PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                case PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+            }
+            collector.recordMessageToCSV("\nGAME OVER\n");
+
+            this.endGame();
+        }
+
+        @Override
+        public void run() {
+            try {
+                while (findPlayers) {
+                    try {
+                        waitPlayers();
+
+                        final StatisticsCollector collector = new StatisticsCollector(id);
+
+                        gameStart(collector);
+
+                        // весь игровой процесс
+                        while (gameLogic.isGameBegun()) {
+                            gameRun(collector);
+                            //noinspection BusyWait
+                            Thread.sleep(server.delay);
+                        }
+
+                        gameEnding(collector);
+                    } catch (final ServerException | SocketTimeoutException | UnitException
+                            | BoardException | InterruptedException e) {
+                        logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
+                        gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
+                        this.endGame();
+                    }
+                }
+            } catch (final IOException e) {
+                logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
+                if (gameLogic != null) {
+                    gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
+                }
                 this.downService();
-            } catch (final IOException | UnitException e) {
-                this.downService();
-            }//*/
+            }
         }
 
         /**
-         *  Отправляет сериализованное сообщение клиенту
+         * Отправляет сериализованное сообщение клиенту
+         * <p>
+         * МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
          */
-        private void sendAsk(final String message, final BufferedWriter out) throws IOException {
-            out.write(message + '\n');
-            out.flush();
+        private void sendAsk(final Data data, final RoomsClient player) throws IOException {
+            player.socket.setSoTimeout(CommandsTime.getTime(data.command));
+            player.out.write(Serializer.serializeData(data) + '\n');
+            player.out.flush();
         }
 
         /**
-         * закрытие сервера, удаление себя из списка нитей
+         * Отправляет отрисовку и ждет ответ,
+         * <p>
+         * МЕНЯЕТ ВРЕМЯ ОЖИДАНИЯ В СОКЕТЕ ИГРОКА
+         */
+        public void sendDraw(final Data data, final RoomsClient player) throws ServerException, IOException {
+            sendAsk(data, player);
+            if (CommonCommands.DRAW_UNSUCCESSFUL.command.equals(player.in.readLine())) {
+                throw new ServerException(ServerExceptionType.ERROR_DRAWING);
+            }
+        }
+
+        /**
+         * Закрытие комнаты
          */
         private void downService() {
+            findPlayers = false;
+            endGame();
+        }
+
+        private void endGame() {
             try {
-                if (!socketOne.isClosed() || !socketTwo.isClosed()) {
-                    socketOne.close();
-                    inPlayerOne.close();
-                    outPlayerOne.close();
-                    socketTwo.close();
-                    inPlayerTwo.close();
-                    outPlayerTwo.close();
-                    server.serverList.remove(this);
-                }
-            } catch (final IOException ignored) {
+                closePlayer(playerOne);
+                closePlayer(playerTwo);
+                playerOne = null;
+                playerTwo = null;
+            } catch (IOException e) {
+                logger.error(ServerExceptionType.ERROR_SEND_ENDGAME.getErrorType(), e);
+            }
+        }
+
+        private void closePlayer(final RoomsClient player) throws IOException {
+            if (!player.socket.isClosed()) {
+                player.socket.close();
+                player.in.close();
+                player.out.close();
             }
         }
     }
@@ -146,25 +292,30 @@ public class Server {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
+            serverSocket.setSoTimeout(1000);
+            for (int i = 1; i <= maxRooms; i++) {
+                final Rooms room = new Rooms(this, i);
+                getRoom.put(i, room);
+                room.start();
+            }
             while (true) {
-                // Блокируется до возникновения нового соединения
-                // Ждет первого игрока
-                final Socket socketOne = serverSocket.accept();
-                final Socket socketTwo = serverSocket.accept();
                 try {
-                    new ServerSomething(this, socketOne, socketTwo).start();
-                } catch (final IOException e) {
-                    socketTwo.close();
-                    socketOne.close();
+                    final Socket socket = serverSocket.accept();
+                    final RoomsClient client = new RoomsClient(this, socket);
+                    client.start();
+                    clients.add(client);
+                } catch (final SocketTimeoutException e) {
+                    logger.debug("Socket is not accept((", e);
                 }
             }
         } catch (final BindException e) {
-            e.printStackTrace();
+            logger.error(ServerExceptionType.ERROR_SERVER_RUNNING.getErrorType(), e);
         }
     }
 
     public static void main(final String[] args) throws IOException {
-        final Server server = new Server();
+        final ServersConfigs sc = Deserializer.getConfig();
+        final Server server = new Server(sc.PORT, sc.MAX_ROOMS, sc.DELAY);
         server.startServer();
     }
 }

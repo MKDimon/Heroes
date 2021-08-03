@@ -1,23 +1,26 @@
 package heroes.clientserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.player.Answer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Deserializer {
-
-    public static Board deserializeBoard(final String jsonBoard) throws IOException {
-            return new ObjectMapper().readValue(jsonBoard, Board.class);
+    public static Data deserializeData(final String json) throws IOException {
+        return new ObjectMapper().readValue(json, Data.class);
     }
 
-    public static Answer deserializeAnswer(final String jsonAnswer) throws IOException {
-        return new ObjectMapper().readValue(jsonAnswer, Answer.class);
-    }
+    /**
+     * Парсит config.json из каталога и возвращает конфиги
+     *
+     * @return все нужные конфиги
+     * @throws IOException json
+     */
+    public static ServersConfigs getConfig() throws IOException {
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/config.json");
 
-    public static Army deserializeArmy(final String jsonArmy) throws IOException {
-        return new ObjectMapper().readValue(jsonArmy, Army.class);
+        final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+        fileInputStream.close();
+        return sc;
     }
 }
