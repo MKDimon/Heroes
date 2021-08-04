@@ -1,5 +1,5 @@
 {
-  "PORT":8082,
+  "PORT":8081,
   "MAX_ROOMS":2,
   "DELAY":500
 }

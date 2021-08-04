@@ -60,7 +60,7 @@ public class Dimon extends BaseBot implements Visualisable {
             }
 
         } catch (BoardException | UnitException e) {
-            logger.error("Error creating army in RandomBot", e);
+            logger.error("Error creating army in bot", e);
             return null;
         }
     }

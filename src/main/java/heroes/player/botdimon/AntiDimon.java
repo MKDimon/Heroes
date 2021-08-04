@@ -18,6 +18,7 @@ import heroes.player.botdimon.simulationfeatures.treesanswers.SimulationTrees;
 import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTreeArmy;
 import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTreesArmy;
 import heroes.player.botdimon.simulationfeatures.treesarmies.SimulationTreesArmyMap;
+import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class AntiDimon extends BaseBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(AntiDimon.class);
 
-    private int maxHeight = 3;
+    private final int maxHeight = 3;
 
     public AntiDimon(final Fields field) throws GameLogicException {
         super(field);
@@ -41,6 +42,10 @@ public class AntiDimon extends BaseBot implements Visualisable {
     }
 
     protected TerminalWrapper tw = null;
+
+    private int getMaxHeight(final Unit[][] army) {
+        return ((int) Board.activeCount(army) <= 3)? 2 : 0;
+    }
 
     @Override
     public void setTerminal(final TerminalWrapper tw) {
@@ -61,7 +66,7 @@ public class AntiDimon extends BaseBot implements Visualisable {
                 return tree.getArmyByArmy(firstPlayerArmy);
             }
         } catch (BoardException | UnitException e) {
-            logger.error("Error creating army in RandomBot", e);
+            logger.error("Error creating army in bot", e);
             return null;
         }
     }
@@ -72,7 +77,7 @@ public class AntiDimon extends BaseBot implements Visualisable {
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.EXPECTI_SIMULATION,
                 UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
-                getField(), maxHeight
+                getField(), maxHeight //+ getMaxHeight(board.getArmy(getField()))
         );
         final Answer answer = tree.getAnswer(board);
         final long finish = System.currentTimeMillis();

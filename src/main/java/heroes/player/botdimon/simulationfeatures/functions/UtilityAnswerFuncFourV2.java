@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * Четвертое поколение
  * Экспоненциальная
@@ -33,7 +32,7 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
         valueActions.put(ActionTypes.HEALING, 2.0);
         valueActions.put(ActionTypes.CLOSE_COMBAT, 1.0);
         valueActions.put(ActionTypes.RANGE_COMBAT, 1.5);
-        valueActions.put(ActionTypes.AREA_DAMAGE, 4.0);
+        valueActions.put(ActionTypes.AREA_DAMAGE, 3.75);
     }
 
     private double checkGenerals(final Board board, final Fields field) {
@@ -72,11 +71,14 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
                 return Double.MAX_VALUE;
             }
         }
-        return 0;
+        if (board.getStatus() == GameStatus.NO_WINNERS) {
+            return 0;
+        }
+        return Double.MIN_VALUE;
     }
 
     private double getModify(final Unit unit, final boolean isGeneral) throws UnitException {
-        final double result = (isGeneral)? 1.2: 1.;
+        final double result = (isGeneral)? 1.3: 1.;
         return 1. * unit.getPower() / 10
                 //* unit.getArmor() / 5
                 * result
