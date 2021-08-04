@@ -26,7 +26,7 @@ import java.util.function.ToDoubleFunction;
 
 public class ExpectiMaxBot extends BaseBot implements Visualisable {
 
-    private static final int maxRecLevel = 3;
+    private static final int maxRecLevel = 2;
     private static final UtilityFunction utilityFunction = UtilityFunctions.HPUtilityFunction;
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
@@ -105,9 +105,6 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
 
     private double getWinByGameTree(final Board implBoard, final int recLevel)
             throws BoardException, UnitException, GameLogicException {
-        final ToDoubleFunction<AnswerAndWin> winCalculator;
-        //Если сейчас ход агента, то функция полезности будет исходной,
-        //если ход противника - домножим функцию на -1.
         final boolean isMax = implBoard.getCurrentPlayer() == getField();
         // Если состояние терминальное, и победил агент, то возвращает +большое число,
         // если победил соперник, возвращает -большое число.
