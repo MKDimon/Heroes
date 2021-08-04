@@ -35,37 +35,37 @@ public class UtilityFunctions {
                 mapToInt(line -> Arrays.stream(line).
                         filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
 
-        return playersAverageArmor/6d + playersHealth - enemiesAverageArmor /6d - enemiesHealth;
+        return playersAverageArmor / 6d + playersHealth - enemiesAverageArmor / 6d - enemiesHealth;
     };
 
     public static final UtilityFunction HPUtilityFunction = (board, player) -> {
         final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
-        return HPOnePlayerUtilityFunction(board,player)- HPOnePlayerUtilityFunction(board, defField);
+        return HPOnePlayerUtilityFunction(board, player) - HPOnePlayerUtilityFunction(board, defField);
     };
 
     private static final double HPOnePlayerUtilityFunction(final Board board, final Fields player) {
-      final Unit[][] playerArmy = board.getArmy(player);
-      final General playerGen = board.getGeneral(player);
-      double result = 0;
-      for(final Unit[] units : playerArmy){
-          for(final Unit unit : units){
-              if(unit.isAlive()) {
-                  result += unit.getCurrentHP() + unit.getPower();
-                  if(unit.getActionType() == ActionTypes.HEALING) {
-                      result += 300;
-                  }
-                  if(unit.getActionType() == ActionTypes.CLOSE_COMBAT){
-                      result += 100;
-                  }
-                  if(unit.getActionType() == ActionTypes.RANGE_COMBAT){
-                      result += 200;
-                  }
-              }
-              if(playerGen.isAlive()){
-                  result += 1000;
-              }
-          }
-      }
+        final Unit[][] playerArmy = board.getArmy(player);
+        final General playerGen = board.getGeneral(player);
+        double result = 0;
+        for (final Unit[] units : playerArmy) {
+            for (final Unit unit : units) {
+                if (unit.isAlive()) {
+                    result += unit.getCurrentHP() + unit.getPower();
+                    if (unit.getActionType() == ActionTypes.HEALING) {
+                        result += 300;
+                    }
+                    if (unit.getActionType() == ActionTypes.CLOSE_COMBAT) {
+                        result += 100;
+                    }
+                    if (unit.getActionType() == ActionTypes.RANGE_COMBAT) {
+                        result += 200;
+                    }
+                }
+                if (playerGen.isAlive()) {
+                    result += 1000;
+                }
+            }
+        }
         return result;
     }
 }

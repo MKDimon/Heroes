@@ -44,6 +44,11 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
         }
     }
 
+    /**
+     * Вспомогательный класс. Хранит ответ и количество побед/всех игр,
+     * проведенных в симуляциях в данном или нижних узлах.
+     **/
+
     private static final class WinsAndAllGames {
         private int wins;
         private int allGames;
@@ -55,16 +60,20 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
             this.answer = answer;
         }
 
-        private WinsAndAllGames uniteStats(final WinsAndAllGames winsAndAllGames){
+        private WinsAndAllGames uniteStats(final WinsAndAllGames winsAndAllGames) {
             wins += winsAndAllGames.wins;
             allGames += winsAndAllGames.allGames;
             return this;
         }
 
-        private double getWin(){
+        private double getWin() {
             return (double) wins / allGames;
         }
     }
+
+    /**
+     * Класс "распараллеливатель" задач. Рекурсивно строит дерево игры и проводит симуляции в нижних узлах.
+     **/
 
     private final class Node extends RecursiveTask<WinsAndAllGames> {
         private final Answer rootAnswer;
@@ -82,36 +91,43 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
         @Override
         protected WinsAndAllGames compute() {
             try {
+                // Если достигнута максимальаня глубина дерева, проводим симуляцию для оценки узла.
                 if (treeHeight >= maxTreeHeight) {
                     return new WinsAndAllGames(simulateGame(board), iterations, rootAnswer);
                 }
-                if (board.getStatus() != GameStatus.GAME_PROCESS){
+                // Если наткнулись на терминальный узел, то проводим его оценку
+                // (0, если узел проигрышный и 1, если узел выйгрышный для агента).
+                if (board.getStatus() != GameStatus.GAME_PROCESS) {
                     return new WinsAndAllGames(getTerminalStateValue(board), 1, rootAnswer);
                 }
+                // Если узел нетерминальный, продолжаем строить дерево в глубину и в статистику родительского узла
+                // добавляем статистику из нижних узлов. (back propagation)
                 final List<Node> subtasks = new LinkedList<>();
                 final List<Answer> actions = board.getPossibleMoves();
                 final List<WinsAndAllGames> wgList = new ArrayList<>();
-                for(final Answer answer : actions){
-                    final Node task = new Node(answer, board.copy(answer), treeHeight+1);
+                for (final Answer answer : actions) {
+                    final Node task = new Node(answer, board.copy(answer), treeHeight + 1);
                     task.fork();
                     subtasks.add(task);
                 }
-                for(final Node task : subtasks){
+                for (final Node task : subtasks) {
                     final WinsAndAllGames wg = task.join();
                     wgList.add(wg);
                     this.win.uniteStats(wg);
                 }
-                if (rootAnswer != null){
+                if (rootAnswer != null) {
                     return this.win;
                 } else {
                     return getGreedyDecision(wgList);
                 }
 
             } catch (final UnitException | BoardException | GameLogicException e) {
+                logger.error("Error Monte-Carlo bot tree searching", e);
                 return null;
             }
         }
     }
+
     public MonteCarloBot(final Fields field) throws GameLogicException {
         super(field);
     }
@@ -145,11 +161,14 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
         return result;
     }
 
+    /**
+     * Метод находит ответ с наилучшей статистикой победы/все игры.
+     **/
 
-    private WinsAndAllGames getGreedyDecision(final List<WinsAndAllGames> wgList){
+    private WinsAndAllGames getGreedyDecision(final List<WinsAndAllGames> wgList) {
         WinsAndAllGames bestWG = wgList.get(0);
         double bestWin = bestWG.getWin();
-        for(int i = 1; i < wgList.size(); i++){
+        for (int i = 1; i < wgList.size(); i++) {
             final WinsAndAllGames curWG = wgList.get(i);
             final double curWin = curWG.getWin();
             if (curWin > bestWin) {
@@ -162,7 +181,8 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
 
 
     /**
-     * Симуляция игры в узле rootNode. Результат записывается в поля этого объекта.
+     * Симуляция игры из состояния board`ы до конца. Игра проводится iterations раз.
+     * Возвращает количество побед.
      **/
 
     private int simulateGame(final Board board) throws BoardException, UnitException, GameLogicException {
@@ -170,7 +190,7 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
             return 0;
         }
         int result = 0;
-        for(int i = 0; i < iterations; i++) {
+        for (int i = 0; i < iterations; i++) {
             final Fields enemyField = getField() == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
             final BaseBot botPlayer = new RandomBot(getField());
             final BaseBot botEnemy = new RandomBot(enemyField);

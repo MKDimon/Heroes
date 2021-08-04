@@ -29,7 +29,7 @@ import java.util.Scanner;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "192.168.7.159";//"127.0.0.1";
+    private static final String IP = "127.0.0.1";
 
     private final String ip;
     private final int port;
@@ -74,7 +74,6 @@ public class Client {
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", new MultithreadedMinMaxBot.MultithreadedMinMaxBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
-        botFactoryMap.put("Simulation", new SimulationBot.SimulationBotFactory());
 
         final Controls controls = new Controls(tw);
         final Selector selector = new Selector(1 , 4);

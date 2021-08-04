@@ -10,7 +10,6 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
-import heroes.player.RandomBot;
 import heroes.player.TestBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

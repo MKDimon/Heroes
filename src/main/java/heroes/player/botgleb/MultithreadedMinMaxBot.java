@@ -2,7 +2,10 @@ package heroes.player.botgleb;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
-import heroes.gamelogic.*;
+import heroes.gamelogic.Army;
+import heroes.gamelogic.Board;
+import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
@@ -19,7 +22,7 @@ import java.util.concurrent.RecursiveTask;
 import java.util.function.ToDoubleFunction;
 
 /**
- * Бот по стратегии "минимакс".
+ * Бот по стратегии "минимакс" с использованием ForkJoinPull.
  **/
 
 public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
@@ -42,20 +45,23 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
         }
     }
 
-    private static final class AnswerAndWin implements Comparable<AnswerAndWin> {
+    /**
+     * Вспомогательный класс. Хранит ответ и оценку состояния доски, к которому приведет этот ответ.
+     **/
+
+    private static final class AnswerAndWin {
         final Answer answer;
         final double win;
 
-        private AnswerAndWin(final Answer answer, final double win){
+        private AnswerAndWin(final Answer answer, final double win) {
             this.answer = answer;
             this.win = win;
         }
-
-        @Override
-        public int compareTo(final AnswerAndWin o) {
-            return Double.compare(win, o.win);
-        }
     }
+
+    /**
+     * Класс "распараллеливвтель" задач. Метод compute() строит дерево игры.
+     **/
 
     private final class WinCounter extends RecursiveTask<AnswerAndWin> {
 
@@ -102,19 +108,19 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
                     task.fork();
                     subTasks.add(task);
                 }
-                for(final WinCounter subTask : subTasks){
+                for (final WinCounter subTask : subTasks) {
                     final AnswerAndWin aw = subTask.join();
                     awList.add(aw);
                 }
 
                 // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
                 // корневому ответу сопоставляется значение из нижнего состяния.
-                if(rootAnswer != null) {
+                if (rootAnswer != null) {
                     return new AnswerAndWin(rootAnswer, getGreedyDecision(awList, winCalculator).win);
                 } else {
                     return getGreedyDecision(awList, winCalculator);
                 }
-            } catch ( GameLogicException e){
+            } catch (GameLogicException e) {
                 return null;
             }
         }
@@ -145,15 +151,14 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
 
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
-            final long startTime = System.currentTimeMillis();
-            final WinCounter startWinCounter = new WinCounter(board, 0, null);
-            final ForkJoinPool resultForkJoinPool = new ForkJoinPool(4);
-            final Answer result = resultForkJoinPool.invoke(startWinCounter).answer;
-            System.out.println("MultithreadedMinMax time: " + (System.currentTimeMillis() - startTime));
-            return result;
+        final long startTime = System.currentTimeMillis();
+        final WinCounter startWinCounter = new WinCounter(board, 0, null);
+        final ForkJoinPool resultForkJoinPool = new ForkJoinPool();
+        final Answer result = resultForkJoinPool.invoke(startWinCounter).answer;
+        System.out.println("MultithreadedMinMax time: " + (System.currentTimeMillis() - startTime));
+        return result;
 
     }
-
 
     /**
      * Метод находит в списке awList элемент с максимальным полем win.
@@ -163,13 +168,13 @@ public class MultithreadedMinMaxBot extends BaseBot implements Visualisable {
      **/
 
     private AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList,
-                                           final ToDoubleFunction<AnswerAndWin> winCalculator){
+                                           final ToDoubleFunction<AnswerAndWin> winCalculator) {
         AnswerAndWin bestAW = awList.get(0);
         double bestWin = winCalculator.applyAsDouble(bestAW);
-        for(int i = 1; i < awList.size(); i++){
+        for (int i = 1; i < awList.size(); i++) {
             final AnswerAndWin currentAW = awList.get(i);
             final double currentWin = winCalculator.applyAsDouble(currentAW);
-            if(currentWin > bestWin){
+            if (currentWin > bestWin) {
                 bestAW = currentAW;
                 bestWin = currentWin;
             }

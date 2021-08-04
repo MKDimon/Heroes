@@ -4,7 +4,10 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.*;
+import heroes.gamelogic.Army;
+import heroes.gamelogic.Board;
+import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
@@ -15,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.RecursiveTask;
 import java.util.function.ToDoubleFunction;
 
 /**
@@ -46,7 +48,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         final Answer answer;
         final double win;
 
-        private AnswerAndWin(final Answer answer, final double win){
+        private AnswerAndWin(final Answer answer, final double win) {
             this.answer = answer;
             this.win = win;
         }
@@ -86,7 +88,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
             final long startTime = System.currentTimeMillis();
             final List<Answer> actions = board.getPossibleMoves();
             final List<AnswerAndWin> awList = new ArrayList<>();
-            for(final Answer answer : actions){
+            for (final Answer answer : actions) {
                 final Board implBoard = board.copy(answer);
                 final double win = getWinByGameTree(implBoard, 1, UtilityFunctions.MIN_VALUE,
                         UtilityFunctions.MAX_VALUE);
@@ -108,7 +110,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
      **/
 
     private double getWinByGameTree(final Board implBoard, final int recLevel,
-                                     double alpha, double beta) throws BoardException, UnitException, GameLogicException {
+                                    double alpha, double beta) throws BoardException, UnitException, GameLogicException {
         final ToDoubleFunction<AnswerAndWin> winCalculator;
         //Если сейчас ход агента, то функция полезности будет исходной,
         //если ход противника - домножим функцию на -1.
@@ -120,10 +122,10 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         }
         // Если состояние терминальное, и победил агент, то возвращает +большое число,
         // если победил соперник, возвращает -большое число.
-        if(implBoard.getStatus() != GameStatus.GAME_PROCESS){
+        if (implBoard.getStatus() != GameStatus.GAME_PROCESS) {
             return getTerminalStateValue(implBoard);
         }
-        if(recLevel >= maxRecLevel){
+        if (recLevel >= maxRecLevel) {
             // функция полезности вычисляется для агента.
             // Показывает, насколько поелзно будет ему это действие
             return utilityFunction.compute(implBoard, getField());
@@ -132,12 +134,12 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         // то начинаем строить дерево из текущего состояния.
         final List<Answer> actions = implBoard.getPossibleMoves();
         final List<AnswerAndWin> awList = new ArrayList<>();
-        for (final Answer answer : actions){
+        for (final Answer answer : actions) {
             final Board simBoard = implBoard.copy(answer);
-            final double win = getWinByGameTree(simBoard, recLevel+1, alpha, beta);
+            final double win = getWinByGameTree(simBoard, recLevel + 1, alpha, beta);
 
             // Альфа-бета отсечения
-            if (isMax && win >= beta || isMax && win <= alpha){
+            if (isMax && win >= beta || isMax && win <= alpha) {
                 return win;
             }
             if (isMax) {
@@ -162,13 +164,13 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
      **/
 
     private AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList,
-                                                     final ToDoubleFunction<AnswerAndWin> winCalculator){
+                                           final ToDoubleFunction<AnswerAndWin> winCalculator) {
         AnswerAndWin bestAW = awList.get(0);
         double bestWin = winCalculator.applyAsDouble(bestAW);
-        for(int i = 1; i < awList.size(); i++){
+        for (int i = 1; i < awList.size(); i++) {
             final AnswerAndWin currentAW = awList.get(i);
             final double currentWin = winCalculator.applyAsDouble(currentAW);
-            if(currentWin > bestWin){
+            if (currentWin > bestWin) {
                 bestAW = currentAW;
                 bestWin = currentWin;
             }
