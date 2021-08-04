@@ -1,7 +1,6 @@
 package heroes.clientserver;
 
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;
@@ -11,10 +10,7 @@ import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.player.*;
-import heroes.player.botgleb.MonteCarloBot;
-import heroes.player.botgleb.MultithreadedMinMaxBot;
-import heroes.player.botgleb.SimpleMinMaxBot;
-import heroes.player.botgleb.SimulationBot;
+import heroes.player.botgleb.*;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -29,7 +25,7 @@ import java.util.Scanner;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "127.0.0.1";
+    private static final String IP = "192.168.7.159";//"127.0.0.1";
 
     private final String ip;
     private final int port;
@@ -72,7 +68,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new MultithreadedMinMaxBot.MultithreadedMinMaxBotFactory());
+        botFactoryMap.put("Player", new ExpectiMaxBot.ExpectiMaxBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);

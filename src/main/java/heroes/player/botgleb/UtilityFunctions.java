@@ -50,15 +50,12 @@ public class UtilityFunctions {
         for (final Unit[] units : playerArmy) {
             for (final Unit unit : units) {
                 if (unit.isAlive()) {
-                    result += unit.getCurrentHP() + unit.getPower();
+                    result += unit.getCurrentHP() + unit.getPower() + unit.getAccuracy() - unit.getDefenseArmor();
                     if (unit.getActionType() == ActionTypes.HEALING) {
-                        result += 300;
-                    }
-                    if (unit.getActionType() == ActionTypes.CLOSE_COMBAT) {
-                        result += 100;
+                        result += 500;
                     }
                     if (unit.getActionType() == ActionTypes.RANGE_COMBAT) {
-                        result += 200;
+                        result += 300;
                     }
                 }
                 if (playerGen.isAlive()) {
