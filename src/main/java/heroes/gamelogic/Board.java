@@ -223,6 +223,25 @@ public class Board {
         return fieldPlayerTwo.getGeneral();
     }
 
+    public Position getGeneralPosition(final Fields field) throws UnitException {
+        Army army;
+        if (field == Fields.PLAYER_ONE) {
+            army = fieldPlayerOne;
+        } else {
+            army = fieldPlayerTwo;
+        }
+
+        General general = army.getGeneral();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (army.getPlayerUnits()[i][j] == general) {
+                    return new Position(i, j, field);
+                }
+            }
+        }
+        return null;
+    }
+
     public void setCurrentPlayer(final Fields currentPlayer) {
         this.currentPlayer = currentPlayer;
     }

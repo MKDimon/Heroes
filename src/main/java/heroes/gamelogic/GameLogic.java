@@ -26,9 +26,9 @@ public class GameLogic {
         gameBegun = false;
     }
 
-    public GameLogic(Board board) throws UnitException, BoardException {
+    public GameLogic(final Board board) throws UnitException, BoardException {
         this.board = new Board(board);
-        gameBegun = true;
+        gameBegun = board.getStatus() == GameStatus.GAME_PROCESS;
     }
 
     /**
