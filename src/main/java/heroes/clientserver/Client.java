@@ -8,6 +8,7 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
+import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "127.0.0.1";
+    private static final String IP = "192.168.7.159";
 
     private final String ip;
     private final int port;
@@ -64,7 +65,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new PlayerBot.PlayerBotFactory());
+        botFactoryMap.put("Player", new NikitaBot.NikitaBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);
