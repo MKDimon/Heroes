@@ -21,7 +21,7 @@ public class GetRoomCommand extends Command{
     @Override
     public void execute() {
         try {
-            int id = 0;
+            int id;
             int max = Deserializer.getConfig().MAX_ROOMS;
             Scanner scanner = new Scanner(System.in);
             do {
