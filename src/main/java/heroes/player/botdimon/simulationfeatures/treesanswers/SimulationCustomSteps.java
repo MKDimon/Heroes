@@ -35,7 +35,7 @@ public class SimulationCustomSteps extends SimulationTree {
         }
         final Node node = getGreedyDecision(root.list, field);
         final Answer answer = node.answer;
-        logger.info("Value: " + node.value);
+        logger.error("Value: " + node.value);
         logger.info("Attacker position = {}, defender position = {}, action type = {}",
                 answer.getAttacker(), answer.getDefender(), answer.getActionType());
         return answer;

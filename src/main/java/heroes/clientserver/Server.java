@@ -73,6 +73,7 @@ public class Server {
                 } catch (final SocketTimeoutException e) {
                     server.clients.remove(this);
                     logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
+                    break;
                 } catch (final IOException e) {
                     logger.error(ServerExceptionType.ERROR_SERVER_ROOM_CHANGED.getErrorType(), e);
                 }
@@ -107,10 +108,13 @@ public class Server {
                 for (final RoomsClient rc : server.clients) {
                     if (rc.id == id) {
                         server.clients.remove(rc);
-                        if (playerOne == null) {
+                        if (playerOne == null || playerOne.socket.isClosed()) {
                             playerOne = rc;
-                        } else {
+                        } else if (playerTwo == null || playerTwo.socket.isClosed()) {
                             playerTwo = rc;
+                        }
+                        if (playerOne != null && playerTwo != null &&
+                                !playerOne.socket.isClosed() && !playerTwo.socket.isClosed()) {
                             playersReady = true;
                             break;
                         }
@@ -204,7 +208,6 @@ public class Server {
 
         @Override
         public void run() {
-            try {
                 while (findPlayers) {
                     try {
                         waitPlayers();
@@ -221,20 +224,13 @@ public class Server {
                         }
 
                         gameEnding(collector);
-                    } catch (final ServerException | SocketTimeoutException | UnitException
-                            | BoardException | InterruptedException e) {
+                    } catch (final ServerException | UnitException
+                            | BoardException | InterruptedException | IOException e) {
                         logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
                         gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
                         this.endGame();
                     }
                 }
-            } catch (final IOException e) {
-                logger.error(ServerExceptionType.ERROR_ROOM_RUNNING.getErrorType(), e);
-                if (gameLogic != null) {
-                    gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
-                }
-                this.downService();
-            }
         }
 
         /**

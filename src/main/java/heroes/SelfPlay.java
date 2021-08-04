@@ -1,11 +1,9 @@
 package heroes;
 
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.GameStatus;
+import heroes.gamelogic.*;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
@@ -16,7 +14,6 @@ import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,13 +91,13 @@ public class SelfPlay {
         }
     }
 
-    public static void main(String[] args) throws GameLogicException, UnitException {
+    public static void main(String[] args) throws GameLogicException, UnitException, BoardException {
         int countWin = 0;
         int countDefeat = 0;
         System.out.println(LocalDateTime.now());
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 50; i++) {
             final BaseBot bot1 = new Dimon.DimonFactory().createBot(Fields.PLAYER_ONE);
-            final BaseBot bot2 = new TestBot.TestBotFactory().createBot(Fields.PLAYER_TWO);
+            final BaseBot bot2 = new AntiDimon.AntiDimonFactory().createBot(Fields.PLAYER_TWO);
 
             final GameLogic gameLogic = new GameLogic();
             final Army one = bot1.getArmy(null);
@@ -112,7 +109,7 @@ public class SelfPlay {
             getPlayer.put(Fields.PLAYER_TWO, bot2);
 
             while (gameLogic.isGameBegun()) {
-                final Answer answer = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).getAnswer(gameLogic.getBoard());
+                final Answer answer = getPlayer.get(gameLogic.getBoard().getCurrentPlayer()).getAnswer(new Board(gameLogic.getBoard()));
                 gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
 
             }

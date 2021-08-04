@@ -10,6 +10,7 @@ import heroes.gamelogic.GameLogic;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
+import heroes.units.General;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
