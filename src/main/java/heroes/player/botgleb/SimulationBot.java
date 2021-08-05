@@ -6,6 +6,7 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
@@ -59,8 +60,13 @@ public class SimulationBot extends BaseBot implements Visualisable {
             final Map<Answer, Double> decomposition = new HashMap<>();
             for (final Answer answer : board.getPossibleMoves()) {
                 final Board simulationBoard = board.copy(answer);
+                if (simulationBoard.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE ||
+                        simulationBoard.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO) {
+                    return answer;
+                }
                 decomposition.put(answer,
                         utilityFunction.compute(simulationBoard, getField()));
+
             }
             return getBestAnswer(decomposition);
         } catch (GameLogicException e) {

@@ -26,7 +26,7 @@ import java.util.function.ToDoubleFunction;
 
 public class ExpectiMaxBot extends BaseBot implements Visualisable {
 
-    private static final int maxRecLevel = 2;
+    private static final int maxRecLevel = 3;
     private static final UtilityFunction utilityFunction = UtilityFunctions.HPUtilityFunction;
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
@@ -106,6 +106,7 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
     private double getWinByGameTree(final Board implBoard, final int recLevel)
             throws BoardException, UnitException, GameLogicException {
         final boolean isMax = implBoard.getCurrentPlayer() == getField();
+
         // Если состояние терминальное, и победил агент, то возвращает +большое число,
         // если победил соперник, возвращает -большое число.
         if (implBoard.getStatus() != GameStatus.GAME_PROCESS) {
@@ -181,7 +182,6 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
         }
         if ((board.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE) ||
                 (board.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO)) {
-            System.out.println("CAN WIN");
             return UtilityFunctions.MAX_VALUE;
         } else {
             return UtilityFunctions.MIN_VALUE;

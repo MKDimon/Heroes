@@ -68,7 +68,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new ExpectiMaxBot.ExpectiMaxBotFactory());
+        botFactoryMap.put("Player", new MultithreadedExpectiMaxBot.MultithreadedExpectiMaxBotFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);

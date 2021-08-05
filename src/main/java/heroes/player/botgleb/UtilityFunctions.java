@@ -15,7 +15,7 @@ public class UtilityFunctions {
 
     /**
      * Простая функция полезности. Получает доску и игрока, для которого вычисляется
-     * величина, равная playersHP + armor/6 - enemiesHP - armor/6
+     * величина, равная playersHP - enemiesHP
      **/
 
     public static final UtilityFunction simpleUtilityFunction = (board, player) -> {
@@ -24,18 +24,10 @@ public class UtilityFunctions {
         double playersHealth = Arrays.stream(board.getArmy(player)).mapToInt(line -> Arrays.stream(line).
                 mapToInt(Unit::getCurrentHP).sum()).sum();
 
-        double playersAverageArmor = Arrays.stream(board.getArmy(player)).
-                mapToInt(line -> Arrays.stream(line).
-                        filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
-
         double enemiesHealth = Arrays.stream(board.getArmy(defField)).mapToInt(line -> Arrays.stream(line).
                 mapToInt(Unit::getCurrentHP).sum()).sum();
 
-        double enemiesAverageArmor = Arrays.stream(board.getArmy(defField)).
-                mapToInt(line -> Arrays.stream(line).
-                        filter(unit -> unit.isAlive()).mapToInt(Unit::getArmor).sum()).sum();
-
-        return playersAverageArmor / 6d + playersHealth - enemiesAverageArmor / 6d - enemiesHealth;
+        return playersHealth - enemiesHealth;
     };
 
     public static final UtilityFunction HPUtilityFunction = (board, player) -> {
@@ -50,13 +42,16 @@ public class UtilityFunctions {
         for (final Unit[] units : playerArmy) {
             for (final Unit unit : units) {
                 if (unit.isAlive()) {
-                    result += unit.getCurrentHP() + unit.getPower() + unit.getAccuracy() - unit.getDefenseArmor();
+                    result += unit.getCurrentHP() + ( (double) unit.getPower() * (double) unit.getAccuracy()/100)
+                            - unit.getDefenseArmor();
                     if (unit.getActionType() == ActionTypes.HEALING) {
                         result += 500;
                     }
                     if (unit.getActionType() == ActionTypes.RANGE_COMBAT) {
                         result += 300;
                     }
+                } else {
+                    result -= 1000;
                 }
                 if (playerGen.isAlive()) {
                     result += 1000;

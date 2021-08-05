@@ -96,7 +96,7 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
                     return new WinsAndAllGames(simulateGame(board), iterations, rootAnswer);
                 }
                 // Если наткнулись на терминальный узел, то проводим его оценку
-                // (0, если узел проигрышный и 1, если узел выйгрышный для агента).
+                // (0, если узел проигрышный и 1000, если узел выйгрышный для агента).
                 if (board.getStatus() != GameStatus.GAME_PROCESS) {
                     return new WinsAndAllGames(getTerminalStateValue(board), 1, rootAnswer);
                 }
@@ -211,7 +211,7 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
 
 
     /**
-     * Метод вычисляет тип терминального состояния. Возвращает 1, если победил игрок,
+     * Метод вычисляет тип терминального состояния. Возвращает 1000, если победил игрок,
      * 0 - если ничья, или игрок проиграл.
      **/
 

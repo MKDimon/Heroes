@@ -188,7 +188,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
         if (board.getStatus() == GameStatus.NO_WINNERS) {
-            return 0d;
+            return -100000d;
         }
         if (board.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE ||
                 board.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO) {
