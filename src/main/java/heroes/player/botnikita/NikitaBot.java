@@ -28,9 +28,9 @@ import java.util.List;
 public class NikitaBot extends BaseBot implements Visualisable {
     private static int getRecLevel(final Board board) {
         final int initRecLevel = 3;
-        if (board.getCurNumRound() >= 3) {
-            //return initRecLevel + board.getCurNumRound() - 3;
-        }
+//        if (board.getCurNumRound() >= 3) {
+//            return initRecLevel + board.getCurNumRound() - 3;
+//        }
         return initRecLevel;
     }
 
@@ -104,34 +104,16 @@ public class NikitaBot extends BaseBot implements Visualisable {
                                                       final PositionUnit oppPositionUnit,
                                                       final ActionTypes actionType,
                                                       final Board board, final int currentRecLevel,
-                                                      final List<AnswerWinHolder> answerList,
-                                                      double alpha, double beta, boolean isMaximizer)
+                                                      final List<AnswerWinHolder> answerList)
                                                     throws GameLogicException {
         final Answer newAnswer = new Answer(attPositionUnit.getPosition(),
                 oppPositionUnit.getPosition(), actionType);
         try {
             GameLogic gl = new GameLogic(new Board(board));
             if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), newAnswer.getActionType())) {
-                if (isMaximizer) {
-                    double bestValue = Double.MIN_VALUE;
-                    final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                    final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1, alpha, beta);
-                    bestValue = Math.max(bestValue, win);
-                    alpha = Math.max(alpha, bestValue);
-                    if (beta > alpha) {
-                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                    }
-                } else {
-                    double bestValue = Double.MAX_VALUE;
-                    final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                    final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1, alpha, beta);
-                    bestValue = Math.min(bestValue, win);
-                    beta = Math.min(beta, bestValue);
-                    if (beta < alpha) {
-                        answerList.add(new AnswerWinHolder(newAnswer, win));
-                    }
-                }
-
+                final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
+                final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
+                answerList.add(new AnswerWinHolder(newAnswer, win));
             }
         } catch (UnitException | BoardException e) {
             e.printStackTrace();
@@ -139,16 +121,12 @@ public class NikitaBot extends BaseBot implements Visualisable {
         return answerList;
     }
 
-    private double getWinByGameTree(final Board board, final Answer answer, final int currentRecLevel,
-                                    double alpha, double beta) throws GameLogicException {
+    private double getWinByGameTree(final Board board, final Answer answer, final int currentRecLevel) throws GameLogicException {
         IMinMax minmax;
-        boolean isMaximizer;
         if (board.getCurrentPlayer() == super.getField()) {
             minmax = AnswerWinHolder::getWin;
-            isMaximizer = true;
         } else {
             minmax = AnswerWinHolder -> -AnswerWinHolder.getWin();
-            isMaximizer = false;
         }
 
         if (board.getStatus() != GameStatus.GAME_PROCESS) {
@@ -166,7 +144,7 @@ public class NikitaBot extends BaseBot implements Visualisable {
         }
         final Fields oppField = FieldsWrapper.getOppField(playerField);
 
-        LinkedList<AnswerWinHolder> answerList = new LinkedList<>();
+        List<AnswerWinHolder> answerList = new LinkedList<>();
 
         final List<PositionUnit> playerArmyActiveUnits =
                 BoardSimulation.getActiveUnits(board, playerField);
@@ -177,18 +155,18 @@ public class NikitaBot extends BaseBot implements Visualisable {
                     : BoardSimulation.getAliveUnits(board, oppField);
             if (isDefenseOnlyState(attPositionUnit)) {
                 getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList, alpha, beta, isMaximizer);
+                        board, currentRecLevel, answerList);
             } else {
                 getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList, alpha, beta, isMaximizer);
+                        board, currentRecLevel, answerList);
                 for (PositionUnit oppPositionUnit : oppArmyUnits) {
                     if (attPositionUnit.getUnit().getActionType() == ActionTypes.AREA_DAMAGE) {
                         getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                                board, currentRecLevel, answerList, alpha, beta, isMaximizer);
+                                board, currentRecLevel, answerList);
                         break;
                     }
                     getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                            board, currentRecLevel, answerList, alpha, beta, isMaximizer);
+                            board, currentRecLevel, answerList);
                 }
             }
         }
@@ -201,13 +179,10 @@ public class NikitaBot extends BaseBot implements Visualisable {
         final long start = System.currentTimeMillis();
         final int currentRecLevel = 0;
         final Fields playerField;
-        boolean isMaximizer;
         if (board.getCurrentPlayer() == super.getField()) {
             playerField = super.getField();
-            isMaximizer = true;
         } else {
             playerField = FieldsWrapper.getOppField(super.getField());
-            isMaximizer = false;
         }
         final Fields oppField = FieldsWrapper.getOppField(playerField);
 
@@ -222,21 +197,21 @@ public class NikitaBot extends BaseBot implements Visualisable {
                     : BoardSimulation.getAliveUnits(board, oppField);
             if (isDefenseOnlyState(attPositionUnit)) {
                 getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList, Double.MIN_VALUE, Double.MAX_VALUE, isMaximizer);
+                        board, currentRecLevel, answerList);
             } else {
 
                 for (PositionUnit oppPositionUnit : oppArmyUnits) {
                     if (attPositionUnit.getUnit().getActionType() == ActionTypes.AREA_DAMAGE) {
                         getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                                board, currentRecLevel, answerList, Double.MIN_VALUE, Double.MAX_VALUE, isMaximizer);
+                                board, currentRecLevel, answerList);
                         break;
                     }
                     getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                            board, currentRecLevel, answerList, Double.MIN_VALUE, Double.MAX_VALUE, isMaximizer);
+                            board, currentRecLevel, answerList);
                 }
 
                 getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList, Double.MIN_VALUE, Double.MAX_VALUE, isMaximizer);
+                        board, currentRecLevel, answerList);
             }
         }
 
