@@ -60,10 +60,10 @@ public class AntiDimon extends BaseBot implements Visualisable {
             );
 
             if (getField() == Fields.PLAYER_ONE) {
-                return tree.getArmyConst();
+                return tree.getArmyConst(1);
             }
             else {
-                return tree.getArmyByArmy(firstPlayerArmy);
+                return tree.getArmyConst(1);
             }
         } catch (BoardException | UnitException e) {
             logger.error("Error creating army in bot", e);
@@ -75,7 +75,7 @@ public class AntiDimon extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
-                SimulationTrees.EXPECTI_SIMULATION,
+                SimulationTrees.THREAD_CUSTOM_STEP_SIMULATION,
                 UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
                 getField(), maxHeight //+ getMaxHeight(board.getArmy(getField()))
         );

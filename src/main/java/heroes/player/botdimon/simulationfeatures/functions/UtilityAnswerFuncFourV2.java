@@ -24,15 +24,15 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
 
     private static final double HP_PRIORITY = 2;
     private static final double HP_RATE = Math.exp(1);
-    private static final double IS_DEATH_PRIORITY = 800;
+    private static final double IS_DEATH_PRIORITY = 1200;
     private static final double DEGREE_PRIORITY = Math.exp(-1);
 
     private static final Map<ActionTypes, Double> valueActions = new HashMap<>();
     static {
         valueActions.put(ActionTypes.HEALING, 2.0);
-        valueActions.put(ActionTypes.CLOSE_COMBAT, 1.0);
+        valueActions.put(ActionTypes.CLOSE_COMBAT, 1.2);
         valueActions.put(ActionTypes.RANGE_COMBAT, 1.5);
-        valueActions.put(ActionTypes.AREA_DAMAGE, 3.75);
+        valueActions.put(ActionTypes.AREA_DAMAGE, 3.3);
     }
 
     private double checkGenerals(final Board board, final Fields field) {
@@ -78,9 +78,8 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
     }
 
     private double getModify(final Unit unit, final boolean isGeneral) throws UnitException {
-        final double result = (isGeneral)? 1.3: 1.;
+        final double result = (isGeneral)? 1.4: 1.;
         return 1. * unit.getPower() / 10
-                //* unit.getArmor() / 5
                 * result
                 * valueActions.get(unit.getActionType());
     }
@@ -94,7 +93,6 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
             final Unit[][] army = board.getArmy(field);
             final Unit[][] enemiesArmy = board.getArmy(enemyField);
 
-            result += checkGenerals(board, field);
             final Position general = board.getGeneralPosition(field);
             final Position enemyGeneral = board.getGeneralPosition(enemyField);
 

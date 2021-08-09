@@ -9,7 +9,7 @@ public class SimulationArmy extends SimulationTreeArmy {
     @Override
     public Army getArmyByArmy(Army army) {
         try {
-            return getArmyConst();
+            return getArmyConst(0);
         } catch (UnitException | BoardException e) {
             e.printStackTrace();
         }

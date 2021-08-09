@@ -53,10 +53,10 @@ public class Dimon extends BaseBot implements Visualisable {
             );
 
             if (getField() == Fields.PLAYER_ONE) {
-                return tree.getArmyConst();
+                return tree.getArmyConst(1);
             }
             else {
-                return tree.getArmyByArmy(firstPlayerArmy);
+                return tree.getArmyConst(1);
             }
 
         } catch (BoardException | UnitException e) {
@@ -69,8 +69,8 @@ public class Dimon extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
-                SimulationTrees.CUSTOM_STEP_SIMULATION,
-                UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V1),
+                SimulationTrees.THREAD_CUSTOM_STEP_SIMULATION,
+                UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
                 getField(), 3
         );
         final Answer answer = tree.getAnswer(board);
