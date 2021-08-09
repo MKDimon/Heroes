@@ -6,17 +6,17 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.unitexception.UnitExceptionTypes;
 
 import java.util.Objects;
-
-
-/**
- * Класс - игровой юнит
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = General.class)
 }
 )
+
+/**
+ * Класс - игровой юнит
+ */
+
 public class Unit {
     @JsonProperty
     private int defenseArmor;
@@ -121,7 +121,10 @@ public class Unit {
     }
 
     public int getAccuracy() {
-        return Math.min(Math.max(accuracy + bonusAccuracy, 0), 100);
+        if(accuracy + bonusAccuracy > 100){
+            return 100;
+        }
+        return accuracy + bonusAccuracy;
     }
 
     public int getArmor() {

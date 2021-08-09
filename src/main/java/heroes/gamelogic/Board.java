@@ -7,17 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.boardexception.BoardExceptionTypes;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.boardfactory.CommandFactory;
 import heroes.gamelogic.validation.Validator;
 import heroes.mathutils.Position;
+import heroes.player.Answer;
 import heroes.units.General;
 import heroes.units.Unit;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Board {
@@ -214,12 +214,12 @@ public class Board {
     }
 
     @JsonIgnore
-    public General getGeneralPlayerOne() throws UnitException {
+    public General getGeneralPlayerOne() {
         return fieldPlayerOne.getGeneral();
     }
 
     @JsonIgnore
-    public General getGeneralPlayerTwo() throws UnitException {
+    public General getGeneralPlayerTwo() {
         return fieldPlayerTwo.getGeneral();
     }
 
@@ -281,4 +281,79 @@ public class Board {
     public void setStatus(final GameStatus status) {
         this.status = status;
     }
+
+    /**
+     * Возвращает список позиций активных юнитов игрока fields.
+     **/
+
+    public List<Position> getActiveUnitsPositions(final Fields fields){
+        final Unit[][] army = getArmy(fields);
+        final List<Position> result = new ArrayList<>(6);
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++){
+                if(army[i][j].isActive()){
+                    result.add(new Position(i, j, fields));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Возвращает список позиций живих юнитов игрока fields.
+     **/
+
+    public List<Position> getAliveUnitsPositions(final Fields fields){
+        final Unit[][] army = getArmy(fields);
+        final List<Position> result = new ArrayList<>(6);
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++){
+                if(army[i][j].isAlive()){
+                    result.add(new Position(i, j, fields));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Возвращает копию текущей доски, к которой применили действие, вызываемое answer`ом.
+     * Причем, наносимый урон высчитывается как матожидание (точность*макисмлаьный урон).
+     **/
+
+    public Board copy(final Answer answer) throws GameLogicException {
+        try {
+            final GameLogic gl = new GameLogic(this);
+            gl.getBoard().getUnitByCoordinate(answer.getAttacker()).setPower(
+                    (int)(gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getPower() *
+                            (double)gl.getBoard().getUnitByCoordinate(answer.getAttacker()).getAccuracy() / 100));
+            gl.getBoard().getUnitByCoordinate(answer.getAttacker()).setAccuracy(100);
+            gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
+            return gl.getBoard();
+
+        } catch (UnitException | BoardException e){
+            throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+        }
+    }
+
+    /**
+     * Возвращает список ходов, возможных для текущего игрока.
+     **/
+
+    public List<Answer> getPossibleMoves() throws GameLogicException {
+        try {
+            return new GameLogic(this).getAvailableMoves(currentPlayer);
+        } catch (UnitException | BoardException e) {
+            throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
+        }
+    }
+
+    public General getGeneral(final Fields player) {
+        if(player == Fields.PLAYER_ONE){
+            return getGeneralPlayerOne();
+        } else {
+            return getGeneralPlayerTwo();
+        }
+    }
+
 }
