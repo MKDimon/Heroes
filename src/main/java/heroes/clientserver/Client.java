@@ -4,10 +4,11 @@ import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
-import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
-import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
+import heroes.gui.heroeslanterna.LanternaWrapper;
+import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
+import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
+import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new TestBot.TestBotFactory());
+        playerBots.put("Dimon", new NikitaBot.NikitaBotFactory());
     }
 
     private final String ip;
@@ -33,7 +34,7 @@ public class Client {
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
 
-    private TerminalWrapper tw;
+    private LanternaWrapper tw;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -127,7 +128,7 @@ public class Client {
         return player;
     }
 
-    public TerminalWrapper getTw() {
+    public LanternaWrapper getTw() {
         return tw;
     }
 
@@ -139,7 +140,7 @@ public class Client {
      */
     private void start() {
         try {
-            tw = new TerminalWrapper();
+            tw = new LanternaWrapper();
             tw.start();
 
             while (!socket.isClosed()) {
