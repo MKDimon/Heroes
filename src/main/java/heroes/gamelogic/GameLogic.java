@@ -186,11 +186,4 @@ public class GameLogic {
         return result;
     }
 
-    /**
-     * Метод симулирует действие, вызываемое answer`ом, возвращает новый экзмепляр класса GameLogic.
-     **/
-
-    public GameLogic simulateAction(final Answer answer) throws BoardException, UnitException, GameLogicException {
-        return new GameLogic(board.copy(answer));
-    }
 }

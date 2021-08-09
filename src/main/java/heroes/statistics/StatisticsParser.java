@@ -153,10 +153,10 @@ public class StatisticsParser {
         try {
             final String[] logString = reader.readLine().split(",");
             final int countOfRounds = Integer.parseInt(logString[0]);
-            if(!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")){
+            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")) {
                 throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
-                return new Pair<>(logString[1], countOfRounds);
+            return new Pair<>(logString[1], countOfRounds);
         } catch (final IOException | IllegalArgumentException e) {
             logger.error("Error winner parsing", e);
             throw new StatisticsException(e);
@@ -167,27 +167,27 @@ public class StatisticsParser {
      * Далее набор методов для парсинга файлов с обработанной статистикой
      **/
 
-    public static Map<Army, Integer[]> parseArmiesStatisticsFile(){
-        try(final BufferedReader reader = new BufferedReader(
-                new FileReader(StatisticsRecorder.armiesStatisticsFilename))){
+    public static Map<Army, Integer[]> parseArmiesStatisticsFile() {
+        try (final BufferedReader reader = new BufferedReader(
+                new FileReader(StatisticsRecorder.armiesStatisticsFilename))) {
             final Map<Army, Integer[]> result = new HashMap<>();
-            while(reader.ready()){
+            while (reader.ready()) {
                 final String[] line = reader.readLine().split(",");
                 result.put(parseArmy(line, 0), new Integer[]{Integer.valueOf(line[6]),
                         Integer.valueOf(line[7]), Integer.valueOf(line[8])});
             }
             return result;
-        } catch (IOException | StatisticsException e){
+        } catch (IOException | StatisticsException e) {
             logger.error("Error armiesStatistics file parsing", e);
             return null;
         }
     }
 
-    public static double parseGameDurationStatisticsFile(){
-        try(final BufferedReader reader = new BufferedReader(
-                new FileReader(StatisticsRecorder.gameDurationStatisticsFilename))){
+    public static double parseGameDurationStatisticsFile() {
+        try (final BufferedReader reader = new BufferedReader(
+                new FileReader(StatisticsRecorder.gameDurationStatisticsFilename))) {
             return Double.parseDouble(reader.readLine());
-        } catch (IOException | NumberFormatException e){
+        } catch (IOException | NumberFormatException e) {
             logger.error("Error gameDurationStatistics file parsing", e);
             return 0;
         }
