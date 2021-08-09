@@ -4,7 +4,6 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
@@ -17,12 +16,11 @@ import java.util.List;
 import java.util.function.ToDoubleFunction;
 
 /**
- * Бот по стратегии "минимакс".
+ * Бот по стратегии "ExpectiMax".
  **/
 
 public class ExpectiMaxBot extends AIBot implements Visualisable {
-    protected final TerminalWrapper tw = null;
-
+    protected TerminalWrapper tw = null;
 
     @Override
     public void setTerminal(final TerminalWrapper tw) {
@@ -53,11 +51,6 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
     public ExpectiMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
             throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
-    }
-
-    @Override
-    public Army getArmy(final Army firstPlayerArmy) {
-        return super.getArmy(firstPlayerArmy);
     }
 
     /**
@@ -128,7 +121,7 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
      * Метод находит в списке awList элемент с максимальным полем win.
      **/
 
-    private AnswerAndWin getMaxAW(final List<AnswerAndWin> awList) {
+    protected AnswerAndWin getMaxAW(final List<AnswerAndWin> awList) {
         AnswerAndWin bestAW = awList.get(0);
         double bestWin = bestAW.win();
         for (int i = 1; i < awList.size(); i++) {
@@ -146,8 +139,8 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
      * Метод оценивает вероятностные узлы с помощью функции probabilityFunction.
      **/
 
-    private double getChance(final List<AnswerAndWin> awList,
-                             final ToDoubleFunction<AnswerAndWin> probabilityFunction) {
+    protected double getChance(final List<AnswerAndWin> awList,
+                               final ToDoubleFunction<AnswerAndWin> probabilityFunction) {
         double win = 0;
         for (final AnswerAndWin aw : awList) {
             win += probabilityFunction.applyAsDouble(aw);
