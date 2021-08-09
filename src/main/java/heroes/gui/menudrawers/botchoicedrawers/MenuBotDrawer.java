@@ -1,17 +1,8 @@
 package heroes.gui.menudrawers.botchoicedrawers;
 
-import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.menudrawers.MenuGeneralDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
 import heroes.gui.utils.TextColorMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class MenuBotDrawer {
     public static void drawBots(final TerminalWrapper tw, final int selectedGeneral) {

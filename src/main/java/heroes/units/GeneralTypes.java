@@ -2,7 +2,7 @@ package heroes.units;
 
 
 public enum GeneralTypes {
-    ARCHMAGE(UnitTypes.MAGE, 0, 10, 0),
+    ARCHMAGE(UnitTypes.MAGE, 0, 5, 0),
     COMMANDER(UnitTypes.SWORDSMAN, 10, 0, 0),
     SNIPER(UnitTypes.BOWMAN,0,0,10)
     ;

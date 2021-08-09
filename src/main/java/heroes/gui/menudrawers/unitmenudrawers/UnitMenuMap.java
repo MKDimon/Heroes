@@ -1,10 +1,6 @@
 package heroes.gui.menudrawers.unitmenudrawers;
 
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.IGeneralMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 

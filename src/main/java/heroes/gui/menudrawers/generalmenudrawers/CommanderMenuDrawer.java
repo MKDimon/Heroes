@@ -4,7 +4,6 @@ import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.Side;
 import heroes.gui.utils.TextColorMap;
 
 import java.io.IOException;
@@ -18,23 +17,21 @@ public class CommanderMenuDrawer implements IGeneralMenuDrawer {
 
         TextGraphics tg = tw.getScreen().newTextGraphics();
         if (isSelected) {
-            if (isSelected) {
-                tg.setForegroundColor(TextColorMap.getColor("gold"));
-                tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 5, y_start + 25, "COMMANDER");
-                tg.setForegroundColor(TextColorMap.getColor("lightblue"));
-                tg.setModifiers(EnumSet.of(SGR.ITALIC));
-                tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 32, y_start + 27,
-                        "His Majesty's Marshal of Army. Experienced warrior and general.");
-                tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 34, y_start + 28,
-                        "The strongest knight of the Kingdom. His troops are excel in defense.");
-                tg.clearModifiers();
-                tg.setForegroundColor(TextColorMap.getColor("blue"));
-                tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 30,
-                        "Inspiration: ");
-                tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 7, y_start + 30,
-                        "Defense +10% for all units.");
-                tg.setForegroundColor(TextColorMap.getColor("gold"));
-            }
+            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 5, y_start + 25, "COMMANDER");
+            tg.setForegroundColor(TextColorMap.getColor("lightblue"));
+            tg.setModifiers(EnumSet.of(SGR.ITALIC));
+            tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 32, y_start + 27,
+                    "His Majesty's Marshal of Army. Experienced warrior and general.");
+            tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 34, y_start + 28,
+                    "The strongest knight of the Kingdom. His troops are excel in defense.");
+            tg.clearModifiers();
+            tg.setForegroundColor(TextColorMap.getColor("blue"));
+            tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 30,
+                    "Inspiration: ");
+            tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 7, y_start + 30,
+                    "Defense +10% for all units.");
+            tg.setForegroundColor(TextColorMap.getColor("gold"));
         }
         tg.putString(x_start, y_start + 1, "      _,.");
         tg.putString(x_start, y_start + 2, "    ,` -.)");
