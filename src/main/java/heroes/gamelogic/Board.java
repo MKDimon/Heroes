@@ -223,7 +223,7 @@ public class Board {
         return fieldPlayerTwo.getGeneral();
     }
 
-    public Position getGeneralPosition(final Fields field) throws UnitException {
+    public Position getGeneralPosition(final Fields field) {
         Army army;
         if (field == Fields.PLAYER_ONE) {
             army = fieldPlayerOne;
@@ -285,7 +285,6 @@ public class Board {
     /**
      * Возвращает список позиций активных юнитов игрока fields.
      **/
-
     public List<Position> getActiveUnitsPositions(final Fields fields){
         final Unit[][] army = getArmy(fields);
         final List<Position> result = new ArrayList<>(6);
