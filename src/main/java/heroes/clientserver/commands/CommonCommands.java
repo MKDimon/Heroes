@@ -4,6 +4,7 @@ import heroes.gamelogic.Fields;
 
 public enum CommonCommands {
     END_GAME("END_GAME"),
+    CONTINUE_GAME("CONTINUE_GAME"),
     GET_ARMY("GET_ARMY"),
     GET_ANSWER("GET_ANSWER"),
     MAX_ROOMS("MAX_ROOMS"),

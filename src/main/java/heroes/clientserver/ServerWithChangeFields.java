@@ -31,12 +31,22 @@ public class ServerWithChangeFields {
     private final int PORT;
     private final int maxRooms;
     private final int delay;
+    private final int gamesCount;
+    private final int treads;
+
+    private final String pathLog;
+    private final String logBack;
+
     private final Map<Integer, Rooms> getRoom;
 
-    public ServerWithChangeFields(final int PORT, final int maxRooms, final int delay) {
-        this.maxRooms = maxRooms;
-        this.PORT = PORT;
-        this.delay = delay;
+    public ServerWithChangeFields(final ServersConfigs serversConfigs) {
+        maxRooms = serversConfigs.MAX_ROOMS;
+        PORT = serversConfigs.PORT;
+        delay = serversConfigs.DELAY;
+        gamesCount = serversConfigs.GAMES_COUNT;
+        treads = serversConfigs.THREADS;
+        pathLog = serversConfigs.PATH_LOG;
+        logBack = serversConfigs.LOGBACK;
         getRoom = new Hashtable<>();
     }
 
@@ -198,7 +208,7 @@ public class ServerWithChangeFields {
         }
 
         private void gameEnding(final StatisticsCollector collector) throws IOException {
-            final Data data = new Data(CommonCommands.END_GAME, gameLogic.getBoard());
+            final Data data = new Data(CommonCommands.CONTINUE_GAME, gameLogic.getBoard());
             sendAsk(data, playerOne);
             sendAsk(data, playerTwo);
 
@@ -212,8 +222,6 @@ public class ServerWithChangeFields {
                 case NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
             }
             collector.recordMessageToCSV("\nGAME OVER\n");
-
-            this.endGame();
         }
 
         @Override
@@ -221,23 +229,29 @@ public class ServerWithChangeFields {
                 while (findPlayers) {
                     try {
                         waitPlayers();
+                        for (int i = 0; i < server.gamesCount; i++) {
+                            final StatisticsCollector collector = new StatisticsCollector(id);
 
-                        final StatisticsCollector collector = new StatisticsCollector(id);
+                            gameStart(collector);
 
-                        gameStart(collector);
+                            // весь игровой процесс
+                            while (gameLogic.isGameBegun()) {
+                                gameRun(collector);
+                                //noinspection BusyWait
+                                Thread.sleep(server.delay);
+                            }
 
-                        // весь игровой процесс
-                        while (gameLogic.isGameBegun()) {
-                            gameRun(collector);
-                            //noinspection BusyWait
-                            Thread.sleep(server.delay);
+                            gameEnding(collector);
                         }
-
-                        gameEnding(collector);
+                        final Data data = new Data(CommonCommands.END_GAME, gameLogic.getBoard());
+                        sendAsk(data, playerOne);
+                        sendAsk(data, playerTwo);
                     } catch (final ServerException | UnitException
                             | BoardException | InterruptedException | IOException e) {
                         logger.error(ServerExceptionType.ERROR_GAME_RUNNING.getErrorType(), e);
                         gameLogic.getBoard().setStatus(GameStatus.NO_WINNERS);
+                    }
+                    finally {
                         this.endGame();
                     }
                 }
@@ -321,7 +335,7 @@ public class ServerWithChangeFields {
 
     public static void main(final String[] args) throws IOException {
         final ServersConfigs sc = Deserializer.getServersConfig();
-        final ServerWithChangeFields server = new ServerWithChangeFields(sc.PORT, sc.MAX_ROOMS, sc.DELAY);
+        final ServerWithChangeFields server = new ServerWithChangeFields(sc);
         server.startServer();
     }
 }

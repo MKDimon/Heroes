@@ -17,6 +17,7 @@ public class CommandFactory {
     private void initialize(final Data data, final BufferedWriter out, final Client client) {
         commandMap.put(CommonCommands.DRAW, new DrawCommand(data, out, client));
         commandMap.put(CommonCommands.END_GAME, new EndGameCommand(data, out, client));
+        commandMap.put(CommonCommands.CONTINUE_GAME, new ContinueGameCommand(data, out, client));
         commandMap.put(CommonCommands.GET_ANSWER, new GetAnswerCommand(data, out, client));
         commandMap.put(CommonCommands.GET_ARMY, new GetArmyCommand(data, out, client));
         commandMap.put(CommonCommands.GET_ROOM, new GetRoomCommand(data, out, client));
