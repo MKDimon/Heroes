@@ -67,7 +67,7 @@ public abstract class AIBot extends BaseBot implements Visualisable {
 
     /**
      * Метод вычисляет тип терминального состояния и выдает в соответствии с ним значение функции полезности
-     * (+- условная бесконечность, либо 0, если ничья).
+     * (+- условная бесконечность, либо DRAW_VALUE, если ничья).
      **/
 
     private double getTerminalStateValue(final Board board) throws GameLogicException {
@@ -75,7 +75,7 @@ public abstract class AIBot extends BaseBot implements Visualisable {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
         if (board.getStatus() == GameStatus.NO_WINNERS) {
-            return -100000d;
+            return UtilityFunctions.DRAW_VALUE;
         }
         if (board.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE ||
                 board.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO) {

@@ -12,6 +12,7 @@ public class UtilityFunctions {
 
     public static final double MAX_VALUE = 9999999999d;
     public static final double MIN_VALUE = -9999999999d;
+    public static final double DRAW_VALUE = -1000000d;
 
     /**
      * Простая функция полезности. Получает доску и игрока, для которого вычисляется
