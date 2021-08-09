@@ -119,7 +119,7 @@ public class ServerWithChangeFields {
             this.id = id;
         }
 
-        private void waitPlayers() {
+        private void waitPlayers() throws IOException {
             boolean playersReady = false;
             while (!playersReady) {
                 for (final RoomsClient rc : server.fieldOne) {
@@ -141,17 +141,16 @@ public class ServerWithChangeFields {
                 playersReady = playerOne != null && playerTwo != null &&
                         !playerOne.socket.isClosed() && !playerTwo.socket.isClosed();
             }
-        }
-
-        private void gameStart(final StatisticsCollector collector) throws IOException, ServerException,
-                UnitException, BoardException {
             // выдача полей
             getPlayer.put(Fields.PLAYER_ONE, playerOne);
             getPlayer.put(Fields.PLAYER_TWO, playerTwo);
 
             sendAsk(new Data(CommonCommands.FIELD_ONE), playerOne);
             sendAsk(new Data(CommonCommands.FIELD_TWO), playerTwo);
+        }
 
+        private void gameStart(final StatisticsCollector collector) throws IOException, ServerException,
+                UnitException, BoardException {
             // Первая армия
             sendAsk(new Data(CommonCommands.GET_ARMY), playerOne);
             final Army one = Deserializer.deserializeData(playerOne.in.readLine()).army;
