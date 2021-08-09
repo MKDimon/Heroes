@@ -34,7 +34,7 @@ public class SelfPlayStatistics {
             final Army firstPlayerArmy = playerOne.getArmy(null);
             final Army secondPlayerArmy = playerTwo.getArmy(firstPlayerArmy);
             gl.gameStart(firstPlayerArmy, secondPlayerArmy);
-            StatisticsCollector collector = new StatisticsCollector(0);
+            final StatisticsCollector collector = new StatisticsCollector(0);
             collector.recordMessageToCSV("GAME START\n");
             collector.recordArmyToCSV(Fields.PLAYER_ONE, firstPlayerArmy);
             collector.recordArmyToCSV(Fields.PLAYER_TWO, secondPlayerArmy);
