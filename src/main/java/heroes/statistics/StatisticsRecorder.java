@@ -2,7 +2,6 @@ package heroes.statistics;
 
 
 import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Deserializer;
 import heroes.clientserver.ServersConfigs;
 import heroes.gamelogic.Army;
@@ -29,6 +28,8 @@ public class StatisticsRecorder {
     public static final String armiesStatisticsFilename = "src/main/resources/statistics/armiesStatistics";
     public static final String gameDurationStatisticsFilename =
             "src/main/resources/statistics/gameDurationStatistics";
+    public static final String winnerUnitsStatisticsFilename =
+            "src/main/resources/statistics/winnerUnitsStatistics";
 
     public static void main(String[] args) {
         recordStatistics();
@@ -39,29 +40,31 @@ public class StatisticsRecorder {
      * Обрабатывает и записывает всю имеющуюся статистику.
      **/
 
-    public static void recordStatistics(){
+    public static void recordStatistics() {
         try {
             final ServersConfigs sc = Deserializer.getConfig();
             final List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
-            for(int id = 0; id < sc.MAX_ROOMS; id++){
+            for (int id = 1; id <= sc.MAX_ROOMS; id++) {
                 final String filename = new StringBuilder(StatisticsCollector.filenameTemplate).append(id).
                         append(".csv").toString();
                 final List<GameLogInformation> oneFileLogs = StatisticsParser.parseLogFile(filename);
-                if(oneFileLogs != null) {
+                if (oneFileLogs != null) {
                     games.addAll(oneFileLogs);
                 }
             }
-            if(games.isEmpty()){
+            if (games.isEmpty()) {
                 return;
             }
             //Записывем статистку о  составах армии, количестве их побед, поражений, ничьих
             recordArmiesStatisticsToCSV(games, armiesStatisticsFilename);
             //Записываем статистику о характеристиках юнитов и продолжительности игры
             recordGameDurationStatisticsToCSV(games, gameDurationStatisticsFilename);
+            //Записываем статистику о юнитах победителей
+            recordWinnerUnitsStatisticsToCSV(games, winnerUnitsStatisticsFilename);
             //Далее при появлении новых методов в аналитике статистики просто допишем их сюда.
             //Таким образом, при вызове этого метода будет собираться и анализироваться вся имеющаяся статистика.
-        } catch (IOException  e) {
+        } catch (IOException e) {
             logger.error("Error statistics recording", e);
         }
     }
@@ -92,37 +95,64 @@ public class StatisticsRecorder {
                 writer.write(record.toString());
                 writer.flush();
             }
-        } catch (IOException | UnitException | StatisticsException e) {
+        } catch (IOException | StatisticsException e) {
             logger.error("Error armies statistics recording", e);
         }
     }
 
     /**
      * Метод записывает характеристики юнитов и генералов и среднюю продолжительность игры в формате
-     *
+     * averageGameDuration
      * unitType,hp,armor,power,accuracy
      * ...
      * generalType,armorBonus,powerBonus,accuracyBonus
      * ...
-     * averageGameDuration
      **/
 
     public static void recordGameDurationStatisticsToCSV(final List<GameLogInformation> games,
-                                                         final String filename){
-        try(final BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for(final UnitTypes unit:UnitTypes.values()){
+                                                         final String filename) {
+        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(String.valueOf(StatisticsAnalyzer.getAverageGameDuration(games)));
+            writer.write("\n");
+            for (final UnitTypes unit : UnitTypes.values()) {
                 writer.write(new StringBuilder(unit.toString()).append(",").append(unit.HP).
                         append(",").append(unit.armor).append(",").append(unit.power).
                         append(",").append(unit.accuracy).append("\n").toString());
             }
-            for(final GeneralTypes general: GeneralTypes.values()){
+            for (final GeneralTypes general : GeneralTypes.values()) {
                 writer.write(new StringBuilder(general.toString()).append(",").
                         append(general.inspirationArmorBonus).append(",").
                         append(general.inspirationDamageBonus).append(",").
                         append(general.inspirationAccuracyBonus).append("\n").toString());
             }
-            writer.write(String.valueOf(StatisticsAnalyzer.getAverageGameDuration(games)));
             writer.flush();
+        } catch (IOException | StatisticsException e) {
+            logger.error("Error game duration statistics recording", e);
+        }
+    }
+
+    /**
+     * Метод записывает Map с содержанием
+     * unitType -> avXPos,avYPos,avActionsCount,avActionPower,unitCount (сколько раз встретился
+     * в армиях победителей)
+     * в файл в формате CSV
+     **/
+
+    public static void recordWinnerUnitsStatisticsToCSV(final List<GameLogInformation> games,
+                                                        final String filename) {
+        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            final Map<UnitTypes, Double[]> unitsStatistics = StatisticsAnalyzer.getWinnerUnitsStatistics(games);
+            for (UnitTypes unitType : unitsStatistics.keySet()) {
+                final StringBuilder record = new StringBuilder();
+                record.append(unitType.toString());
+                for (int i = 0; i < unitsStatistics.get(unitType).length; i++) {
+                    record.append(",").append(unitsStatistics.get(unitType)[i]);
+                }
+                record.append("\n");
+                writer.write(record.toString());
+                writer.flush();
+            }
+
         } catch (IOException | StatisticsException e) {
             logger.error("Error game duration statistics recording", e);
         }

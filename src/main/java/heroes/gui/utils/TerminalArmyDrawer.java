@@ -17,11 +17,7 @@ public class TerminalArmyDrawer {
 
     public static void drawArmy(final TerminalWrapper tw, final TerminalPosition tp,
                          final Army army, final boolean withBorders, final Fields field) {
-        try {
-            drawArmy(tw, tp, army.getPlayerUnits(), army.getGeneral(), withBorders, field);
-        } catch (UnitException e) {
-            e.printStackTrace();
-        }
+        drawArmy(tw, tp, army.getPlayerUnits(), army.getGeneral(), withBorders, field);
     }
     public static void drawArmy(final TerminalWrapper tw, final TerminalPosition tp,
                                 final Unit[][] units, final General general,

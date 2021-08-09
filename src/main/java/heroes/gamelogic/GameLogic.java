@@ -8,13 +8,12 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.validation.ValidationUnits;
 import heroes.gamelogic.validation.Validator;
 import heroes.mathutils.Position;
+import heroes.player.Answer;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class GameLogic {
     private static final Logger logger = LoggerFactory.getLogger(GameLogic.class);
@@ -152,4 +151,39 @@ public class GameLogic {
     public boolean isGameBegun() {
         return gameBegun;
     }
+
+    /**
+     * Метод возвращает список возмодных для игрока player ходов.
+     **/
+
+    public List<Answer> getAvailableMoves(final Fields player) throws GameLogicException {
+        final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
+        final List<Answer> result = new LinkedList<>();
+        final List<Position> attackers = board.getActiveUnitsPositions(player);
+        final List<Position> defenders = board.getAliveUnitsPositions(defField);
+        final List<Position> aliveAttackers = board.getAliveUnitsPositions(player);
+
+        for(final Position atPos : attackers){
+            result.add(new Answer(atPos, atPos, ActionTypes.DEFENSE));
+            if(board.getUnitByCoordinate(atPos).getActionType() == ActionTypes.HEALING){
+                for(final Position healingPos : aliveAttackers){
+                    result.add(new Answer(atPos, healingPos, ActionTypes.HEALING));
+                }
+            } else {
+                for(final Position defPos : defenders){
+                    final Answer curAnswer = new Answer(atPos, defPos, board.getUnitByCoordinate(atPos).getActionType());
+                    if(actionValidate(curAnswer.getAttacker(), curAnswer.getDefender(), curAnswer.getActionType()) ==
+                            ValidationUnits.SUCCESSFUL_STEP){
+                        result.add(curAnswer);
+                        //Если встрелся маг, то прекращаем искать ему новые цели, чтобы не плодить одинаковые ветки
+                        if(curAnswer.getActionType() == ActionTypes.AREA_DAMAGE){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
 }

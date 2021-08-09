@@ -1,8 +1,8 @@
 package heroes.clientserver;
 
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Fields;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
@@ -21,7 +21,7 @@ import java.util.Map;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "127.0.0.1";
+    private static final String IP = "192.168.7.159";//"127.0.0.1";
 
     private final String ip;
     private final int port;
