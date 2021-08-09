@@ -48,18 +48,11 @@ public abstract class SimulationTreeArmy {
     }
 
     /**
-     * Убирает невостребованные армии из списка
-     */
-    protected void validateArmy() {
-
-    }
-
-    /**
      *
-     * @param ID
-     * @return
-     * @throws UnitException
-     * @throws BoardException
+     * @param ID - номер армии
+     * @return армию по номеру
+     * @throws UnitException ошибка
+     * @throws BoardException ошибка
      */
     public Army getArmyConst(final int ID) throws UnitException, BoardException {
         if (ID >= armies.size() || ID < 0) throw new IllegalArgumentException("ID of army is invalid");

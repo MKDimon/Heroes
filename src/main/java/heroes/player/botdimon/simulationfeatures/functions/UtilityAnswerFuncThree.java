@@ -22,27 +22,18 @@ public class UtilityAnswerFuncThree implements IUtilityFunc {
     private double checkGenerals(final Board board, final Fields field) {
         double result = 0;
         if (field == Fields.PLAYER_ONE) {
-            try {
-                if (board.getGeneralPlayerOne().isAlive()) {
-                    result += 3000;
-                }
-                if (board.getGeneralPlayerTwo().isAlive()) {
-                    result -= 3000;
-                }
-            } catch (UnitException e) {
-                e.printStackTrace();
+            if (board.getGeneralPlayerOne().isAlive()) {
+                result += 3000;
             }
-        }
-        else {
-            try {
-                if (board.getGeneralPlayerTwo().isAlive()) {
-                    result += 3000;
-                }
-                if (board.getGeneralPlayerOne().isAlive()) {
-                    result -= 3000;
-                }
-            } catch (UnitException e) {
-                e.printStackTrace();
+            if (board.getGeneralPlayerTwo().isAlive()) {
+                result -= 3000;
+            }
+        } else {
+            if (board.getGeneralPlayerTwo().isAlive()) {
+                result += 3000;
+            }
+            if (board.getGeneralPlayerOne().isAlive()) {
+                result -= 3000;
             }
         }
         return result;
@@ -66,7 +57,7 @@ public class UtilityAnswerFuncThree implements IUtilityFunc {
     public double getValue(final Board board, final Fields field) {
         double result = 0;
 
-        final Fields enemyField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
+        final Fields enemyField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
         final Unit[][] army = board.getArmy(field);
         final Unit[][] enemiesArmy = board.getArmy(enemyField);
 
@@ -77,15 +68,13 @@ public class UtilityAnswerFuncThree implements IUtilityFunc {
                 if (enemiesArmy[i][j].isAlive()) {
                     result -= ENEMY_HP_PRIORITY * enemiesArmy[i][j].getMaxHP() * //%
                             Math.pow(1. * enemiesArmy[i][j].getCurrentHP() / enemiesArmy[i][j].getMaxHP(), ENEMY_HP_RATE);
-                }
-                else {
+                } else {
                     result += ENEMY_IS_DEATH_PRIORITY;
                 }
                 if (army[i][j].isAlive()) {
                     result += ALLY_HP_PRIORITY * army[i][j].getMaxHP() * //%
                             Math.pow(1. * army[i][j].getCurrentHP() / army[i][j].getMaxHP(), ALLY_HP_RATE);
-                }
-                else {
+                } else {
                     result -= ALLY_IS_DEATH_PRIORITY;
                 }
             }

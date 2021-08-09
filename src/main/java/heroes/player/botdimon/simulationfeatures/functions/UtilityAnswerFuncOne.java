@@ -15,27 +15,18 @@ public class UtilityAnswerFuncOne implements IUtilityFunc {
     private double checkGenerals(final Board board, final Fields field) {
         double result = 0;
         if (field == Fields.PLAYER_ONE) {
-            try {
-                if (board.getGeneralPlayerOne().isAlive()) {
-                    result += 3000;
-                }
-                if (board.getGeneralPlayerTwo().isAlive()) {
-                    result -= 3000;
-                }
-            } catch (UnitException e) {
-                e.printStackTrace();
+            if (board.getGeneralPlayerOne().isAlive()) {
+                result += 3000;
             }
-        }
-        else {
-            try {
-                if (board.getGeneralPlayerTwo().isAlive()) {
-                    result += 3000;
-                }
-                if (board.getGeneralPlayerOne().isAlive()) {
-                    result -= 3000;
-                }
-            } catch (UnitException e) {
-                e.printStackTrace();
+            if (board.getGeneralPlayerTwo().isAlive()) {
+                result -= 3000;
+            }
+        } else {
+            if (board.getGeneralPlayerTwo().isAlive()) {
+                result += 3000;
+            }
+            if (board.getGeneralPlayerOne().isAlive()) {
+                result -= 3000;
             }
         }
         return result;
@@ -59,7 +50,7 @@ public class UtilityAnswerFuncOne implements IUtilityFunc {
     public double getValue(final Board board, final Fields field) {
         double result = 0;
 
-        final Fields enemyField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
+        final Fields enemyField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
         final Unit[][] army = board.getArmy(field);
         final Unit[][] enemiesArmy = board.getArmy(enemyField);
 
@@ -69,14 +60,12 @@ public class UtilityAnswerFuncOne implements IUtilityFunc {
             for (int j = 0; j < 3; j++) {
                 if (enemiesArmy[i][j].isAlive()) {
                     result -= enemiesArmy[i][j].getCurrentHP();
-                }
-                else {
+                } else {
                     result += 200.;
                 }
                 if (army[i][j].isAlive()) {
                     result += army[i][j].getCurrentHP();
-                }
-                else {
+                } else {
                     result -= 200;
                 }
             }

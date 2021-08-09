@@ -69,7 +69,7 @@ public class Dimon extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
-                SimulationTrees.THREAD_CUSTOM_STEP_SIMULATION,
+                SimulationTrees.CUSTOM_STEP_SIMULATION,
                 UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
                 getField(), 3
         );

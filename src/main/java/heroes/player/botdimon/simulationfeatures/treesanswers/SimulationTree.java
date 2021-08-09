@@ -95,6 +95,7 @@ public abstract class SimulationTree {
 
     /**
      * Возвращает все возможные варианты ходов из заданного состояния игры
+     * ! В вернувшихся узлах ходы уже сделаны !
      *
      * @param root корень (узел, которому собираем потомков)
      * @param field поле игрока, который ходит
@@ -119,7 +120,8 @@ public abstract class SimulationTree {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 if (army[i][j].isActive())      { posAttack.add(new Position(i, j, field));     }
-                if (army[i][j].isAlive())       { posHealing.add(new Position(i, j, field));    }
+                if (army[i][j].isAlive() && army[i][j].getCurrentHP() != army[i][j].getMaxHP())
+                                                { posHealing.add(new Position(i, j, field));    }
                 if (enemies[i][j].isAlive())    { posDefend.add(new Position(i, j, enemyField));}
             }
         }

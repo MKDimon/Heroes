@@ -28,6 +28,7 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
     private static final double DEGREE_PRIORITY = Math.exp(-1);
 
     private static final Map<ActionTypes, Double> valueActions = new HashMap<>();
+
     static {
         valueActions.put(ActionTypes.HEALING, 2.0);
         valueActions.put(ActionTypes.CLOSE_COMBAT, 1.2);
@@ -39,23 +40,18 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
         double result = 0;
         final General general;
         final General enemyGeneral;
-        try {
-            if (field == Fields.PLAYER_ONE) {
-                general = board.getGeneralPlayerOne();
-                enemyGeneral = board.getGeneralPlayerTwo();
-            } else {
-                general = board.getGeneralPlayerTwo();
-                enemyGeneral = board.getGeneralPlayerOne();
-            }
-            if (general.isAlive()) {
-                result += 2000.;
-            }
-            if (enemyGeneral.isAlive()) {
-                result -= 2000.;
-            }
+        if (field == Fields.PLAYER_ONE) {
+            general = board.getGeneralPlayerOne();
+            enemyGeneral = board.getGeneralPlayerTwo();
+        } else {
+            general = board.getGeneralPlayerTwo();
+            enemyGeneral = board.getGeneralPlayerOne();
         }
-        catch(UnitException e){
-            logger.error("Check general utility function error", e);
+        if (general.isAlive()) {
+            result += 2000.;
+        }
+        if (enemyGeneral.isAlive()) {
+            result -= 2000.;
         }
         return result;
     }
@@ -78,7 +74,7 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
     }
 
     private double getModify(final Unit unit, final boolean isGeneral) throws UnitException {
-        final double result = (isGeneral)? 1.4: 1.;
+        final double result = (isGeneral) ? 1.4 : 1.;
         return 1. * unit.getPower() / 10
                 * result
                 * valueActions.get(unit.getActionType());
@@ -89,7 +85,7 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
         double result = 0;
 
         try {
-            final Fields enemyField = (field == Fields.PLAYER_ONE)? Fields.PLAYER_TWO: Fields.PLAYER_ONE;
+            final Fields enemyField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
             final Unit[][] army = board.getArmy(field);
             final Unit[][] enemiesArmy = board.getArmy(enemyField);
 
@@ -102,22 +98,21 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
                     if (enemiesArmy[i][j].isAlive()) {
                         result -= HP_PRIORITY * Math.pow(HP_RATE, 1. + getModify(enemiesArmy[i][j], isEnemyGeneral) * Math.pow
                                 (1. * enemiesArmy[i][j].getCurrentHP() / enemiesArmy[i][j].getMaxHP(), DEGREE_PRIORITY));
-                    }
-                    else {
+                    } else {
                         result += IS_DEATH_PRIORITY * getModify(enemiesArmy[i][j], isEnemyGeneral);
                     }
                     final boolean isGeneral = general.X() == i && general.Y() == j;
                     if (army[i][j].isAlive()) {
                         result += HP_PRIORITY * Math.pow(HP_RATE, 1 + getModify(army[i][j], isGeneral) * Math.pow
                                 (1. * army[i][j].getCurrentHP() / army[i][j].getMaxHP(), DEGREE_PRIORITY));
-                    }
-                    else {
+                    } else {
                         result -= IS_DEATH_PRIORITY * getModify(army[i][j], isGeneral);
                     }
                 }
             }
 
-        } catch (UnitException ignore) {}
+        } catch (UnitException ignore) {
+        }
 
         result += checkGameEnding(board, field);
 

@@ -75,7 +75,7 @@ public class AntiDimon extends BaseBot implements Visualisable {
     public Answer getAnswer(final Board board) {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
-                SimulationTrees.THREAD_CUSTOM_STEP_SIMULATION,
+                SimulationTrees.ONE_STEP_SIMULATION,
                 UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
                 getField(), maxHeight //+ getMaxHeight(board.getArmy(getField()))
         );

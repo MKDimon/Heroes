@@ -8,6 +8,7 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
+import heroes.player.botdimon.*;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
