@@ -40,7 +40,7 @@ import java.util.Scanner;
  **/
 
 public class PlayerGUIBot extends BaseBot implements Visualisable {
-    private final Logger logger = LoggerFactory.getLogger(PlayerGUIBot.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlayerGUIBot.class);
     private final Scanner scanner = new Scanner(System.in);
     protected TerminalWrapper tw;
 

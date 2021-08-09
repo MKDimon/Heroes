@@ -33,10 +33,8 @@ public class DamageCommand extends Command {
 
     @Override
     public void execute() {
-
-            for (Unit elem : super.getDef()) {
-
-                if (getHitChance(super.getAtt().getAccuracy())) {
+        for (Unit elem : super.getDef()) {
+            if (getHitChance(super.getAtt().getAccuracy())) {
                 elem.setCurrentHP(elem.getCurrentHP() -
                         reducedDamage(super.getAtt().getPower(), elem.getArmor()));
                 logger.info("Unit hit! Dealing damage.");
@@ -45,9 +43,8 @@ public class DamageCommand extends Command {
                 logger.info("Defender current hp: {}.", elem.getCurrentHP());
                 logger.info("Defender max hp: {}.", elem.getMaxHP());
             } else {
-                    logger.info("Unit missed");
-                }
-
+                logger.info("Unit missed");
+            }
         }
     }
 }

@@ -54,17 +54,15 @@ public class TestBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-                General general = new General(GeneralTypes.ARCHMAGE);
-                Unit[][] army = new Unit[2][3];
-                army[1][0] = general;
-                army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-                army[0][0] = new Unit(UnitTypes.SWORDSMAN);
-                army[0][1] = new Unit(UnitTypes.SWORDSMAN);
-                army[1][2] = new Unit(UnitTypes.BOWMAN);
-                army[1][1] = new Unit(UnitTypes.BOWMAN);
-
-                return new Army(army, general);
-
+            final General general = new General(GeneralTypes.COMMANDER);
+            final Unit[][] army = new Unit[2][3];
+            army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+            army[1][0] = new Unit(UnitTypes.BOWMAN);
+            army[0][1] = new Unit(UnitTypes.SWORDSMAN);
+            army[1][1] = new Unit(UnitTypes.HEALER);
+            army[0][2] = general;
+            army[1][2] = new Unit(UnitTypes.BOWMAN);
+            return new Army(army, general);
         } catch (UnitException | BoardException e) {
             logger.error("Error creating unit in TestBot", e);
             return null;
@@ -83,7 +81,6 @@ public class TestBot extends BaseBot implements Visualisable {
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
-
 
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 

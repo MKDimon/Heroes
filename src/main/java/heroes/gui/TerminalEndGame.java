@@ -16,13 +16,13 @@ public class TerminalEndGame {
     private static final Logger logger = LoggerFactory.getLogger(TerminalEndGame.class);
     public static void endGame(final TerminalWrapper tw, final Data data) {
 
-        TextGraphics tg = tw.getScreen().newTextGraphics();
+        TextGraphics tg = tw.newTG();
         int x = 0, y = 0;
         try {
             tw.update(data.answer, data.board);
-            tw.getScreen().refresh();
-            x = tw.getTerminal().getTerminalSize().getColumns() / 2;
-            y = tw.getTerminal().getTerminalSize().getRows() ;
+            tw.refresh();
+            x = tw.getTerminalSize().getColumns() / 2;
+            y = tw.getTerminalSize().getRows() ;
         } catch (IOException | UnitException e) {
             logger.error("Cannot call TerminalSize from TerminalEndGame", e);
         }

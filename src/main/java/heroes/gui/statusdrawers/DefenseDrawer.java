@@ -2,7 +2,7 @@ package heroes.gui.statusdrawers;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 import heroes.mathutils.Pair;
 import heroes.units.Unit;
 
@@ -11,7 +11,7 @@ public class DefenseDrawer implements IStatusDrawer {
     public void draw(final TerminalWrapper tw, final Pair<Integer, Integer> topLeftCorner, final Unit unit) {
         TextGraphics tg = tw.getScreen().newTextGraphics();
 
-        tg.setForegroundColor(TextColorMap.getColor("lightblue"));
+        tg.setForegroundColor(Colors.LIGHTBLUE.color());
         int def = unit.getDefenseArmor();
         if (def > 0) {
             if (topLeftCorner.getX() > tw.getScreen().getTerminalSize().getColumns() / 2) {
@@ -36,6 +36,6 @@ public class DefenseDrawer implements IStatusDrawer {
             }
 
         }
-        tg.setForegroundColor(TextColorMap.getColor("white"));
+        tg.setForegroundColor(Colors.WHITE.color());
     }
 }

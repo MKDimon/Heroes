@@ -339,7 +339,7 @@ public class Board {
     /**
      * Возвращает список ходов, возможных для текущего игрока.
      **/
-
+    @JsonIgnore
     public List<Answer> getPossibleMoves() throws GameLogicException {
         try {
             return new GameLogic(this).getAvailableMoves(currentPlayer);

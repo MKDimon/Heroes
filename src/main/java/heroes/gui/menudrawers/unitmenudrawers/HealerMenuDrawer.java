@@ -7,19 +7,19 @@ import com.googlecode.lanterna.graphics.BasicTextImage;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.TerminalLineDrawer;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 import heroes.mathutils.Pair;
 
 public class HealerMenuDrawer implements IUnitMenuDrawer {
     @Override
     public TextImage formTextImage(final boolean isGeneral) {
         TextImage ti = new BasicTextImage(new TerminalSize(8, 8), TextCharacter.DEFAULT_CHARACTER.withCharacter(' '));
-        TextCharacter bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('(').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(')').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter i = TextCharacter.DEFAULT_CHARACTER.withCharacter('I').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter eight = TextCharacter.DEFAULT_CHARACTER.withCharacter('8').withForegroundColor(TextColorMap.getColor("brown"));
+        TextCharacter bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('(').withForegroundColor(Colors.SILVER.color());
+        TextCharacter bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(')').withForegroundColor(Colors.SILVER.color());
+        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.SILVER.color());
+        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(Colors.SILVER.color());
+        TextCharacter i = TextCharacter.DEFAULT_CHARACTER.withCharacter('I').withForegroundColor(Colors.BROWN.color());
+        TextCharacter eight = TextCharacter.DEFAULT_CHARACTER.withCharacter('8').withForegroundColor(Colors.BROWN.color());
 
         ti.setCharacterAt(3, 0, slash);
         ti.setCharacterAt(4, 0, backslash);
@@ -65,16 +65,16 @@ public class HealerMenuDrawer implements IUnitMenuDrawer {
 
         if (isSelected) {
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() - 1, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "gold");
+                    topLeftCorner.getY() + 8, '|', Colors.GOLD);
 
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() + 8, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "gold");
+                    topLeftCorner.getY() + 8, '|', Colors.GOLD);
         } else {
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() - 1, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "white");
+                    topLeftCorner.getY() + 8, '|', Colors.WHITE);
 
             TerminalLineDrawer.drawVerticalLine(tw, topLeftCorner.getX() + 8, topLeftCorner.getY() - 1,
-                    topLeftCorner.getY() + 8, '|', "white");
+                    topLeftCorner.getY() + 8, '|', Colors.WHITE);
         }
     }
 }
