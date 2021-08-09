@@ -19,15 +19,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SelfPlayNikita {
-    static Logger logger = LoggerFactory.getLogger(SelfPlayNikita.class);
-
-    public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException, UnitException {
-        List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
+    public static void main(final String[] args) throws GameLogicException, UnitException {
+        final List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), new PlayerGUIBot.PlayerGUIBotFactory(),
                 new NikitaBot.NikitaBotFactory());
-        BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
-        BaseBot playerTwo = factories.get(4).createBot(Fields.PLAYER_TWO);
-        Map<Fields, BaseBot> getPlayer = new HashMap<>();
+        final BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
+        final BaseBot playerTwo = factories.get(4).createBot(Fields.PLAYER_TWO);
+        final Map<Fields, BaseBot> getPlayer = new HashMap<>();
 
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTwo);
@@ -37,13 +35,13 @@ public class SelfPlayNikita {
 
         for (int i = 0; i < gamesCount; i ++) {
 
-            GameLogic gl = new GameLogic();
+            final GameLogic gl = new GameLogic();
             final Army firstPlayerArmy = playerOne.getArmy(null);
             gl.gameStart(firstPlayerArmy, playerTwo.getArmy(firstPlayerArmy));
 
 
             while (gl.isGameBegun()) {
-                Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
+                final Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
                 gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
             }
             if (gl.getBoard().getStatus() == GameStatus.PLAYER_TWO_WINS ||

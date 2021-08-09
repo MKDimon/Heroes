@@ -7,18 +7,14 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.*;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
-import heroes.mathutils.Pair;
-import heroes.mathutils.Position;
 import heroes.player.*;
 import heroes.player.botnikita.decisionalgorythms.IDecisionAlgorythm;
 import heroes.player.botnikita.decisionalgorythms.MiniMaxAlgorythm;
 import heroes.player.botnikita.simulation.BoardSimulation;
 import heroes.player.botnikita.simulation.FieldsWrapper;
 import heroes.player.botnikita.utilityfunction.HealerUtilityFunction;
-import heroes.player.botnikita.utilityfunction.HealthUtilityFunction;
 import heroes.player.botnikita.utilityfunction.IMinMax;
 import heroes.player.botnikita.utilityfunction.IUtilityFunction;
-import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,15 +23,10 @@ import java.util.List;
 
 public class NikitaBot extends BaseBot implements Visualisable {
     private static int getRecLevel(final Board board) {
-        final int initRecLevel = 3;
-//        if (board.getCurNumRound() >= 3) {
-//            return initRecLevel + board.getCurNumRound() - 3;
-//        }
-        return initRecLevel;
+        return 3;
     }
 
     private final IUtilityFunction utilityFunction = new HealerUtilityFunction();
-    private final IDecisionAlgorythm decisionAlgorythm = new MiniMaxAlgorythm();
 
     private static final Logger logger = LoggerFactory.getLogger(NikitaBot.class);
 
@@ -93,13 +84,6 @@ public class NikitaBot extends BaseBot implements Visualisable {
         return bestAW;
     }
 
-    private boolean isDefenseOnlyState(final PositionUnit positionUnit) {
-        if (positionUnit.getUnit().getActionType() == ActionTypes.CLOSE_COMBAT) {
-            return positionUnit.getPosition().X() == 1;
-        }
-        return false;
-    }
-
     private double getWinByGameTree(final Board board, final Answer answer, final int currentRecLevel,
                                     double alpha, double beta) throws GameLogicException {
         IMinMax minmax;
@@ -122,12 +106,8 @@ public class NikitaBot extends BaseBot implements Visualisable {
         if (currentRecLevel == getRecLevel(board)) {
             return utilityFunction.evaluate(board, answer);
         }
-        final Fields oppField = FieldsWrapper.getOppField(playerField);
 
-        List<AnswerWinHolder> answerList = new LinkedList<>();
-
-        final List<PositionUnit> playerArmyActiveUnits =
-                BoardSimulation.getActiveUnits(board, playerField);
+        final List<AnswerWinHolder> answerList = new LinkedList<>();
 
         try {
             final GameLogic gl = new GameLogic(board);
@@ -157,7 +137,6 @@ public class NikitaBot extends BaseBot implements Visualisable {
                     answerList.add(new AnswerWinHolder(ans, bestValue));
                 }
             }
-
         } catch (BoardException | UnitException e) {
             e.printStackTrace();
         }
@@ -191,7 +170,7 @@ public class NikitaBot extends BaseBot implements Visualisable {
             }
 
         } catch (BoardException | UnitException e) {
-            e.printStackTrace();
+            logger.error("Board or unit exception in NikitaBot.", e);
         }
 
         final Answer answer = getGreedyDecision(answerList, AnswerWinHolder::getWin).getAnswer();
