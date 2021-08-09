@@ -11,10 +11,6 @@ import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
-import heroes.player.BaseBot;
-import heroes.player.TestBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,23 +20,29 @@ import java.util.function.ToDoubleFunction;
  * Бот по стратегии "минимакс".
  **/
 
-public class ExpectiMaxBot extends BaseBot implements Visualisable {
-
-    private static final int maxRecLevel = 3;
-    private static final UtilityFunction utilityFunction = UtilityFunctions.HPUtilityFunction;
-
-    private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
-
+public class ExpectiMaxBot extends AIBot implements Visualisable {
     protected final TerminalWrapper tw = null;
+
+
+    @Override
+    public void setTerminal(final TerminalWrapper tw) {
+        super.tw = tw;
+    }
 
     /**
      * Фабрика ботов.
      **/
 
-    public static class ExpectiMaxBotFactory extends BaseBotFactory {
+    public static class ExpectiMaxBotFactory extends AIBotFactory {
         @Override
         public ExpectiMaxBot createBot(final Fields fields) throws GameLogicException {
             return new ExpectiMaxBot(fields);
+        }
+
+        @Override
+        public AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
+                                 final int maxRecLevel) throws GameLogicException {
+            return new ExpectiMaxBot(fields, utilityFunction, maxRecLevel);
         }
     }
 
@@ -58,19 +60,14 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
         super(field);
     }
 
-    @Override
-    public void setTerminal(final TerminalWrapper tw) {
-        super.tw = tw;
+    public ExpectiMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
+            throws GameLogicException {
+        super(fields, utilityFunction, maxRecLevel);
     }
 
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
-        try {
-            return new TestBot(getField()).getArmy(firstPlayerArmy);
-        } catch (final GameLogicException e) {
-            logger.error("Error creating army by ExpectiMaxBot", e);
-            return null;
-        }
+        return super.getArmy(firstPlayerArmy);
     }
 
     /**
@@ -89,7 +86,7 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
                 awList.add(new AnswerAndWin(answer, win));
             }
             System.out.println("ExpectiMax bot time: " + (System.currentTimeMillis() - startTime));
-            return getGreedyDecision(awList).answer;
+            return getMaxAW(awList).answer;
 
         } catch (final GameLogicException | BoardException | UnitException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
@@ -112,10 +109,10 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
         if (implBoard.getStatus() != GameStatus.GAME_PROCESS) {
             return getTerminalStateValue(implBoard);
         }
-        if (recLevel >= maxRecLevel) {
+        if (recLevel >= getMaxRecLevel()) {
             // функция полезности вычисляется для агента.
             // Показывает, насколько поелзно будет ему это действие
-            return utilityFunction.compute(implBoard, getField());
+            return getUtilityFunction().compute(implBoard, getField());
         }
         // Если состояние не терминальное, и не достигнут максимлаьынй уровень рекурсии,
         // то начинаем строить дерево из текущего состояния.
@@ -130,7 +127,7 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
         // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
         // корневому ответу сопоставляется значение из нижнего состяния.
         if (isMax) {
-            return getGreedyDecision(awList).win;
+            return getMaxAW(awList).win;
         } else {
             return getChance(awList, aw -> aw.win / awList.size());
         }
@@ -141,7 +138,7 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
      * Метод находит в списке awList элемент с максимальным полем win.
      **/
 
-    private AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList) {
+    private AnswerAndWin getMaxAW(final List<AnswerAndWin> awList) {
         AnswerAndWin bestAW = awList.get(0);
         double bestWin = bestAW.win;
         for (int i = 1; i < awList.size(); i++) {
@@ -166,26 +163,6 @@ public class ExpectiMaxBot extends BaseBot implements Visualisable {
             win += probabilityFunction.applyAsDouble(aw);
         }
         return win;
-    }
-
-    /**
-     * Метод вычисляет тип терминального состояния и выдает в соответствии с ним значение функции полезности
-     * (+- условная бесконечность, либо 0, если ничья).
-     **/
-
-    private double getTerminalStateValue(final Board board) throws GameLogicException {
-        if (board.getStatus() == GameStatus.GAME_PROCESS) {
-            throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
-        }
-        if (board.getStatus() == GameStatus.NO_WINNERS) {
-            return -100000d;
-        }
-        if ((board.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE) ||
-                (board.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO)) {
-            return UtilityFunctions.MAX_VALUE;
-        } else {
-            return UtilityFunctions.MIN_VALUE;
-        }
     }
 
 }
