@@ -102,5 +102,11 @@ public class Data {
         this.info = 0;
     }
 
-
+    public Data(final int info) {
+        this.command = null;
+        this.army = null;
+        this.board = null;
+        this.answer = null;
+        this.info = info;
+    }
 }

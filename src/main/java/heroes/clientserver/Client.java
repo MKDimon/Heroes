@@ -40,15 +40,15 @@ public class Client {
     private BufferedWriter out = null; // поток записи в сокет
 
     public static void main(String[] args) {
+        final Client client;
         try {
-            final ClientsConfigs cc = Deserializer.getClientsConfig();
-            final Client client = new Client(cc, null);
+            client = new Client(null);
             client.startClient();
         } catch (IOException ignore) {}
     }
 
-    private Client(final ClientsConfigs clientsConfigs,final BaseBot player) {
-        this.clientsConfigs = clientsConfigs;
+    private Client(final BaseBot player) throws IOException {
+        this.clientsConfigs = Deserializer.getClientsConfig();
         ip = clientsConfigs.HOST;
         port = clientsConfigs.PORT;
         this.player = player;
