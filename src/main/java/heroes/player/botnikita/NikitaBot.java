@@ -100,33 +100,19 @@ public class NikitaBot extends BaseBot implements Visualisable {
         return false;
     }
 
-    private List<AnswerWinHolder> getSimulationBranch(final PositionUnit attPositionUnit,
-                                                      final PositionUnit oppPositionUnit,
-                                                      final ActionTypes actionType,
-                                                      final Board board, final int currentRecLevel,
-                                                      final List<AnswerWinHolder> answerList)
-                                                    throws GameLogicException {
-        final Answer newAnswer = new Answer(attPositionUnit.getPosition(),
-                oppPositionUnit.getPosition(), actionType);
-        try {
-            GameLogic gl = new GameLogic(new Board(board));
-            if (gl.action(newAnswer.getAttacker(), newAnswer.getDefender(), newAnswer.getActionType())) {
-                final Board simBoard = BoardSimulation.simulateTurn(board, newAnswer);
-                final double win = getWinByGameTree(simBoard, newAnswer, currentRecLevel + 1);
-                answerList.add(new AnswerWinHolder(newAnswer, win));
-            }
-        } catch (UnitException | BoardException e) {
-            e.printStackTrace();
-        }
-        return answerList;
-    }
-
-    private double getWinByGameTree(final Board board, final Answer answer, final int currentRecLevel) throws GameLogicException {
+    private double getWinByGameTree(final Board board, final Answer answer, final int currentRecLevel,
+                                    double alpha, double beta) throws GameLogicException {
         IMinMax minmax;
+        final boolean isMax;
+        final Fields playerField;
         if (board.getCurrentPlayer() == super.getField()) {
             minmax = AnswerWinHolder::getWin;
+            isMax = true;
+            playerField = super.getField();
         } else {
             minmax = AnswerWinHolder -> -AnswerWinHolder.getWin();
+            isMax = false;
+            playerField = FieldsWrapper.getOppField(super.getField());
         }
 
         if (board.getStatus() != GameStatus.GAME_PROCESS) {
@@ -136,12 +122,6 @@ public class NikitaBot extends BaseBot implements Visualisable {
         if (currentRecLevel == getRecLevel(board)) {
             return utilityFunction.evaluate(board, answer);
         }
-        final Fields playerField;
-        if (board.getCurrentPlayer() == super.getField()) {
-            playerField = super.getField();
-        } else {
-            playerField = FieldsWrapper.getOppField(super.getField());
-        }
         final Fields oppField = FieldsWrapper.getOppField(playerField);
 
         List<AnswerWinHolder> answerList = new LinkedList<>();
@@ -149,26 +129,37 @@ public class NikitaBot extends BaseBot implements Visualisable {
         final List<PositionUnit> playerArmyActiveUnits =
                 BoardSimulation.getActiveUnits(board, playerField);
 
-        for (PositionUnit attPositionUnit : playerArmyActiveUnits) {
-            final List<PositionUnit> oppArmyUnits = (attPositionUnit.getUnit().getActionType() == ActionTypes.HEALING)
-                    ? BoardSimulation.getAliveUnits(board, playerField)
-                    : BoardSimulation.getAliveUnits(board, oppField);
-            if (isDefenseOnlyState(attPositionUnit)) {
-                getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList);
-            } else {
-                getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList);
-                for (PositionUnit oppPositionUnit : oppArmyUnits) {
-                    if (attPositionUnit.getUnit().getActionType() == ActionTypes.AREA_DAMAGE) {
-                        getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                                board, currentRecLevel, answerList);
-                        break;
+        try {
+            final GameLogic gl = new GameLogic(board);
+
+            List<Answer> answers = gl.getAvailableMoves(playerField);
+
+            for (Answer ans : answers) {
+                if (isMax) {
+                    double bestValue = Double.MIN_VALUE;
+                    final Board simBoard = BoardSimulation.simulateTurn(board, ans);
+                    final double win = getWinByGameTree(simBoard, ans, currentRecLevel + 1, alpha, beta);
+                    bestValue = Math.max(bestValue, win);
+                    if (bestValue >= beta) {
+                        return bestValue;
                     }
-                    getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                            board, currentRecLevel, answerList);
+                    alpha = Math.max(alpha, bestValue);
+                    answerList.add(new AnswerWinHolder(ans, bestValue));
+                } else {
+                    double bestValue = Double.MAX_VALUE;
+                    final Board simBoard = BoardSimulation.simulateTurn(board, ans);
+                    final double win = getWinByGameTree(simBoard, ans, currentRecLevel + 1, alpha, beta);
+                    bestValue = Math.min(bestValue, win);
+                    if (bestValue <= alpha) {
+                        return bestValue;
+                    }
+                    beta = Math.min(beta, bestValue);
+                    answerList.add(new AnswerWinHolder(ans, bestValue));
                 }
             }
+
+        } catch (BoardException | UnitException e) {
+            e.printStackTrace();
         }
 
         return getGreedyDecision(answerList, minmax).getWin();
@@ -184,35 +175,23 @@ public class NikitaBot extends BaseBot implements Visualisable {
         } else {
             playerField = FieldsWrapper.getOppField(super.getField());
         }
-        final Fields oppField = FieldsWrapper.getOppField(playerField);
 
         final LinkedList<AnswerWinHolder> answerList = new LinkedList<>();
 
-        final List<PositionUnit> playerArmyActiveUnits =
-                            BoardSimulation.getActiveUnits(board, playerField);
+        try {
+            final GameLogic gl = new GameLogic(board);
 
-        for (PositionUnit attPositionUnit : playerArmyActiveUnits) {
-            final List<PositionUnit> oppArmyUnits = (attPositionUnit.getUnit().getActionType() == ActionTypes.HEALING)
-                    ? BoardSimulation.getAliveUnits(board, playerField)
-                    : BoardSimulation.getAliveUnits(board, oppField);
-            if (isDefenseOnlyState(attPositionUnit)) {
-                getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList);
-            } else {
+            List<Answer> answers = gl.getAvailableMoves(playerField);
 
-                for (PositionUnit oppPositionUnit : oppArmyUnits) {
-                    if (attPositionUnit.getUnit().getActionType() == ActionTypes.AREA_DAMAGE) {
-                        getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                                board, currentRecLevel, answerList);
-                        break;
-                    }
-                    getSimulationBranch(attPositionUnit, oppPositionUnit, attPositionUnit.getUnit().getActionType(),
-                            board, currentRecLevel, answerList);
-                }
-
-                getSimulationBranch(attPositionUnit, attPositionUnit, ActionTypes.DEFENSE,
-                        board, currentRecLevel, answerList);
+            for (Answer ans : answers) {
+                final Board simBoard = BoardSimulation.simulateTurn(board, ans);
+                final double win = getWinByGameTree(simBoard, ans, currentRecLevel + 1,
+                        -Double.MAX_VALUE, Double.MIN_VALUE);
+                answerList.add(new AnswerWinHolder(ans, win));
             }
+
+        } catch (BoardException | UnitException e) {
+            e.printStackTrace();
         }
 
         final Answer answer = getGreedyDecision(answerList, AnswerWinHolder::getWin).getAnswer();

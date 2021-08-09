@@ -25,10 +25,9 @@ public class BoardSimulation {
         GameLogic gl;
         Board simBoard;
         try {
-            simBoard = new Board(actualBoard);
-            gl = new GameLogic(simBoard);
+            gl = new GameLogic(actualBoard);
             gl.action(answer.getAttacker(), answer.getDefender(), answer.getActionType());
-            return simBoard;
+            return gl.getBoard();
         } catch (UnitException | BoardException e) {
             logger.error("Cannot create GameLogic object in BoardSimulation", e);
         }

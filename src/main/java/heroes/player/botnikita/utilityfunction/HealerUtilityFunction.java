@@ -12,7 +12,7 @@ import heroes.units.Unit;
 public class HealerUtilityFunction implements IUtilityFunction {
     @Override
     public double evaluate(final Board actualBoard, final Answer answer) {
-        int evaluation = 0;
+        int evaluation = 1;
         PositionUnit minimalHPUnitMax = new PositionUnit(new Position(0,0, Fields.PLAYER_ONE),
                 actualBoard.getUnitByCoordinate(new Position(0,0, Fields.PLAYER_ONE)));
         PositionUnit minimalHPUnitMin = new PositionUnit(new Position(0,0, Fields.PLAYER_TWO),
@@ -43,11 +43,11 @@ public class HealerUtilityFunction implements IUtilityFunction {
 
         final Board simBoard = BoardSimulation.simulateTurn(actualBoard, answer);
         if (!simBoard.getUnitByCoordinate(minimalHPUnitMax.getPosition()).isAlive()) {
-            evaluation -= 3000;
+            evaluation -= 20000;
         }
 
         if (!simBoard.getUnitByCoordinate(minimalHPUnitMax.getPosition()).isAlive()) {
-            evaluation += 3000;
+            evaluation += 30000;
         }
 
         if (simBoard.getUnitByCoordinate(minimalHPUnitMax.getPosition()).getCurrentHP() >

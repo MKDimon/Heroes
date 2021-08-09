@@ -14,10 +14,7 @@ import heroes.mathutils.Position;
 import heroes.units.General;
 import heroes.units.Unit;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Board {
@@ -191,6 +188,36 @@ public class Board {
             army[0] = army[1];
             army[1] = temp;
         }
+    }
+
+    public List<Position> getActiveUnitsPositions(final Fields fields){
+        final Unit[][] army = getArmy(fields);
+        final List<Position> result = new ArrayList<>(6);
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++){
+                if(army[i][j].isActive()){
+                    result.add(new Position(i, j, fields));
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Возвращает список позиций живих юнитов игрока fields.
+     **/
+
+    public List<Position> getAliveUnitsPositions(final Fields fields){
+        final Unit[][] army = getArmy(fields);
+        final List<Position> result = new ArrayList<>(6);
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 3; j++){
+                if(army[i][j].isAlive()){
+                    result.add(new Position(i, j, fields));
+                }
+            }
+        }
+        return result;
     }
 
     public void setCurNumRound(final int curNumRound) {
