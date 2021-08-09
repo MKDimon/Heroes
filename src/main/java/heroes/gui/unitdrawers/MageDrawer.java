@@ -6,27 +6,27 @@ import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.graphics.BasicTextImage;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 import heroes.mathutils.Pair;
 
 public class MageDrawer implements IUnitDrawer {
     @Override
     public TextImage formTextImage(final boolean isGeneral) {
         TextImage ti = new BasicTextImage(new TerminalSize(8, 8), TextCharacter.DEFAULT_CHARACTER.withCharacter(' '));
-        TextCharacter dot = TextCharacter.DEFAULT_CHARACTER.withCharacter('.').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter comma = TextCharacter.DEFAULT_CHARACTER.withCharacter(',').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter equ = TextCharacter.DEFAULT_CHARACTER.withCharacter('=').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(TextColorMap.getColor("indigo"));
-        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("indigo"));
-        TextCharacter pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("indigo"));
-        TextCharacter apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter aqute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter minus = TextCharacter.DEFAULT_CHARACTER.withCharacter('-').withForegroundColor(TextColorMap.getColor("brown"));
+        TextCharacter dot = TextCharacter.DEFAULT_CHARACTER.withCharacter('.').withForegroundColor(Colors.SILVER.color());
+        TextCharacter comma = TextCharacter.DEFAULT_CHARACTER.withCharacter(',').withForegroundColor(Colors.SILVER.color());
+        TextCharacter equ = TextCharacter.DEFAULT_CHARACTER.withCharacter('=').withForegroundColor(Colors.SILVER.color());
+        TextCharacter backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(Colors.INDIGO.color());
+        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.INDIGO.color());
+        TextCharacter pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.INDIGO.color());
+        TextCharacter apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(Colors.BROWN.color());
+        TextCharacter aqute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(Colors.BROWN.color());
+        TextCharacter minus = TextCharacter.DEFAULT_CHARACTER.withCharacter('-').withForegroundColor(Colors.BROWN.color());
 
         if (isGeneral) {
-            backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(TextColorMap.getColor("red"));
-            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("red"));
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("red"));
+            backslash = TextCharacter.DEFAULT_CHARACTER.withCharacter('\\').withForegroundColor(Colors.RED.color());
+            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.RED.color());
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.RED.color());
         }
 
         ti.setCharacterAt(2, 0, dot);
@@ -47,9 +47,9 @@ public class MageDrawer implements IUnitDrawer {
         ti.setCharacterAt(5, 2, equ);
 
         if (isGeneral) {
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("gold"));
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.GOLD.color());
         } else {
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("brown"));
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.BROWN.color());
         }
 
 

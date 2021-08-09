@@ -1,11 +1,5 @@
 package heroes.gui.menudrawers.generalmenudrawers;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.gui.generaldrawers.CommanderDrawer;
-import heroes.gui.generaldrawers.IGeneralDrawer;
-import heroes.gui.generaldrawers.PriestDrawer;
-import heroes.gui.generaldrawers.SniperDrawer;
-
 import java.util.Map;
 
 /**

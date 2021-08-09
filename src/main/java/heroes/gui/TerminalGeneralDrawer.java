@@ -2,10 +2,10 @@ package heroes.gui;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import heroes.gui.utils.Colors;
 import heroes.gui.utils.GeneralDrawersMap;
 import heroes.gui.utils.GeneralNamesMap;
 import heroes.gui.utils.Side;
-import heroes.gui.utils.TextColorMap;
 import heroes.units.General;
 
 import java.io.IOException;
@@ -29,13 +29,13 @@ public class TerminalGeneralDrawer {
         drawStatus(tw, general, side);
     }
 
-    private static void drawStatus(final TerminalWrapper tw, final General general, final Side side) throws IOException {
-        int x_start = (side == Side.RHS) ? tw.getTerminal().getTerminalSize().getColumns() - 34 : 1;
+    private static void drawStatus(final TerminalWrapper tw, final General general, final Side side) {
+        int x_start = (side == Side.RHS) ? tw.getTerminalSize().getColumns() - 34 : 1;
         int y_start = 25;
-        TextGraphics tg = tw.getScreen().newTextGraphics();
-        tg.setForegroundColor(TextColorMap.getColor("gold"));
+        TextGraphics tg = tw.newTG();
+        tg.setForegroundColor(Colors.GOLD.color());
         tg.setModifiers(EnumSet.of(SGR.ITALIC));
         tg.putString(x_start + 13, y_start - 2, GeneralNamesMap.getName(general.getActionType()));
-        tg.setForegroundColor(TextColorMap.getColor("white"));
+        tg.setForegroundColor(Colors.WHITE.color());
     }
 }

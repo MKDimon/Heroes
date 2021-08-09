@@ -1,17 +1,8 @@
 package heroes.gui.menudrawers.botchoicedrawers;
 
-import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.menudrawers.MenuGeneralDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.CommanderMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.PriestMenuDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SniperMenuDrawer;
-import heroes.gui.utils.TextColorMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
+import heroes.gui.utils.Colors;
 
 public class MenuBotDrawer {
     public static void drawBots(final TerminalWrapper tw, final int selectedGeneral) {
@@ -26,27 +17,27 @@ public class MenuBotDrawer {
         tg.putString(x_start + 20, y, "PlayerGUIBot");
 
         if (selectedGeneral == 1) {
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
             tg.putString(x_start - 20, y, "TestBot");
-            tg.setForegroundColor(TextColorMap.getColor("white"));
+            tg.setForegroundColor(Colors.WHITE.color());
         }
 
         if (selectedGeneral == 2) {
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
             tg.putString(x_start - 5, y, "RandomBot");
-            tg.setForegroundColor(TextColorMap.getColor("white"));
+            tg.setForegroundColor(Colors.WHITE.color());
         }
 
         if (selectedGeneral == 3) {
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
             tg.putString(x_start + 5, y, "PlayerBot");
-            tg.setForegroundColor(TextColorMap.getColor("white"));
+            tg.setForegroundColor(Colors.WHITE.color());
         }
 
         if (selectedGeneral == 4) {
-            tg.setForegroundColor(TextColorMap.getColor("gold"));
+            tg.setForegroundColor(Colors.GOLD.color());
             tg.putString(x_start + 20, y, "PlayerGUIBot");
-            tg.setForegroundColor(TextColorMap.getColor("white"));
+            tg.setForegroundColor(Colors.WHITE.color());
         }
     }
 

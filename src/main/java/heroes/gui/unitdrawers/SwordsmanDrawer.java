@@ -6,24 +6,24 @@ import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.graphics.BasicTextImage;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.TerminalWrapper;
-import heroes.gui.utils.TextColorMap;
+import heroes.gui.utils.Colors;
 import heroes.mathutils.Pair;
 
 public class SwordsmanDrawer implements IUnitDrawer {
     @Override
     public TextImage formTextImage(final boolean isGeneral) {
         TextImage ti = new BasicTextImage(new TerminalSize(8, 8), TextCharacter.DEFAULT_CHARACTER.withCharacter(' '));
-        TextCharacter square_bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('[').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter square_bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(']').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter figure_bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('{').withForegroundColor(TextColorMap.getColor("steelgray"));
-        TextCharacter figure_bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter('}').withForegroundColor(TextColorMap.getColor("steelgray"));
-        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter minus = TextCharacter.DEFAULT_CHARACTER.withCharacter('-').withForegroundColor(TextColorMap.getColor("silver"));
-        TextCharacter o = TextCharacter.DEFAULT_CHARACTER.withCharacter('o').withForegroundColor(TextColorMap.getColor("steelgray"));
-        TextCharacter zero = TextCharacter.DEFAULT_CHARACTER.withCharacter('0').withForegroundColor(TextColorMap.getColor("red"));
-        TextCharacter apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter acute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(TextColorMap.getColor("brown"));
-        TextCharacter pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("silver"));
+        TextCharacter square_bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('[').withForegroundColor(Colors.SILVER.color());
+        TextCharacter square_bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter(']').withForegroundColor(Colors.SILVER.color());
+        TextCharacter figure_bracket_left = TextCharacter.DEFAULT_CHARACTER.withCharacter('{').withForegroundColor(Colors.STEELGRAY.color());
+        TextCharacter figure_bracket_right = TextCharacter.DEFAULT_CHARACTER.withCharacter('}').withForegroundColor(Colors.STEELGRAY.color());
+        TextCharacter slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.SILVER.color());
+        TextCharacter minus = TextCharacter.DEFAULT_CHARACTER.withCharacter('-').withForegroundColor(Colors.SILVER.color());
+        TextCharacter o = TextCharacter.DEFAULT_CHARACTER.withCharacter('o').withForegroundColor(Colors.STEELGRAY.color());
+        TextCharacter zero = TextCharacter.DEFAULT_CHARACTER.withCharacter('0').withForegroundColor(Colors.RED.color());
+        TextCharacter apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(Colors.BROWN.color());
+        TextCharacter acute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(Colors.BROWN.color());
+        TextCharacter pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.SILVER.color());
 
 
         ti.setCharacterAt(3, 0, slash);
@@ -54,7 +54,7 @@ public class SwordsmanDrawer implements IUnitDrawer {
         ti.setCharacterAt(6, 5, minus);
 
         if (isGeneral) {
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("indigo"));
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.INDIGO.color());
         }
 
         ti.setCharacterAt(3, 1, pipe);
@@ -62,14 +62,14 @@ public class SwordsmanDrawer implements IUnitDrawer {
         ti.setCharacterAt(3, 3, pipe);
         ti.setCharacterAt(3, 4, pipe);
         if (isGeneral) {
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("gold"));
-            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("gold"));
-            apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(TextColorMap.getColor("gold"));
-            acute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(TextColorMap.getColor("gold"));
-            zero = TextCharacter.DEFAULT_CHARACTER.withCharacter('0').withForegroundColor(TextColorMap.getColor("blue"));
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.GOLD.color());
+            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.GOLD.color());
+            apostrophe = TextCharacter.DEFAULT_CHARACTER.withCharacter('\'').withForegroundColor(Colors.GOLD.color());
+            acute = TextCharacter.DEFAULT_CHARACTER.withCharacter('`').withForegroundColor(Colors.GOLD.color());
+            zero = TextCharacter.DEFAULT_CHARACTER.withCharacter('0').withForegroundColor(Colors.BROWN.color());
         } else {
-            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(TextColorMap.getColor("brown"));
-            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(TextColorMap.getColor("brown"));
+            pipe = TextCharacter.DEFAULT_CHARACTER.withCharacter('|').withForegroundColor(Colors.BROWN.color());
+            slash = TextCharacter.DEFAULT_CHARACTER.withCharacter('/').withForegroundColor(Colors.BROWN.color());
         }
 
 
