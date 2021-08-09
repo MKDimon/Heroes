@@ -11,10 +11,6 @@ import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
-import heroes.player.BaseBot;
-import heroes.player.TestBot;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +20,7 @@ import java.util.function.ToDoubleFunction;
  * Бот по стратегии "минимакс".
  **/
 
-public class SimpleMinMaxBot extends BaseBot implements Visualisable {
-
-    private static final int maxRecLevel = 3;
-    private static final UtilityFunction utilityFunction = UtilityFunctions.HPUtilityFunction;
-
-    private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
+public class SimpleMinMaxBot extends AIBot implements Visualisable {
 
     protected final TerminalWrapper tw = null;
 
@@ -37,10 +28,16 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
      * Фабрика ботов.
      **/
 
-    public static class SimpleMinMaxBotFactory extends BaseBotFactory {
+    public static class SimpleMinMaxBotFactory extends AIBotFactory {
         @Override
         public SimpleMinMaxBot createBot(final Fields fields) throws GameLogicException {
             return new SimpleMinMaxBot(fields);
+        }
+
+        @Override
+        public AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
+                                 final int maxRecLevel) throws GameLogicException {
+            return new SimpleMinMaxBot(fields, utilityFunction, maxRecLevel);
         }
     }
 
@@ -63,6 +60,11 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         super(field);
     }
 
+    public SimpleMinMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
+            throws GameLogicException {
+        super(fields, utilityFunction, maxRecLevel);
+    }
+
     @Override
     public void setTerminal(final TerminalWrapper tw) {
         super.tw = tw;
@@ -70,12 +72,7 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
 
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
-        try {
-            return new TestBot(getField()).getArmy(firstPlayerArmy);
-        } catch (final GameLogicException e) {
-            logger.error("Error creating army by SimpleMinMaxBot", e);
-            return null;
-        }
+        return super.getArmy(firstPlayerArmy);
     }
 
     /**
@@ -125,10 +122,10 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
         if (implBoard.getStatus() != GameStatus.GAME_PROCESS) {
             return getTerminalStateValue(implBoard);
         }
-        if (recLevel >= maxRecLevel) {
+        if (recLevel >= getMaxRecLevel()) {
             // функция полезности вычисляется для агента.
             // Показывает, насколько поелзно будет ему это действие
-            return utilityFunction.compute(implBoard, getField());
+            return getUtilityFunction().compute(implBoard, getField());
         }
         // Если состояние не терминальное, и не достигнут максимлаьынй уровень рекурсии,
         // то начинаем строить дерево из текущего состояния.
@@ -176,26 +173,6 @@ public class SimpleMinMaxBot extends BaseBot implements Visualisable {
             }
         }
         return bestAW;
-    }
-
-    /**
-     * Метод вычисляет тип терминального состояния и выдает в соответствии с ним значение функции полезности
-     * (+- условная бесконечность, либо 0, если ничья).
-     **/
-
-    private double getTerminalStateValue(final Board board) throws GameLogicException {
-        if (board.getStatus() == GameStatus.GAME_PROCESS) {
-            throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
-        }
-        if (board.getStatus() == GameStatus.NO_WINNERS) {
-            return -100000d;
-        }
-        if (board.getStatus() == GameStatus.PLAYER_ONE_WINS && getField() == Fields.PLAYER_ONE ||
-                board.getStatus() == GameStatus.PLAYER_TWO_WINS && getField() == Fields.PLAYER_TWO) {
-            return UtilityFunctions.MAX_VALUE;
-        } else {
-            return UtilityFunctions.MIN_VALUE;
-        }
     }
 
 }
