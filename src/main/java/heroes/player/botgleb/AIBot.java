@@ -8,7 +8,6 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
-import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.TestBot;
 
@@ -31,7 +30,7 @@ public abstract class AIBot extends BaseBot implements Visualisable {
         public abstract AIBot createBot(final Fields fields) throws GameLogicException;
 
         public abstract AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
-                                          int maxRecLevel);
+                                          int maxRecLevel) throws GameLogicException;
     }
 
 
@@ -50,6 +49,10 @@ public abstract class AIBot extends BaseBot implements Visualisable {
         return maxRecLevel;
     }
 
+    public UtilityFunction getUtilityFunction(){
+        return utilityFunction;
+    }
+
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
@@ -60,17 +63,12 @@ public abstract class AIBot extends BaseBot implements Visualisable {
         }
     }
 
-    @Override
-    public Answer getAnswer(final Board board) throws GameLogicException {
-        return null;
-    }
-
     /**
      * Метод вычисляет тип терминального состояния и выдает в соответствии с ним значение функции полезности
      * (+- условная бесконечность, либо DRAW_VALUE, если ничья).
      **/
 
-    private double getTerminalStateValue(final Board board) throws GameLogicException {
+    public double getTerminalStateValue(final Board board) throws GameLogicException {
         if (board.getStatus() == GameStatus.GAME_PROCESS) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }
