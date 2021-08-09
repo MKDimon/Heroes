@@ -63,7 +63,7 @@ public class Server {
         public void run() {
             while (true) {
                 try {
-                    final Data data = new Data(CommonCommands.GET_ROOM);
+                    final Data data = new Data(CommonCommands.GET_ROOM, server.maxRooms);
                     socket.setSoTimeout(CommandsTime.getTime(data.command));
                     out.write(Serializer.serializeData(data) + '\n');
                     out.flush();
@@ -310,7 +310,7 @@ public class Server {
     }
 
     public static void main(final String[] args) throws IOException {
-        final ServersConfigs sc = Deserializer.getConfig();
+        final ServersConfigs sc = Deserializer.getServersConfig();
         final Server server = new Server(sc.PORT, sc.MAX_ROOMS, sc.DELAY);
         server.startServer();
     }
