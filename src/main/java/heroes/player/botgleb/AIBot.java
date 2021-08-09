@@ -33,7 +33,6 @@ public abstract class AIBot extends BaseBot implements Visualisable {
                                           int maxRecLevel) throws GameLogicException;
     }
 
-
     public AIBot(final Fields field, final UtilityFunction utilityFunction, final int maxRecLevel)
             throws GameLogicException {
         super(field);
@@ -68,7 +67,7 @@ public abstract class AIBot extends BaseBot implements Visualisable {
      * (+- условная бесконечность, либо DRAW_VALUE, если ничья).
      **/
 
-    public double getTerminalStateValue(final Board board) throws GameLogicException {
+    protected double getTerminalStateValue(final Board board) throws GameLogicException {
         if (board.getStatus() == GameStatus.GAME_PROCESS) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
         }

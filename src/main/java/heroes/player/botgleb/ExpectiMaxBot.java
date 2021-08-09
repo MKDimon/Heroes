@@ -46,16 +46,6 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
         }
     }
 
-    private static final class AnswerAndWin {
-        final Answer answer;
-        final double win;
-
-        private AnswerAndWin(final Answer answer, final double win) {
-            this.answer = answer;
-            this.win = win;
-        }
-    }
-
     public ExpectiMaxBot(final Fields field) throws GameLogicException {
         super(field);
     }
@@ -86,7 +76,7 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
                 awList.add(new AnswerAndWin(answer, win));
             }
             System.out.println("ExpectiMax bot time: " + (System.currentTimeMillis() - startTime));
-            return getMaxAW(awList).answer;
+            return getMaxAW(awList).answer();
 
         } catch (final GameLogicException | BoardException | UnitException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
@@ -127,9 +117,9 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
         // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
         // корневому ответу сопоставляется значение из нижнего состяния.
         if (isMax) {
-            return getMaxAW(awList).win;
+            return getMaxAW(awList).win();
         } else {
-            return getChance(awList, aw -> aw.win / awList.size());
+            return getChance(awList, aw -> aw.win() / awList.size());
         }
 
     }
@@ -140,10 +130,10 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
 
     private AnswerAndWin getMaxAW(final List<AnswerAndWin> awList) {
         AnswerAndWin bestAW = awList.get(0);
-        double bestWin = bestAW.win;
+        double bestWin = bestAW.win();
         for (int i = 1; i < awList.size(); i++) {
             final AnswerAndWin currentAW = awList.get(i);
-            final double currentWin = currentAW.win;
+            final double currentWin = currentAW.win();
             if (currentWin > bestWin) {
                 bestAW = currentAW;
                 bestWin = currentWin;

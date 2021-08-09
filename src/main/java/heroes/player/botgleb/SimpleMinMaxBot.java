@@ -41,21 +41,6 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
         }
     }
 
-    private static final class AnswerAndWin implements Comparable<AnswerAndWin> {
-        final Answer answer;
-        final double win;
-
-        private AnswerAndWin(final Answer answer, final double win) {
-            this.answer = answer;
-            this.win = win;
-        }
-
-        @Override
-        public int compareTo(final AnswerAndWin o) {
-            return Double.compare(win, o.win);
-        }
-    }
-
     public SimpleMinMaxBot(final Fields field) throws GameLogicException {
         super(field);
     }
@@ -92,7 +77,7 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
                 awList.add(new AnswerAndWin(answer, win));
             }
             System.out.println("SimpleMinMax time: " + (System.currentTimeMillis() - startTime));
-            return getGreedyDecision(awList, aw -> aw.win).answer;
+            return getGreedyDecision(awList, AnswerAndWin::win).answer();
 
         } catch (final GameLogicException | BoardException | UnitException e) {
             throw new GameLogicException(GameLogicExceptionType.INCORRECT_PARAMS);
@@ -113,9 +98,9 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
         //если ход противника - домножим функцию на -1.
         final boolean isMax = implBoard.getCurrentPlayer() == getField();
         if (isMax) {
-            winCalculator = aw -> aw.win;
+            winCalculator = AnswerAndWin::win;
         } else {
-            winCalculator = aw -> -aw.win;
+            winCalculator = aw -> -aw.win();
         }
         // Если состояние терминальное, и победил агент, то возвращает +большое число,
         // если победил соперник, возвращает -большое число.
@@ -150,7 +135,7 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
 
         // Пробрасывает на верхний уровень, вплоть до метода getAnswer, где каждому
         // корневому ответу сопоставляется значение из нижнего состяния.
-        return getGreedyDecision(awList, winCalculator).win;
+        return getGreedyDecision(awList, winCalculator).win();
     }
 
     /**
