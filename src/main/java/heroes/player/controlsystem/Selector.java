@@ -39,8 +39,8 @@ public class Selector {
     public void updateSelection(final KeyType kt) {
         Pair<Integer, Integer> fromMap = keyTypePairMap.getOrDefault(kt, new Pair<>(0, 0));
 
-        int x = (fromMap.getX() + currentSelection.getX() + rows) % rows; // java % - ост. от деления, нужно добавить
-        int y = (fromMap.getY() + currentSelection.getY() + cols) % cols; // чтобы не уйти в отрицательные числа
+        final int x = (fromMap.getX() + currentSelection.getX() + rows) % rows;
+        final int y = (fromMap.getY() + currentSelection.getY() + cols) % cols;
 
         currentSelection = new Pair<>(x, y);
     }
