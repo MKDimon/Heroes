@@ -138,7 +138,7 @@ public class GameLogic {
         if (result == ValidationUnits.SUCCESSFUL_STEP) {
             logger.info(result.toString());
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
-            gameBegun = ControlRound.checkStep(board);
+            gameBegun = ControlRound.nextStep(board);
             return true;
         }
         return false;

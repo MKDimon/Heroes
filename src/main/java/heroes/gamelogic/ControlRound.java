@@ -36,7 +36,7 @@ public class ControlRound {
      * @return продолжается игра - true / false иначе
      * @throws UnitException ошибка ;D
      */
-    public static boolean checkStep(final Board board) throws UnitException {
+    public static boolean nextStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
             board.deinspireArmy(board.getFieldPlayerOne());
