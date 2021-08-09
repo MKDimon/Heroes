@@ -57,9 +57,9 @@ public class NikitaBot extends BaseBot implements Visualisable {
     }
 
     private double computeWin(final GameStatus gs) {
-        GameStatus currentPlayer =
+        final GameStatus currentPlayer =
                 super.getField() == Fields.PLAYER_ONE ? GameStatus.PLAYER_ONE_WINS : GameStatus.PLAYER_TWO_WINS;
-        GameStatus oppPlayer =
+        final GameStatus oppPlayer =
                 super.getField() == Fields.PLAYER_ONE ? GameStatus.PLAYER_TWO_WINS : GameStatus.PLAYER_ONE_WINS;
         if (gs == currentPlayer) {
             return 100000.0;
@@ -160,7 +160,7 @@ public class NikitaBot extends BaseBot implements Visualisable {
         try {
             final GameLogic gl = new GameLogic(board);
 
-            List<Answer> answers = gl.getAvailableMoves(playerField);
+            final List<Answer> answers = gl.getAvailableMoves(playerField);
 
             for (Answer ans : answers) {
                 final Board simBoard = BoardSimulation.simulateTurn(board, ans);

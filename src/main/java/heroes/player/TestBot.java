@@ -54,8 +54,8 @@ public class TestBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            General general = new General(GeneralTypes.COMMANDER);
-            Unit[][] army = new Unit[2][3];
+            final General general = new General(GeneralTypes.COMMANDER);
+            final Unit[][] army = new Unit[2][3];
             army[0][0] = new Unit(UnitTypes.SWORDSMAN);
             army[1][0] = new Unit(UnitTypes.BOWMAN);
             army[0][1] = new Unit(UnitTypes.SWORDSMAN);
@@ -81,7 +81,6 @@ public class TestBot extends BaseBot implements Visualisable {
     @Override
     public Answer getAnswer(final Board board) throws GameLogicException {
         Random r = new Random();
-
 
         Fields defField = (getField() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
