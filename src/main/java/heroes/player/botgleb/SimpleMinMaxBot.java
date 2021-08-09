@@ -4,7 +4,6 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
@@ -22,7 +21,7 @@ import java.util.function.ToDoubleFunction;
 
 public class SimpleMinMaxBot extends AIBot implements Visualisable {
 
-    protected final TerminalWrapper tw = null;
+    protected TerminalWrapper tw = null;
 
     /**
      * Фабрика ботов.
@@ -35,8 +34,8 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
         }
 
         @Override
-        public AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
-                                 final int maxRecLevel) throws GameLogicException {
+        public SimpleMinMaxBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
+                                           final int maxRecLevel) throws GameLogicException {
             return new SimpleMinMaxBot(fields, utilityFunction, maxRecLevel);
         }
     }
@@ -53,11 +52,6 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
     @Override
     public void setTerminal(final TerminalWrapper tw) {
         super.tw = tw;
-    }
-
-    @Override
-    public Army getArmy(final Army firstPlayerArmy) {
-        return super.getArmy(firstPlayerArmy);
     }
 
     /**
@@ -145,8 +139,8 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
      * ценностью, если ходит соперник.
      **/
 
-    private AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList,
-                                           final ToDoubleFunction<AnswerAndWin> winCalculator) {
+    protected AnswerAndWin getGreedyDecision(final List<AnswerAndWin> awList,
+                                             final ToDoubleFunction<AnswerAndWin> winCalculator) {
         AnswerAndWin bestAW = awList.get(0);
         double bestWin = winCalculator.applyAsDouble(bestAW);
         for (int i = 1; i < awList.size(); i++) {
