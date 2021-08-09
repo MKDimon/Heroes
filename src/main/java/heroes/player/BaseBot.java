@@ -5,20 +5,19 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.Visualisable;
 
 /**
  * Класс - базовый бот.
- * @field - поле, к которому привязан бот.
  **/
 
 public abstract class BaseBot implements Visualisable {
     private final Fields field;
-    protected TerminalWrapper tw;
+    protected LanternaWrapper tw;
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         this.tw = tw;
     }
 
