@@ -1,15 +1,12 @@
 package heroes.player.botnikita;
 
-import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.*;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.*;
-import heroes.player.botnikita.decisionalgorythms.IDecisionAlgorythm;
-import heroes.player.botnikita.decisionalgorythms.MiniMaxAlgorythm;
 import heroes.player.botnikita.simulation.BoardSimulation;
 import heroes.player.botnikita.simulation.FieldsWrapper;
 import heroes.player.botnikita.utilityfunction.HealerUtilityFunction;
@@ -38,7 +35,7 @@ public class NikitaBot extends BaseBot implements Visualisable {
     }
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         super.setTerminal(tw);
     }
 

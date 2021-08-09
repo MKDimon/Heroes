@@ -9,15 +9,15 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.Visualisable;
-import heroes.gui.menudrawers.MenuBoardDrawer;
-import heroes.gui.menudrawers.MenuGeneralDrawer;
-import heroes.gui.menudrawers.MenuTitleDrawers;
-import heroes.gui.menudrawers.MenuUnitDrawer;
-import heroes.gui.menudrawers.generalmenudrawers.SelectedGeneralMap;
-import heroes.gui.menudrawers.unitmenudrawers.UnitMenuMap;
-import heroes.gui.utils.TerminalArmyDrawer;
+import heroes.gui.heroeslanterna.menudrawers.MenuBoardDrawer;
+import heroes.gui.heroeslanterna.menudrawers.MenuGeneralDrawer;
+import heroes.gui.heroeslanterna.menudrawers.MenuTitleDrawers;
+import heroes.gui.heroeslanterna.menudrawers.MenuUnitDrawer;
+import heroes.gui.heroeslanterna.menudrawers.generalmenudrawers.SelectedGeneralMap;
+import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.UnitMenuMap;
+import heroes.gui.heroeslanterna.utils.LanternaArmyDrawer;
 import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 import heroes.player.controlsystem.Controls;
@@ -42,10 +42,10 @@ import java.util.Scanner;
 public class PlayerGUIBot extends BaseBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(PlayerGUIBot.class);
     private final Scanner scanner = new Scanner(System.in);
-    protected TerminalWrapper tw;
+    protected LanternaWrapper tw;
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         super.tw = tw;
         this.tw = super.tw;
     }
@@ -101,7 +101,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
             tw.getScreen().clear();
 
             if (firstPlayerArmy != null) {
-                TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
+                LanternaArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
                         false, Fields.PLAYER_ONE);
                 MenuTitleDrawers.drawArmyHereDisclaimer(tw, new TerminalPosition(10, 10));
             } else {
@@ -175,7 +175,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
                 tw.getScreen().clear();
 
                 if (firstPlayerArmy != null) {
-                    TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
+                    LanternaArmyDrawer.drawArmy(tw, new TerminalPosition(0, 0), firstPlayerArmy,
                             false, Fields.PLAYER_ONE);
                     MenuTitleDrawers.drawArmyHereDisclaimer(tw, new TerminalPosition(10, 10));
                 } else {
@@ -189,7 +189,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
                 MenuBoardDrawer.drawUnitBorders(tw, new TerminalPosition(110, 10),
                         new TerminalPosition(137, 46), selector.getSelectedNumber());
 
-                TerminalArmyDrawer.drawArmy(tw, new TerminalPosition(0,0), units, general,
+                LanternaArmyDrawer.drawArmy(tw, new TerminalPosition(0,0), units, general,
                         true, Fields.PLAYER_TWO);
 
                 MenuTitleDrawers.drawChoose(tw, new TerminalPosition(5, 2));

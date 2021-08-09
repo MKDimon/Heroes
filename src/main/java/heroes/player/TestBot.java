@@ -7,7 +7,7 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.Visualisable;
 import heroes.mathutils.Position;
 import heroes.units.General;
@@ -28,10 +28,10 @@ import java.util.Random;
 public class TestBot extends BaseBot implements Visualisable {
     Logger logger = LoggerFactory.getLogger(TestBot.class);
 
-    protected TerminalWrapper tw;
+    protected LanternaWrapper tw;
 
     @Override
-    public void setTerminal(TerminalWrapper tw) {
+    public void setTerminal(LanternaWrapper tw) {
         super.tw = tw;
     }
 

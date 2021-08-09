@@ -8,8 +8,8 @@ import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.TerminalEndGame;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaEndGame;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.*;
 import heroes.player.botnikita.NikitaBot;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class SelfPlay {
     static Logger logger = LoggerFactory.getLogger(SelfPlay.class);
 
     public static void main(final String[] args) throws GameLogicException, IOException, InterruptedException, UnitException {
-        TerminalWrapper tw = new TerminalWrapper();
+        LanternaWrapper tw = new LanternaWrapper();
         tw.start();
 
         List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
@@ -63,7 +63,7 @@ public class SelfPlay {
         }
 
         Data data = new Data(CommonCommands.DRAW ,gl.getBoard());
-        TerminalEndGame.endGame(tw, data);
+        LanternaEndGame.endGame(tw, data);
         System.out.println("Minmax bot won " + counter + " games of " + gamesCount);
     }
 }
