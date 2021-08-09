@@ -8,6 +8,7 @@ import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
+import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new TestBot.TestBotFactory());
+        playerBots.put("Dimon", new NikitaBot.NikitaBotFactory());
     }
 
     private final String ip;
