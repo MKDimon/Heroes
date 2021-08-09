@@ -77,7 +77,7 @@ public class StatisticsCollector {
             }
             record.delete(record.length()-1,record.length()).append("\n");
             writer.write(record.toString());
-        } catch (final IOException | UnitException e) {
+        } catch (final IOException e) {
             logger.error("Error army recording", e);
         }
     }
