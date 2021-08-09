@@ -1,7 +1,6 @@
 package heroes.statistics;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
@@ -27,7 +26,7 @@ import java.util.Map;
  * PLAYER_ONE,ARMY
  * PLAYER_TWO,ARMY
  * ...
- *    0           1   2       3      4     5        6         7             8       9            10     11
+ * 0           1   2       3      4     5        6         7             8       9            10     11
  * PLAYER_ATTACK,atX,atY,PLAYER_DEF,defX,defY,actionType,attackerUnitType,atHP,defenderUnitType,defHP,actionPower
  * ...
  * *пустая строка*
@@ -75,9 +74,9 @@ public class StatisticsCollector {
                     }
                 }
             }
-            record.delete(record.length()-1,record.length()).append("\n");
+            record.delete(record.length() - 1, record.length()).append("\n");
             writer.write(record.toString());
-        } catch (final IOException | UnitException e) {
+        } catch (final IOException e) {
             logger.error("Error army recording", e);
         }
     }
@@ -97,7 +96,7 @@ public class StatisticsCollector {
 
     public void recordActionToCSV(final Position attackPos, final Position defPos, ActionTypes actType,
                                   final Unit attacker, final Unit defender, int actPower) {
-        if(actType == ActionTypes.DEFENSE){
+        if (actType == ActionTypes.DEFENSE) {
             actPower = defender.getArmor();
         }
         final StringBuffer record = new StringBuffer();

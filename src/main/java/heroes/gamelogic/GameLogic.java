@@ -13,10 +13,7 @@ import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class GameLogic {
     private static final Logger logger = LoggerFactory.getLogger(GameLogic.class);
@@ -28,9 +25,9 @@ public class GameLogic {
         gameBegun = false;
     }
 
-    public GameLogic(Board board) throws UnitException, BoardException {
+    public GameLogic(final Board board) throws UnitException, BoardException {
         this.board = new Board(board);
-        gameBegun = true;
+        gameBegun = board.getStatus() == GameStatus.GAME_PROCESS;
     }
 
     /**
@@ -147,6 +144,18 @@ public class GameLogic {
         return false;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public boolean isGameBegun() {
+        return gameBegun;
+    }
+
+    /**
+     * Метод возвращает список возмодных для игрока player ходов.
+     **/
+
     public List<Answer> getAvailableMoves(final Fields player) throws GameLogicException {
         final Fields defField = player == Fields.PLAYER_TWO ? Fields.PLAYER_ONE : Fields.PLAYER_TWO;
         final List<Answer> result = new LinkedList<>();
@@ -155,7 +164,7 @@ public class GameLogic {
         final List<Position> aliveAttackers = board.getAliveUnitsPositions(player);
 
         for(final Position atPos : attackers){
-
+            result.add(new Answer(atPos, atPos, ActionTypes.DEFENSE));
             if(board.getUnitByCoordinate(atPos).getActionType() == ActionTypes.HEALING){
                 for(final Position healingPos : aliveAttackers){
                     result.add(new Answer(atPos, healingPos, ActionTypes.HEALING));
@@ -173,16 +182,8 @@ public class GameLogic {
                     }
                 }
             }
-            result.add(new Answer(atPos, atPos, ActionTypes.DEFENSE));
         }
         return result;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public boolean isGameBegun() {
-        return gameBegun;
-    }
 }

@@ -121,6 +121,9 @@ public class Unit {
     }
 
     public int getAccuracy() {
+        if(accuracy + bonusAccuracy > 100){
+            return 100;
+        }
         return accuracy + bonusAccuracy;
     }
 

@@ -8,7 +8,6 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
-import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -22,10 +21,14 @@ import java.util.Map;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
-    private static final String IP = "192.168.7.159";
+    private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
+    static {
+        playerBots.put("Dimon", new TestBot.TestBotFactory());
+    }
 
     private final String ip;
     private final int port;
+    private final ClientsConfigs clientsConfigs;
 
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
@@ -38,15 +41,16 @@ public class Client {
 
     public static void main(String[] args) {
         try {
-            final ServersConfigs sc = Deserializer.getConfig();
-            final Client client = new Client(IP, sc.PORT, null);
+            final ClientsConfigs cc = Deserializer.getClientsConfig();
+            final Client client = new Client(cc, null);
             client.startClient();
         } catch (IOException ignore) {}
     }
 
-    private Client(final String ip, final int port,final BaseBot player) {
-        this.ip = ip;
-        this.port = port;
+    private Client(final ClientsConfigs clientsConfigs,final BaseBot player) {
+        this.clientsConfigs = clientsConfigs;
+        ip = clientsConfigs.HOST;
+        port = clientsConfigs.PORT;
         this.player = player;
     }
 
@@ -65,7 +69,7 @@ public class Client {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
-        botFactoryMap.put("Player", new NikitaBot.NikitaBotFactory());
+        botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);

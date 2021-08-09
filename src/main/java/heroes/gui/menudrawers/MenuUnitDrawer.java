@@ -38,10 +38,10 @@ public class MenuUnitDrawer {
         HealerMenuDrawer healerMenuDrawer = new HealerMenuDrawer();
 
 
-        swordsmanMenuDrawer.draw(tw, new Pair<Integer, Integer>(x_start , y ), swordsmanSelected);
-        bowmanMenuDrawer.draw(tw, new Pair<Integer, Integer>(x_start, y + 10), bowmanSelected);
-        mageMenuDrawer.draw(tw, new Pair<Integer, Integer>(x_start, y + 20), mageSelected);
-        healerMenuDrawer.draw(tw, new Pair<Integer, Integer>(x_start, y + 30), healerSelected);
+        swordsmanMenuDrawer.draw(tw, new Pair<>(x_start , y ), swordsmanSelected);
+        bowmanMenuDrawer.draw(tw, new Pair<>(x_start, y + 10), bowmanSelected);
+        mageMenuDrawer.draw(tw, new Pair<>(x_start, y + 20), mageSelected);
+        healerMenuDrawer.draw(tw, new Pair<>(x_start, y + 30), healerSelected);
 
     }
 }
