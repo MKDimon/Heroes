@@ -1,8 +1,10 @@
 package heroes.clientserver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ServersConfigs {
     @JsonProperty
     public final int PORT;
@@ -10,12 +12,28 @@ public class ServersConfigs {
     public final int MAX_ROOMS;
     @JsonProperty
     public final int DELAY;
+    @JsonProperty
+    public final int THREADS;
+    @JsonProperty
+    public final int GAMES_COUNT;
+    @JsonProperty
+    public final String PATH_LOG;
+    @JsonProperty
+    public final String LOGBACK;
     @JsonCreator
     public ServersConfigs(@JsonProperty("PORT") final int PORT,
                           @JsonProperty("MAX_ROOMS") final int MAX_ROOMS,
-                          @JsonProperty("DELAY") final int DELAY) {
+                          @JsonProperty("DELAY") final int DELAY,
+                          @JsonProperty("THREADS") final int threads,
+                          @JsonProperty("GAMES_COUNT") final int games_count,
+                          @JsonProperty("PATH_LOG") final String path_log,
+                          @JsonProperty("LOGBACK") final String logback) {
         this.MAX_ROOMS = MAX_ROOMS;
         this.PORT = PORT;
         this.DELAY = DELAY;
+        THREADS = threads;
+        GAMES_COUNT = games_count;
+        PATH_LOG = path_log;
+        LOGBACK = logback;
     }
 }
