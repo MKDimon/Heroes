@@ -46,6 +46,5 @@ public class DamageCommand extends Command {
                 logger.info("Unit missed");
             }
         }
-
     }
 }

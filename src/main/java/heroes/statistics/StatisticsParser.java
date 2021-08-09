@@ -19,9 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -94,7 +92,7 @@ public class StatisticsParser {
      * Парсер для строки с армией
      **/
 
-    public static Army parseArmy(final String[] armyStrings, int startPos) throws StatisticsException {
+    private static Army parseArmy(final String[] armyStrings, int startPos) throws StatisticsException {
         if (armyStrings.length != 7) {
             throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
         }
@@ -125,7 +123,7 @@ public class StatisticsParser {
      * Метод для парсинга логов игры.
      **/
 
-    public static List<LogInformation> parseLog(final BufferedReader reader) throws StatisticsException {
+    private static List<LogInformation> parseLog(final BufferedReader reader) throws StatisticsException {
         final List<LogInformation> result = new ArrayList<>(120);
         try {
             String log;
@@ -151,17 +149,47 @@ public class StatisticsParser {
      * PLAYER_WINNER хранится в виде строки, т.к. возможна ничья
      */
 
-    public static Pair<String, Integer> parseWinner(final BufferedReader reader) throws StatisticsException {
+    private static Pair<String, Integer> parseWinner(final BufferedReader reader) throws StatisticsException {
         try {
             final String[] logString = reader.readLine().split(",");
             final int countOfRounds = Integer.parseInt(logString[0]);
-            if(!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")){
+            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")) {
                 throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
-                return new Pair<>(logString[1], countOfRounds);
+            return new Pair<>(logString[1], countOfRounds);
         } catch (final IOException | IllegalArgumentException e) {
             logger.error("Error winner parsing", e);
             throw new StatisticsException(e);
+        }
+    }
+
+    /**
+     * Далее набор методов для парсинга файлов с обработанной статистикой
+     **/
+
+    public static Map<Army, Integer[]> parseArmiesStatisticsFile() {
+        try (final BufferedReader reader = new BufferedReader(
+                new FileReader(StatisticsRecorder.armiesStatisticsFilename))) {
+            final Map<Army, Integer[]> result = new HashMap<>();
+            while (reader.ready()) {
+                final String[] line = reader.readLine().split(",");
+                result.put(parseArmy(line, 0), new Integer[]{Integer.valueOf(line[6]),
+                        Integer.valueOf(line[7]), Integer.valueOf(line[8])});
+            }
+            return result;
+        } catch (IOException | StatisticsException e) {
+            logger.error("Error armiesStatistics file parsing", e);
+            return null;
+        }
+    }
+
+    public static double parseGameDurationStatisticsFile() {
+        try (final BufferedReader reader = new BufferedReader(
+                new FileReader(StatisticsRecorder.gameDurationStatisticsFilename))) {
+            return Double.parseDouble(reader.readLine());
+        } catch (IOException | NumberFormatException e) {
+            logger.error("Error gameDurationStatistics file parsing", e);
+            return 0;
         }
     }
 }

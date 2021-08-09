@@ -40,7 +40,7 @@ public class CommandFactoryTest {
 
         assertAll(
                 ()-> assertEquals(HealCommand.class, cf.getCommand(att, def, ActionTypes.HEALING).getClass()),
-                ()-> assertEquals(100, defUnit.getCurrentHP())
+                ()-> assertEquals(80, defUnit.getCurrentHP())
         );
     }
 }

@@ -66,7 +66,7 @@ public class Army {
     }
 
     @JsonIgnore
-    public final General getGeneral() throws UnitException {
+    public final General getGeneral() {
         return general;
     }
 

@@ -2,6 +2,7 @@ package heroes.gui.selectiondrawers.actiontypedrawers;
 
 import heroes.gui.TerminalWrapper;
 import heroes.gui.selectiondrawers.TerminalSelectionDrawer;
+import heroes.gui.utils.Colors;
 import heroes.gui.utils.UnitTerminalGrid;
 import heroes.mathutils.Position;
 
@@ -13,11 +14,11 @@ public class DrawMassDamageCommand extends DrawCommand {
     @Override
     public void execute() {
         UnitTerminalGrid utg = new UnitTerminalGrid(super.getTw());
-        TerminalSelectionDrawer.drawSelection(super.getTw(), utg.getPair(super.getAtt()), '|', "green");
+        TerminalSelectionDrawer.drawSelection(super.getTw(), utg.getPair(super.getAtt()), '|', Colors.GREEN);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 TerminalSelectionDrawer.drawSelection(super.getTw(),
-                        utg.getPair(new Position(i, j, super.getDef().F())), '|', "darkestred");
+                        utg.getPair(new Position(i, j, super.getDef().F())), '|', Colors.DARKESTRED);
             }
         }
     }

@@ -36,7 +36,7 @@ public class ControlRound {
      * @return продолжается игра - true / false иначе
      * @throws UnitException ошибка ;D
      */
-    public static boolean checkStep(final Board board) throws UnitException {
+    public static boolean nextStep(final Board board) throws UnitException {
         // Количество активных юнитов
         if (!board.getGeneralPlayerOne().isAlive() && board.isArmyOneInspired()) {
             board.deinspireArmy(board.getFieldPlayerOne());
@@ -90,7 +90,7 @@ public class ControlRound {
         }
 
         // Смена игрока начинающего раунд
-        board.setCurrentPlayer((board.getRoundPlayer() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_TWO);
+        board.setCurrentPlayer((board.getRoundPlayer() == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE);
         board.setRoundPlayer(board.getCurrentPlayer());
 
         Arrays.stream(board.getFieldPlayerOne()).forEach(x -> Arrays.stream(x).forEach(t -> t.setActive(true)));
