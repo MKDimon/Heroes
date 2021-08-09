@@ -21,16 +21,16 @@ public class ServersConfigs {
     @JsonProperty
     public final String LOGBACK;
     @JsonCreator
-    public ServersConfigs(@JsonProperty("PORT") final int PORT,
-                          @JsonProperty("MAX_ROOMS") final int MAX_ROOMS,
-                          @JsonProperty("DELAY") final int DELAY,
+    public ServersConfigs(@JsonProperty("PORT") final int port,
+                          @JsonProperty("MAX_ROOMS") final int max_rooms,
+                          @JsonProperty("DELAY") final int delay,
                           @JsonProperty("THREADS") final int threads,
                           @JsonProperty("GAMES_COUNT") final int games_count,
                           @JsonProperty("PATH_LOG") final String path_log,
                           @JsonProperty("LOGBACK") final String logback) {
-        this.MAX_ROOMS = MAX_ROOMS;
-        this.PORT = PORT;
-        this.DELAY = DELAY;
+        MAX_ROOMS = max_rooms;
+        PORT = port;
+        DELAY = delay;
         THREADS = threads;
         GAMES_COUNT = games_count;
         PATH_LOG = path_log;
