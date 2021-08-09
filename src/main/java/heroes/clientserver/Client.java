@@ -24,7 +24,7 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new TestBot.TestBotFactory());
+        playerBots.put("Dimon", new Dimon.DimonFactory());
     }
 
     private final String ip;
@@ -71,7 +71,6 @@ public class Client {
         botFactoryMap.put("Test", new AntiDimon.AntiDimonFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        botFactoryMap.put("PlayerBot", new Dimon.DimonFactory());
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(tw);

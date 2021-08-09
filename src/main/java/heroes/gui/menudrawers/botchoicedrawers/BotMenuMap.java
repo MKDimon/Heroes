@@ -13,7 +13,7 @@ public class BotMenuMap {
         botMap = Map.of(
                 1, "Test",
                 2, "Random",
-                3, "PlayerBot",
+                3, "Player",
                 4, "PlayerGUI"
         );
     }
