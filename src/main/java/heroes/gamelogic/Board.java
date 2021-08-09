@@ -193,36 +193,6 @@ public class Board {
         }
     }
 
-    public List<Position> getActiveUnitsPositions(final Fields fields){
-        final Unit[][] army = getArmy(fields);
-        final List<Position> result = new ArrayList<>(6);
-        for (int i = 0; i < 2; i++){
-            for (int j = 0; j < 3; j++){
-                if(army[i][j].isActive()){
-                    result.add(new Position(i, j, fields));
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Возвращает список позиций живих юнитов игрока fields.
-     **/
-
-    public List<Position> getAliveUnitsPositions(final Fields fields){
-        final Unit[][] army = getArmy(fields);
-        final List<Position> result = new ArrayList<>(6);
-        for (int i = 0; i < 2; i++){
-            for (int j = 0; j < 3; j++){
-                if(army[i][j].isAlive()){
-                    result.add(new Position(i, j, fields));
-                }
-            }
-        }
-        return result;
-    }
-
     public void setCurNumRound(final int curNumRound) {
         this.curNumRound = curNumRound;
     }
@@ -369,7 +339,7 @@ public class Board {
     /**
      * Возвращает список ходов, возможных для текущего игрока.
      **/
-
+    @JsonIgnore
     public List<Answer> getPossibleMoves() throws GameLogicException {
         try {
             return new GameLogic(this).getAvailableMoves(currentPlayer);

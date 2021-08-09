@@ -6,17 +6,11 @@ import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.TerminalWrapper;
 import heroes.player.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class SelfPlayNikita {
     public static void main(final String[] args) throws GameLogicException, UnitException {

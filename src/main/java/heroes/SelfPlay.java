@@ -12,8 +12,6 @@ import heroes.gui.TerminalEndGame;
 import heroes.gui.TerminalWrapper;
 import heroes.player.*;
 import heroes.player.botnikita.NikitaBot;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

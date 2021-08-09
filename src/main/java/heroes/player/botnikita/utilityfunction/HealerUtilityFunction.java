@@ -33,6 +33,10 @@ public class HealerUtilityFunction implements IUtilityFunction {
                     evaluation += 2000;
                 }
 
+                if (unit.getDefenseArmor() >= 0) {
+                    evaluation -= 50000;
+                }
+
                 if (unit.getCurrentHP() < minimalHPUnitMin.getUnit().getCurrentHP()) {
                     minimalHPUnitMax = new PositionUnit(new Position(i, j, Fields.PLAYER_TWO), unit);
                 }
