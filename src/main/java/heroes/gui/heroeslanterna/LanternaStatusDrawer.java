@@ -1,10 +1,10 @@
 package heroes.gui.heroeslanterna;
 
+import gamecore.units.Unit;
 import heroes.gui.heroeslanterna.statusdrawers.ActiveDrawer;
 import heroes.gui.heroeslanterna.statusdrawers.DefenseDrawer;
 import heroes.gui.heroeslanterna.statusdrawers.HealthDrawer;
-import heroes.mathutils.Pair;
-import heroes.units.Unit;
+import gamecore.mathutils.Pair;
 
 /**
  * Статический класс-обертка над группой классов рисования статусов юнита.

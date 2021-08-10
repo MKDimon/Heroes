@@ -1,7 +1,7 @@
 package heroes.player.botnikita.utilityfunction;
 
-import heroes.gamelogic.Board;
-import heroes.player.Answer;
+import gamecore.gamelogic.Board;
+import gamecore.player.Answer;
 import heroes.player.botnikita.simulation.BoardSimulation;
 
 public class HealthUtilityFunction implements IUtilityFunction {

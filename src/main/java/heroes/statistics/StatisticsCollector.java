@@ -1,12 +1,12 @@
 package heroes.statistics;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.mathutils.Position;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.mathutils.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

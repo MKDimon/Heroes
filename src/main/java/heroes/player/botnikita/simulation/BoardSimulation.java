@@ -1,14 +1,14 @@
 package heroes.player.botnikita.simulation;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.mathutils.Position;
-import heroes.player.Answer;
+import gamecore.units.Unit;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
+import gamecore.gamelogic.GameLogic;
+import gamecore.mathutils.Position;
+import gamecore.player.Answer;
 import heroes.player.botnikita.PositionUnit;
-import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

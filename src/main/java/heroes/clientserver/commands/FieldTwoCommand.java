@@ -1,8 +1,8 @@
 package heroes.clientserver.commands;
 
+import gamecore.gamelogic.Fields;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
-import heroes.gamelogic.Fields;
 
 import java.io.BufferedWriter;
 

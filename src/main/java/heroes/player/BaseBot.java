@@ -1,12 +1,13 @@
 package heroes.player;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
+import gamecore.player.Answer;
 import heroes.gui.Visualisable;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 
 /**
  * Класс - базовый бот.

@@ -1,15 +1,22 @@
 package heroes.gamelogic;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.mathutils.Position;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.ControlRound;
+import gamecore.gamelogic.Fields;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.mathutils.Position;
 import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 public class TestBoard {
 

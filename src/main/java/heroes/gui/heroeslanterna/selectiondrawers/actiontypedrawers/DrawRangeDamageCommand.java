@@ -4,7 +4,7 @@ import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.selectiondrawers.LanternaSelectionDrawer;
 import heroes.gui.heroeslanterna.utils.Colors;
 import heroes.gui.heroeslanterna.utils.UnitTerminalGrid;
-import heroes.mathutils.Position;
+import gamecore.mathutils.Position;
 
 public class DrawRangeDamageCommand extends DrawCommand {
     public DrawRangeDamageCommand(final LanternaWrapper tw, final Position att, final Position def) {

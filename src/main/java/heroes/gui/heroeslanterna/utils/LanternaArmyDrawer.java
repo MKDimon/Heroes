@@ -1,15 +1,13 @@
 package heroes.gui.heroeslanterna.utils;
 
 import com.googlecode.lanterna.TerminalPosition;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
+import gamecore.units.General;
+import gamecore.units.Unit;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.UnitMenuTerminalGrid;
-import heroes.mathutils.Position;
-import heroes.units.General;
-import heroes.units.Unit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import gamecore.mathutils.Position;
 
 public class LanternaArmyDrawer {
     public static void drawArmy(final LanternaWrapper tw, final TerminalPosition tp,

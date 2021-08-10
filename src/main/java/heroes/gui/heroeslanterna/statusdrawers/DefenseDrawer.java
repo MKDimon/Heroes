@@ -1,10 +1,10 @@
 package heroes.gui.heroeslanterna.statusdrawers;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
+import gamecore.units.Unit;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.utils.Colors;
-import heroes.mathutils.Pair;
-import heroes.units.Unit;
+import gamecore.mathutils.Pair;
 
 public class DefenseDrawer implements IStatusDrawer {
     @Override

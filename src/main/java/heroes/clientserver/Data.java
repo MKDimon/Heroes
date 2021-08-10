@@ -3,12 +3,12 @@ package heroes.clientserver;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Board;
+import gamecore.player.Answer;
 import heroes.clientserver.commands.CommonCommands;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.player.Answer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {

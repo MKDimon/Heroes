@@ -1,13 +1,16 @@
 package heroes.clientserver;
 
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.gamelogic.Fields;
 import heroes.clientserver.commands.CommandFactory;
-import heroes.gamelogic.Fields;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
-import heroes.player.*;
+import heroes.player.BaseBot;
+import heroes.player.PlayerGUIBot;
+import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;

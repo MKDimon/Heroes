@@ -3,10 +3,10 @@ package heroes.gui.heroeslanterna;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.clientserver.commands.CommonCommands;
-import heroes.gamelogic.GameStatus;
+import gamecore.gamelogic.GameStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

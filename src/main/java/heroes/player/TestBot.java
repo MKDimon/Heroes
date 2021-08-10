@@ -1,19 +1,20 @@
 package heroes.player;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import gamecore.player.Answer;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
 import heroes.gui.Visualisable;
-import heroes.mathutils.Position;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import heroes.gui.heroeslanterna.LanternaWrapper;
+import gamecore.mathutils.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ import java.util.Random;
  **/
 
 public class TestBot extends BaseBot implements Visualisable {
-    Logger logger = LoggerFactory.getLogger(TestBot.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestBot.class);
 
     protected LanternaWrapper tw;
 

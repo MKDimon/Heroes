@@ -1,19 +1,21 @@
 package heroes.player;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.validation.Validator;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.gamelogic.GameLogic;
+import gamecore.gamelogic.validation.Validator;
+import gamecore.player.Answer;
 import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 public class TestTestBot {
 
     @Test
-    public void testBotGetAction() throws GameLogicException, UnitException {
+    public void testBotGetAction() throws GameLogicException {
         final BaseBot player = new TestBot(Fields.PLAYER_ONE);
         final BaseBot player1 = new TestBot(Fields.PLAYER_TWO);
 

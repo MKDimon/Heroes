@@ -1,7 +1,7 @@
 package heroes.clientserver.commands;
 
+import gamecore.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
 import heroes.clientserver.Serializer;

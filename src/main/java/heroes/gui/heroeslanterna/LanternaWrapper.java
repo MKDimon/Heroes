@@ -12,16 +12,16 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
 import heroes.gui.heroeslanterna.selectiondrawers.LanternaAnswerDrawer;
 import heroes.gui.heroeslanterna.utils.Colors;
 import heroes.gui.heroeslanterna.utils.Side;
 import heroes.gui.heroeslanterna.utils.UnitDrawersMap;
 import heroes.gui.heroeslanterna.utils.UnitTerminalGrid;
-import heroes.mathutils.Position;
-import heroes.player.Answer;
+import gamecore.mathutils.Position;
+import gamecore.player.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,32 +144,32 @@ public class LanternaWrapper {
      * @throws IOException исключение из методов Лантерны пробрасывается выше.
      * @throws UnitException исключение из методов класса Board также пробрасывается выше.
      */
-    public void update(final Answer answer, final Board board) throws IOException, UnitException {
+    public void update(final Answer answer, final Board board) throws IOException {
         clean();
         LanternaBorderDrawer.drawBorders(this);
 
         final UnitTerminalGrid utg = new UnitTerminalGrid(this);
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                //draw units of 1st army
+                //draw gamecore.units of 1st army
                 if (board.getArmy(Fields.PLAYER_ONE) != null) {
                     LanternaGeneralDrawer.drawGeneral(this, board.getGeneralPlayerOne(), Side.LHS);
 
                     UnitDrawersMap.getDrawer(board.getFieldPlayerOne()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_ONE)),
                                     board.getFieldPlayerOne()[i][j] == board.getGeneralPlayerOne());
-                    //draw status of all units
+                    //draw status of all gamecore.units
                     LanternaStatusDrawer.invokeAllStatusDrawers(this,
                             utg.getPair(new Position(i, j, Fields.PLAYER_ONE)), board.getFieldPlayerOne()[i][j]);
                 }
-                //draw units of 2nd army
+                //draw gamecore.units of 2nd army
                 if (board.getArmy(Fields.PLAYER_TWO) != null) {
                     LanternaGeneralDrawer.drawGeneral(this, board.getGeneralPlayerTwo(), Side.RHS);
 
                     UnitDrawersMap.getDrawer(board.getFieldPlayerTwo()[i][j].getActionType())
                             .draw(this, utg.getPair(new Position(i, j, Fields.PLAYER_TWO)),
                                     board.getFieldPlayerTwo()[i][j] == board.getGeneralPlayerTwo());
-                    //draw status of all units
+                    //draw status of all gamecore.units
                     LanternaStatusDrawer.invokeAllStatusDrawers(this,
                             utg.getPair(new Position(i, j, Fields.PLAYER_TWO)), board.getFieldPlayerTwo()[i][j]);
                 }

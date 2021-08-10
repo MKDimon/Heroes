@@ -30,7 +30,7 @@ public class CommanderMenuDrawer implements IGeneralMenuDrawer {
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 30,
                     "Inspiration: ");
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 7, y_start + 30,
-                    "Defense +10% for all units.");
+                    "Defense +10% for all gamecore.units.");
             tg.setForegroundColor(Colors.GOLD.color());
         }
         tg.putString(x_start, y_start++, "      _,.");

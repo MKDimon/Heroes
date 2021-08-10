@@ -4,12 +4,11 @@ import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.TerminalSize;
 import com.googlecode.lanterna.TextCharacter;
 import com.googlecode.lanterna.graphics.BasicTextImage;
-import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.graphics.TextImage;
+import gamecore.units.Unit;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.utils.Colors;
-import heroes.mathutils.Pair;
-import heroes.units.Unit;
+import gamecore.mathutils.Pair;
 
 public class DeathDrawer implements IStatusDrawer {
     @Override

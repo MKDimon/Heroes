@@ -1,13 +1,13 @@
 package heroes.statistics;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
 import org.junit.Test;
 
 import java.util.List;

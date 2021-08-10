@@ -1,8 +1,8 @@
 package heroes.gui.heroeslanterna.selectiondrawers.actiontypedrawers;
 
-import heroes.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
 import heroes.gui.heroeslanterna.LanternaWrapper;
-import heroes.mathutils.Position;
+import gamecore.mathutils.Position;
 
 import java.util.HashMap;
 import java.util.Map;

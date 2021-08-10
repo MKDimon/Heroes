@@ -1,18 +1,18 @@
 package heroes.statistics;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.boardexception.BoardException;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsExceptionTypes;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.mathutils.Pair;
-import heroes.mathutils.Position;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.mathutils.Pair;
+import gamecore.mathutils.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

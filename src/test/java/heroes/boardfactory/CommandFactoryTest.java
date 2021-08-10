@@ -1,9 +1,13 @@
 package heroes.boardfactory;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.boardfactory.CommandFactory;
+import gamecore.boardfactory.DamageCommand;
+import gamecore.boardfactory.DefenseCommand;
+import gamecore.boardfactory.HealCommand;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
 import org.junit.Test;
 
 import java.util.ArrayList;

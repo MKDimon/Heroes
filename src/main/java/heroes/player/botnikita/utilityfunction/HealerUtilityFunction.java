@@ -1,13 +1,12 @@
 package heroes.player.botnikita.utilityfunction;
 
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.mathutils.Pair;
-import heroes.mathutils.Position;
-import heroes.player.Answer;
+import gamecore.units.Unit;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
+import gamecore.mathutils.Position;
+import gamecore.player.Answer;
 import heroes.player.botnikita.PositionUnit;
 import heroes.player.botnikita.simulation.BoardSimulation;
-import heroes.units.Unit;
 
 public class HealerUtilityFunction implements IUtilityFunction {
     @Override
@@ -16,7 +15,7 @@ public class HealerUtilityFunction implements IUtilityFunction {
         PositionUnit minimalHPUnitMax = new PositionUnit(new Position(0,0, Fields.PLAYER_ONE),
                 actualBoard.getUnitByCoordinate(new Position(0,0, Fields.PLAYER_ONE)));
         PositionUnit minimalHPUnitMin = new PositionUnit(new Position(0,0, Fields.PLAYER_TWO),
-                actualBoard.getUnitByCoordinate(new Position(0,0, Fields.PLAYER_TWO)));;
+                actualBoard.getUnitByCoordinate(new Position(0,0, Fields.PLAYER_TWO)));
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
                 Unit unit = actualBoard.getUnitByCoordinate(new Position(i, j, Fields.PLAYER_ONE));

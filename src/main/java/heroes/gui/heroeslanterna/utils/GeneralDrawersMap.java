@@ -1,6 +1,6 @@
 package heroes.gui.heroeslanterna.utils;
 
-import heroes.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
 import heroes.gui.heroeslanterna.generaldrawers.CommanderDrawer;
 import heroes.gui.heroeslanterna.generaldrawers.IGeneralDrawer;
 import heroes.gui.heroeslanterna.generaldrawers.PriestDrawer;

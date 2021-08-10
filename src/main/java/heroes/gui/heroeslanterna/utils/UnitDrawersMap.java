@@ -1,6 +1,6 @@
 package heroes.gui.heroeslanterna.utils;
 
-import heroes.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
 import heroes.gui.heroeslanterna.unitdrawers.*;
 
 import java.util.Map;

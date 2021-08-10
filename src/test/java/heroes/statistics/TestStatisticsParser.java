@@ -1,15 +1,15 @@
 package heroes.statistics;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.mathutils.Position;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.mathutils.Position;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -17,7 +17,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestStatisticsParser {
     @Test

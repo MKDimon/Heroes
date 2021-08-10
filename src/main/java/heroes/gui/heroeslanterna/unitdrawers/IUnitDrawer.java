@@ -2,7 +2,7 @@ package heroes.gui.heroeslanterna.unitdrawers;
 
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.heroeslanterna.LanternaWrapper;
-import heroes.mathutils.Pair;
+import gamecore.mathutils.Pair;
 
 /**
  * Интерфейс для группы классов, рисующих юнитов.

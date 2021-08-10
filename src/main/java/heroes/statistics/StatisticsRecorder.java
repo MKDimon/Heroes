@@ -1,13 +1,13 @@
 package heroes.statistics;
 
 
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
 import heroes.clientserver.Deserializer;
 import heroes.clientserver.ServersConfigs;
-import heroes.gamelogic.Army;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.gamelogic.Army;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

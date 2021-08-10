@@ -1,7 +1,7 @@
 package heroes.gui.heroeslanterna.selectiondrawers.actiontypedrawers;
 
 import heroes.gui.heroeslanterna.LanternaWrapper;
-import heroes.mathutils.Position;
+import gamecore.mathutils.Position;
 
 
 public abstract class DrawCommand {

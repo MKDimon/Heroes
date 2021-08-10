@@ -2,15 +2,19 @@ package heroes.player;
 
 import com.googlecode.lanterna.TerminalPosition;
 import com.googlecode.lanterna.input.KeyType;
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import gamecore.player.Answer;
+import gamecore.units.General;
+import gamecore.units.GeneralTypes;
+import gamecore.units.Unit;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
 import heroes.gui.Visualisable;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.menudrawers.MenuBoardDrawer;
 import heroes.gui.heroeslanterna.menudrawers.MenuGeneralDrawer;
 import heroes.gui.heroeslanterna.menudrawers.MenuTitleDrawers;
@@ -18,13 +22,10 @@ import heroes.gui.heroeslanterna.menudrawers.MenuUnitDrawer;
 import heroes.gui.heroeslanterna.menudrawers.generalmenudrawers.SelectedGeneralMap;
 import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.UnitMenuMap;
 import heroes.gui.heroeslanterna.utils.LanternaArmyDrawer;
-import heroes.mathutils.Pair;
-import heroes.mathutils.Position;
+import gamecore.mathutils.Pair;
+import gamecore.mathutils.Position;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
-import heroes.units.General;
-import heroes.units.GeneralTypes;
-import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,8 +157,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
         }
     }
 
-    private Unit[][] selectArmy(final Controls controls, final General general, final Army firstPlayerArmy)
-            throws BoardException, UnitException {
+    private Unit[][] selectArmy(final Controls controls, final General general, final Army firstPlayerArmy) {
 
         final Pair<Integer, Integer> genPos = getGeneralPosition(controls, firstPlayerArmy);
         final Selector selector = new Selector(3, 2);

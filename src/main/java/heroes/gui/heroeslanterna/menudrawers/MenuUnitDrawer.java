@@ -5,7 +5,7 @@ import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.BowmanMenuDrawer;
 import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.HealerMenuDrawer;
 import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.MageMenuDrawer;
 import heroes.gui.heroeslanterna.menudrawers.unitmenudrawers.SwordsmanMenuDrawer;
-import heroes.mathutils.Pair;
+import gamecore.mathutils.Pair;
 
 public class MenuUnitDrawer {
     public static void drawUnits(final LanternaWrapper tw, final int selectedUnit) {

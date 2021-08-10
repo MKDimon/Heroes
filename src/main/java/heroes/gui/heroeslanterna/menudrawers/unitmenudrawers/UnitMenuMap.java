@@ -1,8 +1,8 @@
 package heroes.gui.heroeslanterna.menudrawers.unitmenudrawers;
 
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.units.Unit;
-import heroes.units.UnitTypes;
+import gamecore.units.Unit;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
 
 import java.util.HashMap;
 import java.util.Map;

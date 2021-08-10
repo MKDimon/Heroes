@@ -1,13 +1,13 @@
 package heroes.clientserver;
 
-import heroes.auxiliaryclasses.boardexception.BoardException;
+import gamecore.auxiliaryclasses.boardexception.BoardException;
+import gamecore.gamelogic.*;
 import heroes.auxiliaryclasses.serverexcetions.ServerException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.commands.CommandsTime;
 import heroes.clientserver.commands.CommonCommands;
-import heroes.gamelogic.*;
-import heroes.player.Answer;
+import gamecore.player.Answer;
 import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

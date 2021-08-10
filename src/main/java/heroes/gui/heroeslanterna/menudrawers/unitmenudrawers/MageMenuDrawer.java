@@ -8,7 +8,7 @@ import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.heroeslanterna.LanternaLineDrawer;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.utils.Colors;
-import heroes.mathutils.Pair;
+import gamecore.mathutils.Pair;
 
 public class MageMenuDrawer implements IUnitMenuDrawer {
     @Override

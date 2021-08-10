@@ -30,7 +30,7 @@ public class PriestMenuDrawer implements IGeneralMenuDrawer {
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 30,
                     "Inspiration: ");
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 5, y_start + 30,
-                    "Power +10% for all units.");
+                    "Power +10% for all gamecore.units.");
             tg.setForegroundColor(Colors.GOLD.color());
         }
         tg.putString(x_start, y_start++, "                  .---.");

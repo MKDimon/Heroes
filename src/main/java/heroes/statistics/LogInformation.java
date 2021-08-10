@@ -1,8 +1,8 @@
 package heroes.statistics;
 
-import heroes.auxiliaryclasses.ActionTypes;
-import heroes.mathutils.Position;
-import heroes.units.UnitTypes;
+import gamecore.units.UnitTypes;
+import gamecore.auxiliaryclasses.ActionTypes;
+import gamecore.mathutils.Position;
 
 import java.util.Objects;
 

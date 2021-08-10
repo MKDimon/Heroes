@@ -1,7 +1,7 @@
 package heroes.player.controlsystem;
 
 import com.googlecode.lanterna.input.KeyType;
-import heroes.mathutils.Pair;
+import gamecore.mathutils.Pair;
 
 import java.util.HashMap;
 import java.util.Map;

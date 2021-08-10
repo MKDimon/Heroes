@@ -30,7 +30,7 @@ public class SniperMenuDrawer implements IGeneralMenuDrawer {
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 20, y_start + 31,
                     "Inspiration: ");
             tg.putString(tw.getTerminal().getTerminalSize().getColumns() / 2 - 7, y_start + 31,
-                    "Accuracy +10% for all units.");
+                    "Accuracy +10% for all gamecore.units.");
             tg.setForegroundColor(Colors.GOLD.color());
         }
         tg.putString(x_start, y_start++, "        -\\\\");

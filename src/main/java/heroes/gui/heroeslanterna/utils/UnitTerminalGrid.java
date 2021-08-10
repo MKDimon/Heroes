@@ -1,9 +1,9 @@
 package heroes.gui.heroeslanterna.utils;
 
-import heroes.gamelogic.Fields;
+import gamecore.gamelogic.Fields;
 import heroes.gui.heroeslanterna.LanternaWrapper;
-import heroes.mathutils.Pair;
-import heroes.mathutils.Position;
+import gamecore.mathutils.Pair;
+import gamecore.mathutils.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

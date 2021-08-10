@@ -1,12 +1,14 @@
 package heroes.player.botnikita;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.GameStatus;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.gamelogic.GameLogic;
+import gamecore.gamelogic.GameStatus;
+import gamecore.player.Answer;
 import heroes.player.*;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

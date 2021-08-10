@@ -7,7 +7,7 @@ import com.googlecode.lanterna.graphics.BasicTextImage;
 import com.googlecode.lanterna.graphics.TextImage;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.heroeslanterna.utils.Colors;
-import heroes.mathutils.Pair;
+import gamecore.mathutils.Pair;
 
 public class SwordsmanDrawer implements IUnitDrawer {
     @Override

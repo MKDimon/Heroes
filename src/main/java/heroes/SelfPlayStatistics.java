@@ -1,12 +1,16 @@
 package heroes;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.GameStatus;
-import heroes.player.*;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.gamelogic.GameLogic;
+import gamecore.gamelogic.GameStatus;
+import gamecore.player.Answer;
+import heroes.player.BaseBot;
+import heroes.player.PlayerBot;
+import heroes.player.RandomBot;
+import heroes.player.TestBot;
 import heroes.statistics.StatisticsCollector;
 
 import java.util.Arrays;

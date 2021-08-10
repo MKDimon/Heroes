@@ -1,6 +1,6 @@
 package heroes.player.botnikita.simulation;
 
-import heroes.gamelogic.Fields;
+import gamecore.gamelogic.Fields;
 
 public class FieldsWrapper {
     public static Fields getOppField(final Fields field) {

@@ -1,7 +1,7 @@
 package heroes.player.botnikita;
 
-import heroes.mathutils.Position;
-import heroes.units.Unit;
+import gamecore.units.Unit;
+import gamecore.mathutils.Position;
 
 public class PositionUnit {
     final private Position position;

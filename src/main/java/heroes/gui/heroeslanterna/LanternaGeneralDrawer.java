@@ -2,11 +2,11 @@ package heroes.gui.heroeslanterna;
 
 import com.googlecode.lanterna.SGR;
 import com.googlecode.lanterna.graphics.TextGraphics;
+import gamecore.units.General;
 import heroes.gui.heroeslanterna.utils.Colors;
 import heroes.gui.heroeslanterna.utils.GeneralDrawersMap;
 import heroes.gui.heroeslanterna.utils.GeneralNamesMap;
 import heroes.gui.heroeslanterna.utils.Side;
-import heroes.units.General;
 
 import java.io.IOException;
 import java.util.EnumSet;

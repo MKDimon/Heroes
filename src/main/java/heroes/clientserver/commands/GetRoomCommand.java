@@ -3,7 +3,6 @@ package heroes.clientserver.commands;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
-import heroes.clientserver.Deserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,6 +1,6 @@
 package heroes.clientserver.commands;
 
-import heroes.gamelogic.Fields;
+import gamecore.gamelogic.Fields;
 
 public enum CommonCommands {
     END_GAME("END_GAME"),

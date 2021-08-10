@@ -39,5 +39,6 @@
     <orderEntry type="library" name="Maven: com.jwebmp.jackson.core:jackson-annotations:0.66.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.jwebmp.jackson.core:jackson-core:0.66.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.lanterna:lanterna:3.1.1" level="project" />
+    <orderEntry type="module" module-name="Gamecore" />
   </component>
 </module>

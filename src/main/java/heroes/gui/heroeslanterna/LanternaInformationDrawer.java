@@ -1,8 +1,8 @@
 package heroes.gui.heroeslanterna;
 
 import com.googlecode.lanterna.graphics.TextGraphics;
-import heroes.gamelogic.Board;
-import heroes.gamelogic.Fields;
+import gamecore.gamelogic.Board;
+import gamecore.gamelogic.Fields;
 import heroes.gui.heroeslanterna.utils.Colors;
 
 /**

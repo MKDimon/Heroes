@@ -1,6 +1,6 @@
 package heroes.player.botnikita;
 
-import heroes.player.Answer;
+import gamecore.player.Answer;
 
 public class AnswerWinHolder {
     private final Answer answer;

@@ -1,13 +1,14 @@
 package heroes;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
-import heroes.auxiliaryclasses.unitexception.UnitException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.unitexception.UnitException;
+import gamecore.player.Answer;
 import heroes.clientserver.Data;
 import heroes.clientserver.commands.CommonCommands;
-import heroes.gamelogic.Army;
-import heroes.gamelogic.Fields;
-import heroes.gamelogic.GameLogic;
-import heroes.gamelogic.GameStatus;
+import gamecore.gamelogic.Army;
+import gamecore.gamelogic.Fields;
+import gamecore.gamelogic.GameLogic;
+import gamecore.gamelogic.GameStatus;
 import heroes.gui.heroeslanterna.LanternaEndGame;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.*;
@@ -15,9 +16,11 @@ import heroes.player.botnikita.NikitaBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class SelfPlay {

@@ -1,7 +1,7 @@
 package heroes.player.botnikita.decisionalgorythms;
 
-import heroes.gamelogic.Board;
-import heroes.player.Answer;
+import gamecore.gamelogic.Board;
+import gamecore.player.Answer;
 import heroes.player.botnikita.utilityfunction.IUtilityFunction;
 
 public class MiniMaxAlgorythm implements IDecisionAlgorythm {

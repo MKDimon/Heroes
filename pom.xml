@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>org.deeplay</groupId>
     <artifactId>Heroes</artifactId>
+
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
+    <modules>
+        <module>Gamecore</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
@@ -51,13 +57,16 @@
             <artifactId>jackson-databind</artifactId>
             <version>0.66.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.googlecode.lanterna</groupId>
             <artifactId>lanterna</artifactId>
             <version>3.1.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.deeplay</groupId>
+            <artifactId>Gamecore</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,6 +1,6 @@
 package heroes.clientserver.commands;
 
-import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import gamecore.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
