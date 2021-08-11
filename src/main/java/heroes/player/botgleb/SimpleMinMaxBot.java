@@ -7,8 +7,8 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.function.ToDoubleFunction;
 
 public class SimpleMinMaxBot extends AIBot implements Visualisable {
 
-    protected TerminalWrapper tw = null;
+    protected LanternaWrapper tw = null;
 
     /**
      * Фабрика ботов.
@@ -50,7 +50,7 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
     }
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         super.tw = tw;
     }
 

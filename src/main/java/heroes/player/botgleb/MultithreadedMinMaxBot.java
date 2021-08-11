@@ -4,8 +4,8 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +23,10 @@ import java.util.function.ToDoubleFunction;
 
 public class MultithreadedMinMaxBot extends SimpleMinMaxBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(MultithreadedMinMaxBot.class);
-    protected TerminalWrapper tw = null;
+    protected LanternaWrapper tw = null;
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         super.tw = tw;
     }
 
