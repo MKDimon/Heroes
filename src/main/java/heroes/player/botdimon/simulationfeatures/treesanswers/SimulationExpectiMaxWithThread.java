@@ -11,13 +11,15 @@ import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
+import java.util.concurrent.RecursiveTask;
 
 /**
  * Дерево ну типа работает
  */
-public class SimulationCustomStepsWithThread extends SimulationTree {
-    public SimulationCustomStepsWithThread(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
+public class SimulationExpectiMaxWithThread extends SimulationTree {
+    public SimulationExpectiMaxWithThread(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
         super(func, field, maxHeight, clustering);
     }
 
@@ -82,11 +84,17 @@ public class SimulationCustomStepsWithThread extends SimulationTree {
      */
     private Node getGreedyDecision(final List<Node> list, final Fields field) {
         Node maxValue = list.get(0);
-        for (final Node item : list) {
-            if (field == super.field)
-                maxValue = (Double.compare(maxValue.value,item.value) < 0) ? item : maxValue;
-            else
-                maxValue = (Double.compare(maxValue.value,item.value) > 0) ? item : maxValue;
+        if (field == super.field) {
+            for (final Node item : list) {
+                maxValue = (Double.compare(maxValue.value, item.value) < 0) ? item : maxValue;
+            }
+        }
+        else {
+            maxValue = new Node(null, null, 0);
+            for (final Node item : list) {
+                maxValue.value += item.value;
+            }
+            maxValue.value /= list.size();
         }
         return maxValue;
     }

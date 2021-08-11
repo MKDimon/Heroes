@@ -24,17 +24,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Умный бот Димон
  */
-public class Dimon extends BaseBot implements Visualisable {
-    private static final Logger logger = LoggerFactory.getLogger(Dimon.class);
+public class MonteCarloBot extends BaseBot implements Visualisable {
+    private static final Logger logger = LoggerFactory.getLogger(MonteCarloBot.class);
 
-    public Dimon(final Fields field) throws GameLogicException {
+    public MonteCarloBot(final Fields field) throws GameLogicException {
         super(field);
     }
 
-    public static class DimonFactory extends BaseBot.BaseBotFactory {
+    public static class MonteCarloFactory extends BaseBotFactory {
         @Override
         public BaseBot createBot(final Fields fields) throws GameLogicException {
-            return new Dimon(fields);
+            return new MonteCarloBot(fields);
         }
     }
 
@@ -53,10 +53,10 @@ public class Dimon extends BaseBot implements Visualisable {
             );
 
             if (getField() == Fields.PLAYER_ONE) {
-                return tree.getArmyConst(1);
+                return tree.getArmyConst(0);
             }
             else {
-                return tree.getArmyConst(1);
+                return tree.getArmyConst(0);
             }
 
         } catch (BoardException | UnitException e) {
@@ -67,15 +67,13 @@ public class Dimon extends BaseBot implements Visualisable {
 
     @Override
     public Answer getAnswer(final Board board) {
-        final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.EXPECTI_SIMULATION,
                 UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
-                getField(), 3, false
+                getField(), 1, false
         );
         final Answer answer = tree.getAnswer(board);
         final long finish = System.currentTimeMillis();
-        System.out.println("TIME: " + (finish - start));
         return answer;
     }
 }

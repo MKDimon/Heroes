@@ -17,12 +17,12 @@ import org.slf4j.LoggerFactory;
 public class SimulationOneStep extends SimulationTree {
     private final Logger logger = LoggerFactory.getLogger(SimulationOneStep.class);
 
-    public SimulationOneStep(IUtilityFunc func, Fields field, int maxHeight) {
-        super(func, field, maxHeight);
+    public SimulationOneStep(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
+        super(func, field, maxHeight, clustering);
     }
 
     @Override
-    public Answer getAnswer(Board board) {
+    public Answer getAnswer(final Board board) {
         final Node root = new Node(board, null, Double.MIN_VALUE);
         super.setUnitAccuracy(board);
         Node maxNode = root;
@@ -30,7 +30,7 @@ public class SimulationOneStep extends SimulationTree {
             root.list.addAll(getAllSteps(root, field));
             maxNode = root.list.get(0);
             for (final Node item : root.list) {
-                maxNode = (Double.compare(maxNode.value, item.value) < 0) ? item : maxNode;
+                maxNode = (Double.compare(maxNode.value, func.getValue(item.board, field)) < 0) ? item : maxNode;
             }
         } catch (final UnitException | GameLogicException | BoardException e) {
             logger.error("Error get answer simulation", e);

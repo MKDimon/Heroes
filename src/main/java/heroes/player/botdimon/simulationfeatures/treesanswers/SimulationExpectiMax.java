@@ -8,15 +8,17 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.player.Answer;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
+import weka.clusterers.SimpleKMeans;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Дерево симуляции заданной высоты
  */
 public class SimulationExpectiMax extends SimulationTree {
-    public SimulationExpectiMax(final IUtilityFunc func, final Fields field, final int maxHeight) {
-        super(func, field, maxHeight);
+    public SimulationExpectiMax(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
+        super(func, field, maxHeight, clustering);
     }
 
     @Override
@@ -28,12 +30,11 @@ public class SimulationExpectiMax extends SimulationTree {
             for (final Node item : root.list) {
                 item.value = getWinByGameTree(item.board, 1);
             }
-        } catch (final UnitException | GameLogicException | BoardException e) {
+        } catch (final Exception e) {
             logger.error("Error change branch", e);
         }
         final Node node = getGreedyDecision(root.list, field);
         final Answer answer = node.answer;
-        logger.info("Value: " + node.value);
         logger.info("Attacker position = {}, defender position = {}, action type = {}",
                 answer.getAttacker(), answer.getDefender(), answer.getActionType());
         return answer;

@@ -25,8 +25,8 @@ public class SelfPlayDimonBot {
         int countDefeat = 0;
         System.out.println(LocalDateTime.now());
         for (int i = 0; i < 50; i++) {
-            final BaseBot bot1 = new Dimon.DimonFactory().createBot(Fields.PLAYER_ONE);
-            final BaseBot bot2 = new AntiDimon.AntiDimonFactory().createBot(Fields.PLAYER_TWO);
+            final BaseBot bot1 = new AntiDimon.AntiDimonFactory().createBot(Fields.PLAYER_ONE);
+            final BaseBot bot2 = new Dimon.DimonFactory().createBot(Fields.PLAYER_TWO);
 
             final GameLogic gameLogic = new GameLogic();
             final Army one = bot1.getArmy(null);
@@ -44,6 +44,7 @@ public class SelfPlayDimonBot {
             }
             if (gameLogic.getBoard().getStatus() == GameStatus.PLAYER_ONE_WINS) countWin++;
             if (gameLogic.getBoard().getStatus() == GameStatus.PLAYER_TWO_WINS) countDefeat++;
+            System.out.println(countWin + " / " + countDefeat);
         }
         System.out.println(LocalDateTime.now());
         System.out.println("Player One wins: " + countWin);

@@ -10,13 +10,15 @@ import heroes.gamelogic.GameLogic;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
-import heroes.units.General;
+import heroes.player.botdimon.simulationfeatures.functions.UtilityAnswerFuncFourV2;
 import heroes.units.Unit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import weka.clusterers.SimpleKMeans;
+import weka.core.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Абстрактное дерево симуляции ответов
@@ -29,8 +31,27 @@ public abstract class SimulationTree {
     protected final Logger logger = LoggerFactory.getLogger(SimulationTree.class);
 
     protected final IUtilityFunc func;
+    private static final IUtilityFunc nodesFunc = new UtilityAnswerFuncFourV2();
+    private static final int CLUSTERS = 10;
     protected final Fields field;
     protected final int maxHeight;
+    protected final boolean clustering;
+    private static final ArrayList<Attribute> attributes = new ArrayList<>();
+    static {
+        attributes.add(new Attribute("value"));
+        attributes.add(new Attribute("A_00"));
+        attributes.add(new Attribute("A_01"));
+        attributes.add(new Attribute("A_02"));
+        attributes.add(new Attribute("A_10"));
+        attributes.add(new Attribute("A_11"));
+        attributes.add(new Attribute("A_12"));
+        attributes.add(new Attribute("E_00"));
+        attributes.add(new Attribute("E_01"));
+        attributes.add(new Attribute("E_02"));
+        attributes.add(new Attribute("E_10"));
+        attributes.add(new Attribute("E_11"));
+        attributes.add(new Attribute("E_12"));
+    }
 
     protected class Node {
         public final List<Node> list = new ArrayList<>();
@@ -50,12 +71,26 @@ public abstract class SimulationTree {
             this.answer = new Answer(node.answer);
             this.value = node.value;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return Double.compare(node.value, value) == 0 && Objects.equals(list, node.list) && Objects.equals(board, node.board) && Objects.equals(answer, node.answer);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(list, board, answer, value);
+        }
     }
 
-    public SimulationTree(final IUtilityFunc func, final Fields field, final int maxHeight) {
+    public SimulationTree(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
         this.func = func;
         this.field = field;
         this.maxHeight = maxHeight;
+        this.clustering = clustering;
     }
 
     private boolean setAction(final Board board, final Answer answer, final List<Node> result)
@@ -64,10 +99,54 @@ public abstract class SimulationTree {
         final GameLogic gameLogic = new GameLogic(board);
         if (gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType())) {
             final Board newBoard = gameLogic.getBoard();
-            result.add(new Node(newBoard, answer, func.getValue(newBoard, field)));
+            result.add(new Node(newBoard, answer, nodesFunc.getValue(board, field)));
             if (answer.getActionType() == ActionTypes.AREA_DAMAGE) { returns = true; }
         }
         return returns;
+    }
+
+    protected List<Node> clustering(final List<Node> list, final Fields field) throws Exception {
+        Instances dataset = new Instances("Nodes", attributes, 50);
+        for (final Node item : list) {
+            final Board board = item.board;
+            final Unit[][] ally = (field == Fields.PLAYER_ONE) ? board.getFieldPlayerOne() : board.getFieldPlayerTwo();
+            final Unit[][] enemy = (field != Fields.PLAYER_ONE) ? board.getFieldPlayerOne() : board.getFieldPlayerTwo();
+            Instance inst = new DenseInstance(attributes.size());
+            inst.setValue(attributes.get(0), new UtilityAnswerFuncFourV2().getValue(item.board, field));
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 3; k++) {
+                    inst.setValue(attributes.get(j * 3 + k + 1),
+                            (double) ally[j][k].getCurrentHP() / ally[j][k].getMaxHP() * 10);
+                    inst.setValue(attributes.get(j * 3 + k + 7),
+                            (double) enemy[j][k].getCurrentHP() / enemy[j][k].getMaxHP() * 10);
+                }
+            }
+            final Answer answer = item.answer;
+            dataset.add(inst);
+        }
+
+        SimpleKMeans kMeans = new SimpleKMeans();
+        kMeans.setNumClusters(CLUSTERS);
+        kMeans.buildClusterer(dataset);
+        List<Node> result = new ArrayList<>();
+        Map<Integer, Node> map = new HashMap<>();
+        for (int i = 0; i < dataset.size(); i++) {
+            int k = kMeans.clusterInstance(dataset.get(i));
+            if (map.get(k) == null) {
+                map.put(k, list.get(i));
+            } else {
+                final Node node = (field == this.field)?
+                        (Double.compare(list.get(i).value,map.get(k).value) < 0) ? map.get(k) : list.get(i)
+                        : (Double.compare(list.get(i).value,map.get(k).value) > 0) ? map.get(k) : list.get(i);
+                map.put(k, node);
+            }
+        }
+        for (Map.Entry<Integer, Node> entry: map.entrySet()) {
+            result.add(entry.getValue());
+        }
+        //System.out.println(kMeans);
+        //System.out.println(kMeans.getClusterCentroids());
+        return result;
     }
 
     /**
@@ -138,6 +217,13 @@ public abstract class SimulationTree {
 
             final Answer defAnswer = new Answer(unit, unit, ActionTypes.DEFENSE);
             setAction(board, defAnswer, result);
+        }
+        if (clustering && result.size() > CLUSTERS) {
+            try {
+                result.retainAll(clustering(result, field));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return result;
     }

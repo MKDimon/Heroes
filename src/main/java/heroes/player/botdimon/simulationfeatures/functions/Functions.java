@@ -6,4 +6,5 @@ public enum Functions {
     DEGREE_FUNCTION,
     EXPONENT_FUNCTION_V1,
     EXPONENT_FUNCTION_V2,
+    MONTE_CARLO,
 }
