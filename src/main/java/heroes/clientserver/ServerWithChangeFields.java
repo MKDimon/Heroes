@@ -8,6 +8,7 @@ import heroes.clientserver.commands.CommandsTime;
 import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.*;
 import heroes.player.Answer;
+import heroes.player.BaseBot;
 import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,8 @@ public class ServerWithChangeFields {
     private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldOne = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldTwo = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RoomsClient> fieldAny = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RoomsClient> bots = new ConcurrentLinkedQueue<>();
 
     /**
      * Клиент комнаты
@@ -63,6 +66,8 @@ public class ServerWithChangeFields {
         public final Socket socket;
         public final BufferedWriter out;
         public final BufferedReader in;
+        public boolean withBot = false;
+        public boolean isBot = false;
 
         private RoomsClient(final ServerWithChangeFields server, final Socket socket) throws IOException {
             this.server = server;
@@ -75,16 +80,25 @@ public class ServerWithChangeFields {
         public void run() {
             while (true) {
                 try {
+                    final Data opponent = new Data(CommonCommands.GET_OPPONENT);
+                    socket.setSoTimeout(CommandsTime.getTime(opponent.command));
+                    out.write(Serializer.serializeData(opponent) + '\n');
+                    out.flush();
+
+                    withBot = Deserializer.deserializeData(in.readLine()).info == 2;
+
                     final Data data = new Data(CommonCommands.GET_FIELD);
                     socket.setSoTimeout(CommandsTime.getTime(data.command));
                     out.write(Serializer.serializeData(data) + '\n');
                     out.flush();
 
-                    if (Deserializer.deserializeData(in.readLine()).info == 1) {
+                    final int K = Deserializer.deserializeData(in.readLine()).info;
+                    if (K == 1) {
                         server.fieldOne.add(this);
-                    }
-                    else {
+                    } else if (K == 2)  {
                         server.fieldTwo.add(this);
+                    } else {
+                        server.fieldAny.add(this);
                     }
                     break;
                 } catch (final SocketTimeoutException e) {
@@ -122,6 +136,18 @@ public class ServerWithChangeFields {
         private void waitPlayers() throws IOException {
             boolean playersReady = false;
             while (!playersReady) {
+                for (final RoomsClient rc : server.fieldAny) {
+                    if ((playerOne == null || playerOne.socket.isClosed()) && !rc.isUse) {
+                        playerOne = rc;
+                        playerOne.isUse = true;
+                        server.fieldAny.remove(rc);
+                    }
+                    if ((playerTwo == null || playerTwo.socket.isClosed()) && !rc.isUse) {
+                        playerTwo = rc;
+                        playerTwo.isUse = true;
+                        server.fieldAny.remove(rc);
+                    }
+                }
                 for (final RoomsClient rc : server.fieldOne) {
                     if ((playerOne == null || playerOne.socket.isClosed()) && !rc.isUse) {
                         playerOne = rc;
@@ -311,7 +337,6 @@ public class ServerWithChangeFields {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
-            serverSocket.setSoTimeout(1000);
             for (int i = 1; i <= maxRooms; i++) {
                 final Rooms room = new Rooms(this, i);
                 getRoom.put(i, room);

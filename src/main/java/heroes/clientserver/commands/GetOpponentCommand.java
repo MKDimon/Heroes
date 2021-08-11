@@ -11,21 +11,23 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class GetFieldCommand extends Command {
-    private final Logger logger = LoggerFactory.getLogger(GetFieldCommand.class);
+public class GetOpponentCommand extends Command {
+    private final Logger logger = LoggerFactory.getLogger(GetOpponentCommand.class);
 
-    public GetFieldCommand(Data data, BufferedWriter out, Client client) {
+    public GetOpponentCommand(Data data, BufferedWriter out, Client client) {
         super(data, out, client);
     }
 
     @Override
-    public void execute() {
+    public void execute() { //TODO: говорить что надо ввести оппонента
+                            // 1 - живой игрок
+                            // 2 - бот
         try {
             int id;
             Scanner scanner = new Scanner(System.in);
             do {
                 id = getClient().getTw().updateMenu();
-            } while (id > 3 || id < 1);
+            } while (id > 2 || id < 1);
             getOut().write( Serializer.serializeData(new Data(id)) + '\n');
             getOut().flush();
         } catch (final IOException e) {
