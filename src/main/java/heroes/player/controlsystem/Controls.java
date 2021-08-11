@@ -2,20 +2,17 @@ package heroes.player.controlsystem;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import heroes.clientserver.commands.GetRoomCommand;
-import heroes.gui.TerminalWrapper;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Controls {
-    private final TerminalWrapper tw;
+    private final LanternaWrapper tw;
 
     private final Logger logger = LoggerFactory.getLogger(Controls.class);
-    public Controls(final TerminalWrapper tw) {
+    public Controls(final LanternaWrapper tw) {
         this.tw = tw;
     }
 

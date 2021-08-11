@@ -33,7 +33,7 @@ public class TestBoard {
                 () -> assertEquals(new General(firstGeneral), board.getFieldPlayerOne()[1][1]),
                 () -> assertEquals(testSwordsman, board.getUnitByCoordinate(new Position(0,1, Fields.PLAYER_ONE)))
         );
-        assertTrue(ControlRound.checkStep(board));
+        assertTrue(ControlRound.nextStep(board));
         final Unit testUnit = new Unit(UnitTypes.HEALER);
         testUnit.inspire(GeneralTypes.COMMANDER.inspirationArmorBonus, GeneralTypes.COMMANDER.inspirationDamageBonus,
                 GeneralTypes.COMMANDER.inspirationAccuracyBonus);
