@@ -1,6 +1,5 @@
 package heroes.clientserver.commands;
 
-import gamecore.auxiliaryclasses.unitexception.UnitException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
@@ -24,7 +23,7 @@ public class DrawCommand extends Command{
             getClient().getTw().update(getData().answer, getData().board);
             getClient().getTw().printPlayer(getClient().getPlayer().getField());
             getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_SUCCESSFUL)) + '\n');
-        } catch (final IOException | UnitException e) {
+        } catch (final IOException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
             try {
                 getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_UNSUCCESSFUL)) + '\n');

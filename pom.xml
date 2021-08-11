@@ -8,15 +8,16 @@
     <artifactId>Heroes</artifactId>
 
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <modules>
         <module>Gamecore</module>
+        <module>Other</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>15</maven.compiler.source>
-        <maven.compiler.target>15</maven.compiler.target>
+        <maven.compiler.source>14</maven.compiler.source>
+        <maven.compiler.target>14</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -61,11 +62,6 @@
             <groupId>com.googlecode.lanterna</groupId>
             <artifactId>lanterna</artifactId>
             <version>3.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.deeplay</groupId>
-            <artifactId>Gamecore</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 

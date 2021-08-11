@@ -12,6 +12,7 @@ import com.googlecode.lanterna.screen.Screen;
 import com.googlecode.lanterna.screen.TerminalScreen;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.googlecode.lanterna.terminal.swing.*;
 import gamecore.auxiliaryclasses.unitexception.UnitException;
 import gamecore.gamelogic.Board;
 import gamecore.gamelogic.Fields;
@@ -125,6 +126,7 @@ public class LanternaWrapper {
         panel.addComponent(ic);
 
         final Window win = new BasicWindow();
+
         win.setComponent(ic);
         win.setHints(List.of(Window.Hint.FIXED_POSITION, Window.Hint.FIXED_SIZE));
         win.setPosition(new TerminalPosition(0, 0));

@@ -3,7 +3,6 @@ package heroes.gui.heroeslanterna;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import gamecore.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.clientserver.commands.CommonCommands;
 import gamecore.gamelogic.GameStatus;
@@ -12,23 +11,23 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class LanternaEndGame {
-    private static final Logger logger = LoggerFactory.getLogger(LanternaEndGame.class);
-    public static void endGame(final LanternaWrapper tw, final Data data) {
+public class LanternaContinueGame {
+    private static final Logger logger = LoggerFactory.getLogger(LanternaContinueGame.class);
+    public static void continueGame(final LanternaWrapper tw, final Data data) {
 
-        final TextGraphics tg = tw.newTG();
+        final TextGraphics tg = tw.getScreen().newTextGraphics();
         int x = 0, y = 0;
         try {
             tw.update(data.answer, data.board);
-            tw.refresh();
-            x = tw.getTerminalSize().getColumns() / 2;
-            y = tw.getTerminalSize().getRows() ;
-        } catch (IOException | UnitException e) {
+            tw.getScreen().refresh();
+            x = tw.getTerminal().getTerminalSize().getColumns() / 2;
+            y = tw.getTerminal().getTerminalSize().getRows() ;
+        } catch (IOException e) {
             logger.error("Cannot call TerminalSize from LanternaEndGame", e);
         }
 
         tg.putString(x - 8, y - 8, "The game is over.");
-        tg.putString(x - 10, y - 7, "Press ENTER to leave.");
+        tg.putString(x - 10, y - 7, "Press ENTER to continue.");
 
 
         String msg = "";
@@ -62,7 +61,6 @@ public class LanternaEndGame {
                 isPressedEnter = true;
                 try {
                     tw.getScreen().refresh();
-                    tw.stop();
                 } catch (IOException e) {
                     logger.error("Cannot stop terminal in LanternaEndGame", e);
                 }
