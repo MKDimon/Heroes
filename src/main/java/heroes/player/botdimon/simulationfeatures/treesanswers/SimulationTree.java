@@ -18,7 +18,6 @@ import weka.clusterers.SimpleKMeans;
 import weka.core.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Абстрактное дерево симуляции ответов
@@ -105,6 +104,14 @@ public abstract class SimulationTree {
         return returns;
     }
 
+    /**
+     * Принимает список узлов размера N и возвращает список узлов размера CLUSTER
+     *
+     * @param list Список узлов
+     * @param field поле ходившего игрока
+     * @return Список узлов из каждого кластера
+     * @throws Exception ошибка
+     */
     protected List<Node> clustering(final List<Node> list, final Fields field) throws Exception {
         Instances dataset = new Instances("Nodes", attributes, 50);
         for (final Node item : list) {
@@ -144,8 +151,6 @@ public abstract class SimulationTree {
         for (Map.Entry<Integer, Node> entry: map.entrySet()) {
             result.add(entry.getValue());
         }
-        //System.out.println(kMeans);
-        //System.out.println(kMeans.getClusterCentroids());
         return result;
     }
 
