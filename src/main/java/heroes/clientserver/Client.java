@@ -78,13 +78,9 @@ public class Client {
         final Selector selector = new Selector(1 , 4);
 
         while (true) {
-            gui.getScreen().clear();
+            gui.clear();
             MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
-            try {
-                gui.getScreen().refresh();
-            } catch (IOException e) {
-                logger.error("Error refreshing terminal in playerGUIbot", e);
-            }
+            gui.refresh();
 
             KeyType kt = controls.update();
             while(kt == null) {
@@ -97,19 +93,15 @@ public class Client {
                     player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
                     player.setTerminal(gui);
 
-                    gui.getScreen().clear();
+                    gui.clear();
                     MenuBotDrawer.drawWait(tw);
-                    try {
-                        gui.getScreen().refresh();
-                    } catch (IOException e) {
-                        logger.error("Error refreshing terminal in playerGUIbot", e);
-                    }
+                    gui.refresh();
                     break;
                 } catch (GameLogicException e) {
                     logger.error("Error create bot", e);
                 }
             }
-            gui.getScreen().clear();
+            gui.clear();
         }
     }
 
@@ -152,7 +144,7 @@ public class Client {
                     final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
-                gui.getScreen().pollInput();
+                gui.pollInput();
             }
         } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);
