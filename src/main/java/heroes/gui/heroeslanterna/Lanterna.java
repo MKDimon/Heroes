@@ -1,9 +1,5 @@
 package heroes.gui.heroeslanterna;
 
-import com.googlecode.lanterna.TerminalSize;
-import com.googlecode.lanterna.graphics.TextGraphics;
-import com.googlecode.lanterna.screen.Screen;
-import com.googlecode.lanterna.terminal.Terminal;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -54,15 +50,6 @@ public class Lanterna implements IGUI {
     }
 
     /**
-     * Обертка над методом newTG().
-     **/
-
-    @Override
-    public TextGraphics newTG() {
-        return lw.newTG();
-    }
-
-    /**
      * Обертка над методом printPlayer().
      **/
 
@@ -106,31 +93,18 @@ public class Lanterna implements IGUI {
         }
     }
 
-    /**
-     * Обертка над методом getScreen().
-     **/
-
     @Override
-    public Screen getScreen() {
-        return lw.getScreen();
+    public void clear() {
+        lw.getScreen().clear();
     }
 
-    /**
-     * Обертка над методом getTerminal().
-     **/
-
     @Override
-    public Terminal getTerminal() {
-        return lw.getTerminal();
-    }
-
-    /**
-     * Обертка над методом getTerminalSize().
-     **/
-
-    @Override
-    public TerminalSize getTerminalSize() {
-        return lw.getTerminalSize();
+    public void pollInput() {
+        try {
+            lw.getScreen().pollInput();
+        } catch (IOException e) {
+            logger.error("Error poll input by Lanterna");
+        }
     }
 
 }
