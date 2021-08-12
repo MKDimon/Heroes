@@ -10,14 +10,15 @@ public class CommandsTime {
         timer.put(CommonCommands.DRAW, 1000 * 60);
         timer.put(CommonCommands.END_GAME, 1000 * 60);
         timer.put(CommonCommands.GET_ARMY, 1000 * 60 * 5);
+        timer.put(CommonCommands.GET_FIELD, 1000 * 60 * 2);
         timer.put(CommonCommands.GET_ANSWER, 1000 * 60 * 2);
         timer.put(CommonCommands.MAX_ROOMS, 1000 * 60);
         timer.put(CommonCommands.GET_ROOM, 1000 * 60 * 2);
         timer.put(CommonCommands.FIELD_ONE, 1000 * 60);
         timer.put(CommonCommands.FIELD_TWO, 1000 * 60);
-    };
+    }
 
     public static int getTime(final CommonCommands command) {
-        return timer.get(command);
+        return timer.getOrDefault(command, 1000 * 60);
     }
 }

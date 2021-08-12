@@ -138,7 +138,7 @@ public class GameLogic {
         if (result == ValidationUnits.SUCCESSFUL_STEP) {
             logger.info(result.toString());
             board.doAction(board.getUnitByCoordinate(attacker), actionGetList(defender, act), act);
-            gameBegun = ControlRound.checkStep(board);
+            gameBegun = ControlRound.nextStep(board);
             return true;
         }
         return false;
@@ -164,7 +164,6 @@ public class GameLogic {
         final List<Position> aliveAttackers = board.getAliveUnitsPositions(player);
 
         for(final Position atPos : attackers){
-            result.add(new Answer(atPos, atPos, ActionTypes.DEFENSE));
             if(board.getUnitByCoordinate(atPos).getActionType() == ActionTypes.HEALING){
                 for(final Position healingPos : aliveAttackers){
                     result.add(new Answer(atPos, healingPos, ActionTypes.HEALING));
@@ -182,15 +181,9 @@ public class GameLogic {
                     }
                 }
             }
+            result.add(new Answer(atPos, atPos, ActionTypes.DEFENSE));
         }
         return result;
     }
 
-    /**
-     * Метод симулирует действие, вызываемое answer`ом, возвращает новый экзмепляр класса GameLogic.
-     **/
-
-    public GameLogic simulateAction(final Answer answer) throws BoardException, UnitException, GameLogicException {
-        return new GameLogic(board.copy(answer));
-    }
 }

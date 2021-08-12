@@ -16,17 +16,17 @@ public class TestUnits {
     void testUnits1() throws UnitException {
         final Unit swordsman = new Unit(UnitTypes.SWORDSMAN);
         assertAll(
-                () -> assertEquals(100, swordsman.getCurrentHP()),
+                () -> assertEquals(80, swordsman.getCurrentHP()),
                 () -> assertEquals(30, swordsman.getPower()),
-                () -> assertEquals(85, swordsman.getAccuracy()),
-                () -> assertEquals(30, swordsman.getArmor()),
+                () -> assertEquals(70, swordsman.getAccuracy()),
+                () -> assertEquals(25, swordsman.getArmor()),
                 () -> assertEquals(ActionTypes.CLOSE_COMBAT, swordsman.getActionType())
         );
         final General gen = new General(GeneralTypes.COMMANDER);
         swordsman.inspire(gen.inspirationArmorBonus, gen.inspirationDamageBonus, gen.inspirationDamageBonus);
-        assertEquals(40, swordsman.getArmor());
+        assertEquals(35, swordsman.getArmor());
         swordsman.deinspire();
-        assertEquals(30, swordsman.getArmor());
+        assertEquals(25, swordsman.getArmor());
     }
 
     @Test
@@ -34,9 +34,9 @@ public class TestUnits {
         final General archmage = new General(GeneralTypes.ARCHMAGE);
         archmage.inspire(archmage.inspirationArmorBonus, archmage.inspirationDamageBonus, archmage.inspirationAccuracyBonus);
         assertAll(
-                () -> assertEquals(70, archmage.getCurrentHP()),
-                () -> assertEquals(25, archmage.getPower()),
-                () -> assertEquals(85, archmage.getAccuracy()),
+                () -> assertEquals(50, archmage.getCurrentHP()),
+                () -> assertEquals(10, archmage.getPower()),
+                () -> assertEquals(80, archmage.getAccuracy()),
                 () -> assertEquals(10, archmage.getArmor()),
                 () -> assertEquals(ActionTypes.AREA_DAMAGE, archmage.getActionType())
         );

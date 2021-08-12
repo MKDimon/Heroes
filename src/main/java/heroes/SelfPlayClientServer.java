@@ -2,6 +2,7 @@ package heroes;
 
 import heroes.clientserver.Client;
 import heroes.clientserver.Server;
+import heroes.clientserver.ServerWithChangeFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ public class SelfPlayClientServer {
         @Override
         public void run() {
             try {
-                Server.main(new String[]{});
+                ServerWithChangeFields.main(new String[]{});
             } catch (IOException e) {
                 logger.error("Сервер упал(", e);
             }

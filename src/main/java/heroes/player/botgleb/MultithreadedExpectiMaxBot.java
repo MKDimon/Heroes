@@ -4,8 +4,8 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
+import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import java.util.function.ToDoubleFunction;
 
 public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(MultithreadedExpectiMaxBot.class);
-    protected final TerminalWrapper tw = null;
+    protected final LanternaWrapper tw = null;
 
     /**
      * Фабрика ботов.
@@ -113,7 +113,7 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
     }
 
     @Override
-    public void setTerminal(final TerminalWrapper tw) {
+    public void setTerminal(final LanternaWrapper tw) {
         super.tw = tw;
     }
 

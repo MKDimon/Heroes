@@ -223,6 +223,25 @@ public class Board {
         return fieldPlayerTwo.getGeneral();
     }
 
+    public Position getGeneralPosition(final Fields field) {
+        Army army;
+        if (field == Fields.PLAYER_ONE) {
+            army = fieldPlayerOne;
+        } else {
+            army = fieldPlayerTwo;
+        }
+
+        General general = army.getGeneral();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (army.getPlayerUnits()[i][j] == general) {
+                    return new Position(i, j, field);
+                }
+            }
+        }
+        return null;
+    }
+
     public void setCurrentPlayer(final Fields currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
@@ -266,7 +285,6 @@ public class Board {
     /**
      * Возвращает список позиций активных юнитов игрока fields.
      **/
-
     public List<Position> getActiveUnitsPositions(final Fields fields){
         final Unit[][] army = getArmy(fields);
         final List<Position> result = new ArrayList<>(6);
@@ -320,7 +338,7 @@ public class Board {
     /**
      * Возвращает список ходов, возможных для текущего игрока.
      **/
-
+    @JsonIgnore
     public List<Answer> getPossibleMoves() throws GameLogicException {
         try {
             return new GameLogic(this).getAvailableMoves(currentPlayer);
