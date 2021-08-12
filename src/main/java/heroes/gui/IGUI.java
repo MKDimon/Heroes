@@ -1,5 +1,6 @@
 package heroes.gui;
 
+import heroes.clientserver.Data;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.player.Answer;
@@ -13,4 +14,6 @@ public interface IGUI {
     void stop();
     void clear();
     void pollInput();
+    void endGame(final Data data);
+    void continueGame(final Data data);
 }
