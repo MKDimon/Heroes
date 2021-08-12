@@ -11,6 +11,7 @@ import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
 import heroes.player.botnikita.NikitaBot;
+import heroes.player.botdimon.*;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -26,7 +27,8 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new NikitaBot.NikitaBotFactory());
+        playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
+        playerBots.put("Dimon", new Dimon.DimonFactory());
     }
 
     private final String ip;
@@ -74,7 +76,7 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);

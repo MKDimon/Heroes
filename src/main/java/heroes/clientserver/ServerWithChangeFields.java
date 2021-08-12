@@ -331,6 +331,7 @@ public class ServerWithChangeFields {
     public void startServer() throws IOException {
         System.out.println(String.format("Server started, port: %d", PORT));
         try (final ServerSocket serverSocket = new ServerSocket(PORT)) {
+            serverSocket.setSoTimeout(1000);
             for (int i = 1; i <= maxRooms; i++) {
                 final Rooms room = new Rooms(this, i);
                 getRoom.put(i, room);
