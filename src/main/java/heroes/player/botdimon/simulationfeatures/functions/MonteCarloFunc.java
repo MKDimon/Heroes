@@ -51,7 +51,6 @@ public class MonteCarloFunc implements IUtilityFunc {
 
     @Override
     public double getValue(final Board board, final Fields field) {
-        long start = System.currentTimeMillis();
         double result = 0;
         try {
             ExecutorService service = Executors.newCachedThreadPool();
@@ -62,7 +61,6 @@ public class MonteCarloFunc implements IUtilityFunc {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        //System.out.println("Time monte carlo " + (System.currentTimeMillis() - start));
         return result;
     }
 }
