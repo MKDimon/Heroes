@@ -1,6 +1,7 @@
 package heroes.gui.heroeslanterna;
 
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.Data;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.IGUI;
@@ -105,6 +106,16 @@ public class Lanterna implements IGUI {
         } catch (IOException e) {
             logger.error("Error poll input by Lanterna");
         }
+    }
+
+    @Override
+    public void endGame(final Data data) {
+        LanternaEndGame.endGame(lw, data);
+    }
+
+    @Override
+    public void continueGame(final Data data) {
+        LanternaContinueGame.continueGame(lw, data);
     }
 
 }
