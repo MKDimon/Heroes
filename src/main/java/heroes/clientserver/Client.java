@@ -4,7 +4,8 @@ import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
 import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import heroes.gui.IGUI;
+import heroes.gui.heroeslanterna.Lanterna;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
@@ -34,7 +35,7 @@ public class Client {
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
 
-    private LanternaWrapper tw;
+    private IGUI gui;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -73,14 +74,14 @@ public class Client {
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
-        final Controls controls = new Controls(tw);
+        final Controls controls = new Controls(gui);
         final Selector selector = new Selector(1 , 4);
 
         while (true) {
-            tw.getScreen().clear();
+            gui.getScreen().clear();
             MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
             try {
-                tw.getScreen().refresh();
+                gui.getScreen().refresh();
             } catch (IOException e) {
                 logger.error("Error refreshing terminal in playerGUIbot", e);
             }
@@ -94,12 +95,12 @@ public class Client {
             if(kt == KeyType.Enter) {
                 try {
                     player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
-                    player.setTerminal(tw);
+                    player.setTerminal(gui);
 
-                    tw.getScreen().clear();
+                    gui.getScreen().clear();
                     MenuBotDrawer.drawWait(tw);
                     try {
-                        tw.getScreen().refresh();
+                        gui.getScreen().refresh();
                     } catch (IOException e) {
                         logger.error("Error refreshing terminal in playerGUIbot", e);
                     }
@@ -108,7 +109,7 @@ public class Client {
                     logger.error("Error create bot", e);
                 }
             }
-            tw.getScreen().clear();
+            gui.getScreen().clear();
         }
     }
 
@@ -128,8 +129,8 @@ public class Client {
         return player;
     }
 
-    public LanternaWrapper getTw() {
-        return tw;
+    public IGUI getGUI() {
+        return gui;
     }
 
     /**
@@ -140,8 +141,8 @@ public class Client {
      */
     private void start() {
         try {
-            tw = new LanternaWrapper();
-            tw.start();
+            gui = new Lanterna();
+            gui.start();
 
             while (!socket.isClosed()) {
                 if (in.ready()) {
@@ -151,7 +152,7 @@ public class Client {
                     final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
-                tw.getScreen().pollInput();
+                gui.getScreen().pollInput();
             }
         } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);
