@@ -105,20 +105,17 @@ public abstract class SimulationTree {
     }
 
     /**
-     * Принимает список узлов размера N и возвращает список узлов размера CLUSTER
-     *
-     * @param list Список узлов
-     * @param field поле ходившего игрока
-     * @return Список узлов из каждого кластера
-     * @throws Exception ошибка
+     * Возвращает датасет списка узлов
+     * @param list - список узлов
+     * @return датасет из узлов
      */
-    protected List<Node> clustering(final List<Node> list, final Fields field) throws Exception {
-        Instances dataset = new Instances("Nodes", attributes, 50);
+    private Instances getDataSet(final List<Node> list) {
+        final Instances dataset = new Instances("Nodes", attributes, 50);
         for (final Node item : list) {
             final Board board = item.board;
             final Unit[][] ally = (field == Fields.PLAYER_ONE) ? board.getFieldPlayerOne() : board.getFieldPlayerTwo();
             final Unit[][] enemy = (field != Fields.PLAYER_ONE) ? board.getFieldPlayerOne() : board.getFieldPlayerTwo();
-            Instance inst = new DenseInstance(attributes.size());
+            final Instance inst = new DenseInstance(attributes.size());
             inst.setValue(attributes.get(0), new UtilityAnswerFuncFourV2().getValue(item.board, field));
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 3; k++) {
@@ -131,12 +128,25 @@ public abstract class SimulationTree {
             final Answer answer = item.answer;
             dataset.add(inst);
         }
+        return dataset;
+    }
 
-        SimpleKMeans kMeans = new SimpleKMeans();
+    /**
+     * Принимает список узлов размера N и возвращает список узлов размера CLUSTER
+     *
+     * @param list Список узлов
+     * @param field поле ходившего игрока
+     * @return Список узлов из каждого кластера
+     * @throws Exception ошибка
+     */
+    protected List<Node> clustering(final List<Node> list, final Fields field) throws Exception {
+        final Instances dataset = getDataSet(list);
+
+        final SimpleKMeans kMeans = new SimpleKMeans();
         kMeans.setNumClusters(CLUSTERS);
         kMeans.buildClusterer(dataset);
-        List<Node> result = new ArrayList<>();
-        Map<Integer, Node> map = new HashMap<>();
+        final List<Node> result = new ArrayList<>();
+        final Map<Integer, Node> map = new HashMap<>();
         for (int i = 0; i < dataset.size(); i++) {
             int k = kMeans.clusterInstance(dataset.get(i));
             if (map.get(k) == null) {
@@ -189,7 +199,7 @@ public abstract class SimulationTree {
      * @throws GameLogicException ошибка
      */
     protected List<Node> getAllSteps(final Node root, final Fields field) throws UnitException, BoardException, GameLogicException {
-        List<Node> result = new ArrayList<>();
+        final List<Node> result = new ArrayList<>();
         final Board board = new Board(root.board);
 
         final Fields enemyField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
@@ -197,9 +207,9 @@ public abstract class SimulationTree {
         final Unit[][] army = board.getArmy(field);
         final Unit[][] enemies = board.getArmy(enemyField);
 
-        List<Position> posAttack = new ArrayList<>();
-        List<Position> posDefend = new ArrayList<>();
-        List<Position> posHealing = new ArrayList<>();
+        final List<Position> posAttack = new ArrayList<>();
+        final List<Position> posDefend = new ArrayList<>();
+        final List<Position> posHealing = new ArrayList<>();
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
