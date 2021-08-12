@@ -7,7 +7,6 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
-import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.BaseBot;
 import heroes.player.TestBot;
 
@@ -16,13 +15,6 @@ public abstract class AIBot extends BaseBot implements Visualisable {
     public static final int baseMaxRecLevel = 3;
     private final UtilityFunction utilityFunction;
     private final int maxRecLevel;
-
-    protected LanternaWrapper tw;
-
-    @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        this.tw = tw;
-    }
 
     public abstract static class AIBotFactory extends BaseBotFactory {
 
