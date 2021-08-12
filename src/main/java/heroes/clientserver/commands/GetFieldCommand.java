@@ -24,7 +24,7 @@ public class GetFieldCommand extends Command {
             int id;
             Scanner scanner = new Scanner(System.in);
             do {
-                id = getClient().getTw().updateMenu();
+                id = getClient().getController().getFieldCommand();
             } while (id > 2 || id < 1);
             getOut().write( Serializer.serializeData(new Data(id)) + '\n');
             getOut().flush();

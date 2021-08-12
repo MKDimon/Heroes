@@ -3,6 +3,7 @@ package heroes.clientserver;
 import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
+import heroes.controller.IController;
 import heroes.gamelogic.Fields;
 import heroes.gui.IGUI;
 import heroes.gui.heroeslanterna.Lanterna;
@@ -36,6 +37,7 @@ public class Client {
     private BaseBot player;
 
     private IGUI gui;
+    private IController controller;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -79,7 +81,7 @@ public class Client {
 
         while (true) {
             gui.clear();
-            MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
+            gui.drawBots(selector);
             gui.refresh();
 
             KeyType kt = controls.update();
@@ -89,12 +91,12 @@ public class Client {
             selector.updateSelection(kt);
 
             if(kt == KeyType.Enter) {
-                try {
-                    player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
+                try { //
+                    player = botFactoryMap.get(controller.getBot(selector)).createBot(field);
                     player.setTerminal(gui);
 
                     gui.clear();
-                    MenuBotDrawer.drawWait(tw);
+                    gui.drawWait();
                     gui.refresh();
                     break;
                 } catch (GameLogicException e) {
@@ -123,6 +125,10 @@ public class Client {
 
     public IGUI getGUI() {
         return gui;
+    }
+
+    public IController getController() {
+        return controller;
     }
 
     /**

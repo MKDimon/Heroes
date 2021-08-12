@@ -41,7 +41,7 @@ public class SelfPlay {
         int counter = 0;
         final int gamesCount = 1;
         GameLogic gl = new GameLogic();
-        tw.updateMenu();
+        tw.updateMenu("Choose field (1-2 or 3 (any) )");
         for (int i = 0; i < gamesCount; i ++) {
             gl = new GameLogic();
             final Army firstPlayerArmy = playerOne.getArmy(null);

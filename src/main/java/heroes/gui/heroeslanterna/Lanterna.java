@@ -1,10 +1,14 @@
 package heroes.gui.heroeslanterna;
 
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.controller.IController;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gui.IGUI;
+import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
+import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.Answer;
+import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +18,7 @@ import java.io.IOException;
  * Обертка над LanternaWrapper, который управляет процессами запуска терминала.
  */
 
-public class Lanterna implements IGUI {
+public class Lanterna implements IGUI, IController {
     private static final Logger logger = LoggerFactory.getLogger(Lanterna.class);
 
     private LanternaWrapper lw;
@@ -63,8 +67,18 @@ public class Lanterna implements IGUI {
      **/
 
     @Override
-    public int updateMenu() {
-        return lw.updateMenu();
+    public int updateMenu(final String message) {
+        return lw.updateMenu(message);
+    }
+
+    @Override
+    public void drawBots(final Selector selector) {
+        MenuBotDrawer.drawBots(lw, selector.getSelectedNumber());
+    }
+
+    @Override
+    public void drawWait() {
+        MenuBotDrawer.drawWait(lw);
     }
 
     /**
@@ -107,4 +121,18 @@ public class Lanterna implements IGUI {
         }
     }
 
+    @Override
+    public int getFieldCommand() {
+        return updateMenu("Choose field (1-2 or 3 (any) )");
+    }
+
+    @Override
+    public int getRoomCommand() {
+        return updateMenu("Choose room:");
+    }
+
+    @Override
+    public String getBot(final Selector selector) {
+        return BotMenuMap.getDrawer(selector.getSelectedNumber());
+    }
 }
