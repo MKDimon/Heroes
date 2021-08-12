@@ -1,5 +1,6 @@
 package heroes.gui.heroeslanterna;
 
+import com.googlecode.lanterna.input.KeyStroke;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.controller.IController;
@@ -13,6 +14,8 @@ import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.security.auth.kerberos.KerberosTicket;
+import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -63,15 +66,6 @@ public class Lanterna implements IGUI, IController {
         lw.printPlayer(field);
     }
 
-    /**
-     * Обертка над методом updateMenu().
-     **/
-
-    @Override
-    public int updateMenu(final String message) {
-        return lw.updateMenu(message);
-    }
-
     @Override
     public void drawBots(final Selector selector) {
         MenuBotDrawer.drawBots(lw, selector.getSelectedNumber());
@@ -114,22 +108,23 @@ public class Lanterna implements IGUI, IController {
     }
 
     @Override
-    public void pollInput() {
+    public KeyStroke pollInput() {
         try {
-            lw.getScreen().pollInput();
+            return lw.getScreen().pollInput();
         } catch (IOException e) {
             logger.error("Error poll input by Lanterna");
         }
+        return null;
     }
 
     @Override
     public int getFieldCommand() {
-        return updateMenu("Choose field (1-2 or 3 (any) )");
+        return lw.updateMenu("Choose field (1-2 or 3 (any) )");
     }
 
     @Override
     public int getRoomCommand() {
-        return updateMenu("Choose room:");
+        return lw.updateMenu("Choose room:");
     }
 
     @Override

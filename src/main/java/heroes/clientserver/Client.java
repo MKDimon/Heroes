@@ -74,9 +74,9 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
-        final Controls controls = new Controls(gui);
+        final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);
 
         while (true) {
@@ -139,8 +139,10 @@ public class Client {
      */
     private void start() {
         try {
-            gui = new Lanterna();
+            final Lanterna lanterna = new Lanterna();
+            gui = lanterna;
             gui.start();
+            controller = lanterna;
 
             while (!socket.isClosed()) {
                 if (in.ready()) {
@@ -150,7 +152,7 @@ public class Client {
                     final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
-                gui.pollInput();
+                controller.pollInput();
             }
         } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);

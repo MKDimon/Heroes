@@ -15,7 +15,6 @@ public interface IGUI {
     void update(final Answer answer, final Board board);
     void stop();
     void clear();
-    void pollInput();
     void endGame(final Data data);
     void continueGame(final Data data);
 }
