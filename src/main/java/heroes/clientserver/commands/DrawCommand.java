@@ -21,10 +21,10 @@ public class DrawCommand extends Command{
     @Override
     public void execute() {
         try {
-            getClient().getTw().update(getData().answer, getData().board);
-            getClient().getTw().printPlayer(getClient().getPlayer().getField());
+            getClient().getGUI().update(getData().answer, getData().board);
+            getClient().getGUI().printPlayer(getClient().getPlayer().getField());
             getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_SUCCESSFUL)) + '\n');
-        } catch (final IOException | UnitException e) {
+        } catch (final IOException e) {
             logger.error(ServerExceptionType.ERROR_COMMAND_RUNNING.getErrorType(), e);
             try {
                 getOut().write(Serializer.serializeData(new Data(CommonCommands.DRAW_UNSUCCESSFUL)) + '\n');

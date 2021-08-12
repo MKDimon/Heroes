@@ -1,6 +1,7 @@
 package heroes.gui.heroeslanterna;
 
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.Data;
 import heroes.controller.IController;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -135,4 +136,14 @@ public class Lanterna implements IGUI, IController {
     public String getBot(final Selector selector) {
         return BotMenuMap.getDrawer(selector.getSelectedNumber());
     }
+    @Override
+    public void endGame(final Data data) {
+        LanternaEndGame.endGame(lw, data);
+    }
+
+    @Override
+    public void continueGame(final Data data) {
+        LanternaContinueGame.continueGame(lw, data);
+    }
+
 }
