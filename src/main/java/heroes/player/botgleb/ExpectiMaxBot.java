@@ -8,7 +8,6 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
-import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 
 import java.util.ArrayList;
@@ -20,12 +19,6 @@ import java.util.function.ToDoubleFunction;
  **/
 
 public class ExpectiMaxBot extends AIBot implements Visualisable {
-    protected LanternaWrapper tw = null;
-
-    @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        super.tw = tw;
-    }
 
     /**
      * Фабрика ботов.
