@@ -5,7 +5,7 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import heroes.gui.IGUI;
 import heroes.gui.Visualisable;
 
 /**
@@ -14,11 +14,11 @@ import heroes.gui.Visualisable;
 
 public abstract class BaseBot implements Visualisable {
     private final Fields field;
-    protected LanternaWrapper tw;
+    protected IGUI gui;
 
     @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        this.tw = tw;
+    public void setTerminal(final IGUI gui) {
+        this.gui = gui;
     }
 
     public abstract static class BaseBotFactory {

@@ -26,14 +26,7 @@ import java.util.Random;
  **/
 
 public class TestBot extends BaseBot implements Visualisable {
-    Logger logger = LoggerFactory.getLogger(TestBot.class);
-
-    protected LanternaWrapper tw;
-
-    @Override
-    public void setTerminal(LanternaWrapper tw) {
-        super.tw = tw;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(TestBot.class);
 
     /**
      * Фабрика ботов

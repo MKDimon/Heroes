@@ -2,7 +2,6 @@ package heroes.clientserver.commands;
 
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
-import heroes.gui.heroeslanterna.LanternaEndGame;
 
 import java.io.BufferedWriter;
 
@@ -13,7 +12,7 @@ public class EndGameCommand extends Command{
 
     @Override
     public void execute() {
-        LanternaEndGame.endGame(getClient().getTw(), getData());
+        getClient().getGUI().endGame(getData());
         getClient().downService();
     }
 }

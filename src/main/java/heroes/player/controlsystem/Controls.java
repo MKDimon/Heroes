@@ -2,27 +2,23 @@ package heroes.player.controlsystem;
 
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import heroes.controller.IController;
+import heroes.gui.IGUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class Controls {
-    private final LanternaWrapper tw;
+    private final IController controller;
 
     private final Logger logger = LoggerFactory.getLogger(Controls.class);
-    public Controls(final LanternaWrapper tw) {
-        this.tw = tw;
+    public Controls(final IController controller) {
+        this.controller = controller;
     }
 
     public KeyType update() {
-        KeyStroke ks = null;
-        try {
-            ks = tw.getScreen().pollInput();
-        } catch (IOException e) {
-            logger.error("Error in getting pressed button procedure in Controls.", e);
-        }
+        final KeyStroke ks = controller.pollInput();
         return (ks != null) ? ks.getKeyType() : null;
     }
 

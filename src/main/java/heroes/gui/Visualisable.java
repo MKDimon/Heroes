@@ -1,6 +1,5 @@
 package heroes.gui;
 
-import heroes.gui.heroeslanterna.LanternaWrapper;
 
 /**
  * Интерфейс для передачи GUI терминала в сущности без изменения исходного кода.
@@ -8,7 +7,7 @@ import heroes.gui.heroeslanterna.LanternaWrapper;
 public interface Visualisable {
     /**
      * Присваивает внутренней переменной терминала новое значение.
-     * @param tw Обёртка над инфраструктурой GUI Lanterna.
+     * @param gui Обёртка над инфраструктурой GUI.
      */
-    void setTerminal(final LanternaWrapper tw);
+    void setTerminal(final IGUI gui);
 }

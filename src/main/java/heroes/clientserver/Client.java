@@ -3,12 +3,15 @@ package heroes.clientserver;
 import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
+import heroes.controller.IController;
 import heroes.gamelogic.Fields;
-import heroes.gui.heroeslanterna.LanternaWrapper;
+import heroes.gui.IGUI;
+import heroes.gui.heroeslanterna.Lanterna;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
 import heroes.player.botnikita.NikitaBot;
+import heroes.player.botdimon.*;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -24,7 +27,8 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new NikitaBot.NikitaBotFactory());
+        playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
+        playerBots.put("Dimon", new Dimon.DimonFactory());
     }
 
     private final String ip;
@@ -34,7 +38,8 @@ public class Client {
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
 
-    private LanternaWrapper tw;
+    private IGUI gui;
+    private IController controller;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -71,19 +76,15 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
-        final Controls controls = new Controls(tw);
+        final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);
 
         while (true) {
-            tw.getScreen().clear();
-            MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
-            try {
-                tw.getScreen().refresh();
-            } catch (IOException e) {
-                logger.error("Error refreshing terminal in playerGUIbot", e);
-            }
+            gui.clear();
+            gui.drawBots(selector);
+            gui.refresh();
 
             KeyType kt = controls.update();
             while(kt == null) {
@@ -92,23 +93,19 @@ public class Client {
             selector.updateSelection(kt);
 
             if(kt == KeyType.Enter) {
-                try {
-                    player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
-                    player.setTerminal(tw);
+                try { //
+                    player = botFactoryMap.get(controller.getBot(selector)).createBot(field);
+                    player.setTerminal(gui);
 
-                    tw.getScreen().clear();
-                    MenuBotDrawer.drawWait(tw);
-                    try {
-                        tw.getScreen().refresh();
-                    } catch (IOException e) {
-                        logger.error("Error refreshing terminal in playerGUIbot", e);
-                    }
+                    gui.clear();
+                    gui.drawWait();
+                    gui.refresh();
                     break;
                 } catch (GameLogicException e) {
                     logger.error("Error create bot", e);
                 }
             }
-            tw.getScreen().clear();
+            gui.clear();
         }
     }
 
@@ -128,8 +125,12 @@ public class Client {
         return player;
     }
 
-    public LanternaWrapper getTw() {
-        return tw;
+    public IGUI getGUI() {
+        return gui;
+    }
+
+    public IController getController() {
+        return controller;
     }
 
     /**
@@ -140,8 +141,10 @@ public class Client {
      */
     private void start() {
         try {
-            tw = new LanternaWrapper();
-            tw.start();
+            final Lanterna lanterna = new Lanterna();
+            gui = lanterna;
+            gui.start();
+            controller = lanterna;
 
             while (!socket.isClosed()) {
                 if (in.ready()) {
@@ -151,7 +154,7 @@ public class Client {
                     final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
-                tw.getScreen().pollInput();
+                controller.pollInput();
             }
         } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);

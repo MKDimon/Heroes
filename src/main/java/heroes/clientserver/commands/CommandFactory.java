@@ -22,6 +22,7 @@ public class CommandFactory {
         commandMap.put(CommonCommands.GET_ARMY, new GetArmyCommand(data, out, client));
         commandMap.put(CommonCommands.GET_ROOM, new GetRoomCommand(data, out, client));
         commandMap.put(CommonCommands.GET_FIELD, new GetFieldCommand(data, out, client));
+        commandMap.put(CommonCommands.GET_OPPONENT, new GetOpponentCommand(data, out, client));
         commandMap.put(CommonCommands.FIELD_ONE, new FieldOneCommand(data, out, client));
         commandMap.put(CommonCommands.FIELD_TWO, new FieldTwoCommand(data, out, client));
         commandMap.put(CommonCommands.MAX_ROOMS, new MaxRoomsCommand(data, out, client));

@@ -97,7 +97,7 @@ public class LanternaWrapper {
         refresh();
     }
 
-    public int updateMenu() {
+    public int updateMenu(final String message) {
         final WindowBasedTextGUI textGUI = new MultiWindowTextGUI(screen);
         textGUI.setTheme(SimpleTheme.makeTheme(
                 false,
@@ -110,7 +110,7 @@ public class LanternaWrapper {
                 Colors.BLACK.color()));
 
         final TextInputDialog textInputDialog = new TextInputDialogBuilder()
-                .setTitle("Choose game room")
+                .setTitle(message)
                 .setDescription("Enter a single number (0-9)")
                 .setValidationPattern(Pattern.compile("[0-9]"), "You didn't enter a single number!")
                 .setTextBoxSize(new TerminalSize(10, 1))

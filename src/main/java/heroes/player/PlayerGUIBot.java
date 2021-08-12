@@ -1,3 +1,4 @@
+/*
 package heroes.player;
 
 import com.googlecode.lanterna.TerminalPosition;
@@ -9,6 +10,7 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gui.IGUI;
 import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.gui.Visualisable;
 import heroes.gui.heroeslanterna.menudrawers.MenuBoardDrawer;
@@ -34,25 +36,29 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+*/
 /**
  * Класс - бот, управляемый игроком.
  * Игрок через консоль задает армию и выбирает дейтсвия над юнитами.
- **/
+ **//*
+
 
 public class PlayerGUIBot extends BaseBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(PlayerGUIBot.class);
     private final Scanner scanner = new Scanner(System.in);
-    protected LanternaWrapper tw;
+    protected IGUI gui;
 
     @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        super.tw = tw;
-        this.tw = super.tw;
+    public void setTerminal(final IGUI gui) {
+        super.gui = gui;
+        this.gui = super.gui;
     }
 
-    /**
+    */
+/**
      * Фабрика ботов.
-     **/
+     **//*
+
 
     public static class PlayerGUIBotFactory extends BaseBotFactory {
 
@@ -69,7 +75,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     private General selectGeneralWindowDraw(final Controls controls) {
         final Selector selector = new Selector(1, 3);
         while (true) {
-            tw.getScreen().clear();
+            gui.clear();
             MenuGeneralDrawer.drawGenerals(tw, selector.getSelectedNumber());
             MenuTitleDrawers.drawChooseGeneral(tw, new TerminalPosition(14, 2));
             try {
@@ -221,7 +227,7 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
 
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
-        final Controls controls = new Controls(tw);
+        final Controls controls = new Controls(cont);
 
         final General general = selectGeneralWindowDraw(controls);
 
@@ -281,3 +287,4 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
 }
+*/

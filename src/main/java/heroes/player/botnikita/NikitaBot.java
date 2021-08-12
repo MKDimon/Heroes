@@ -34,11 +34,6 @@ public class NikitaBot extends BaseBot implements Visualisable {
         }
     }
 
-    @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        super.setTerminal(tw);
-    }
-
     public NikitaBot(final Fields field) throws GameLogicException {
         super(field);
     }

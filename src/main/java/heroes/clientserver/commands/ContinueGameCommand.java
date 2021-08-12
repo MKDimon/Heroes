@@ -2,7 +2,6 @@ package heroes.clientserver.commands;
 
 import heroes.clientserver.Client;
 import heroes.clientserver.Data;
-import heroes.gui.heroeslanterna.LanternaContinueGame;
 
 import java.io.BufferedWriter;
 
@@ -13,6 +12,6 @@ public class ContinueGameCommand extends Command{
 
     @Override
     public void execute() {
-        LanternaContinueGame.continueGame(getClient().getTw(), getData());
+        getClient().getGUI().continueGame(getData());
     }
 }

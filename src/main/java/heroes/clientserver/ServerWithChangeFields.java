@@ -8,15 +8,13 @@ import heroes.clientserver.commands.CommandsTime;
 import heroes.clientserver.commands.CommonCommands;
 import heroes.gamelogic.*;
 import heroes.player.Answer;
+import heroes.player.BaseBot;
 import heroes.statistics.StatisticsCollector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.BindException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -53,6 +51,7 @@ public class ServerWithChangeFields {
     private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldOne = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldTwo = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<RoomsClient> bots = new ConcurrentLinkedQueue<>();
 
     /**
      * Клиент комнаты
@@ -63,6 +62,8 @@ public class ServerWithChangeFields {
         public final Socket socket;
         public final BufferedWriter out;
         public final BufferedReader in;
+        public boolean withBot = false;
+        public boolean isBot = false;
 
         private RoomsClient(final ServerWithChangeFields server, final Socket socket) throws IOException {
             this.server = server;
@@ -71,21 +72,38 @@ public class ServerWithChangeFields {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         }
 
+        private void setOpponent() throws IOException {
+            final Data opponent = new Data(CommonCommands.GET_OPPONENT);
+            socket.setSoTimeout(CommandsTime.getTime(opponent.command));
+            out.write(Serializer.serializeData(opponent) + '\n');
+            out.flush();
+
+            withBot = Deserializer.deserializeData(in.readLine()).info == 2;
+        }
+
+        private void setField() throws IOException {
+            final Data data = new Data(CommonCommands.GET_FIELD);
+            socket.setSoTimeout(CommandsTime.getTime(data.command));
+            out.write(Serializer.serializeData(data) + '\n');
+            out.flush();
+
+            final int field = Deserializer.deserializeData(in.readLine()).info;
+            if (field == 1) {
+                server.fieldOne.add(this);
+            } else if (field == 2)  {
+                server.fieldTwo.add(this);
+            } else {
+                server.fieldOne.add(this);
+                server.fieldTwo.add(this);
+            }
+        }
+
         @Override
         public void run() {
             while (true) {
                 try {
-                    final Data data = new Data(CommonCommands.GET_FIELD);
-                    socket.setSoTimeout(CommandsTime.getTime(data.command));
-                    out.write(Serializer.serializeData(data) + '\n');
-                    out.flush();
-
-                    if (Deserializer.deserializeData(in.readLine()).info == 1) {
-                        server.fieldOne.add(this);
-                    }
-                    else {
-                        server.fieldTwo.add(this);
-                    }
+                    setOpponent();
+                    setField();
                     break;
                 } catch (final SocketTimeoutException e) {
                     server.clients.remove(this);
@@ -127,6 +145,7 @@ public class ServerWithChangeFields {
                         playerOne = rc;
                         playerOne.isUse = true;
                         server.fieldOne.remove(rc);
+                        server.fieldTwo.remove(rc);
                         break;
                     }
                 }
@@ -134,6 +153,7 @@ public class ServerWithChangeFields {
                     if ((playerTwo == null || playerTwo.socket.isClosed()) && !rc.isUse) {
                         playerTwo = rc;
                         playerTwo.isUse = true;
+                        server.fieldOne.remove(rc);
                         server.fieldTwo.remove(rc);
                         break;
                     }
