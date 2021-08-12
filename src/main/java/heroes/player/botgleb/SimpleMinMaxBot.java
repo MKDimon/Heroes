@@ -8,7 +8,6 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
-import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 
 import java.util.ArrayList;
@@ -20,8 +19,6 @@ import java.util.function.ToDoubleFunction;
  **/
 
 public class SimpleMinMaxBot extends AIBot implements Visualisable {
-
-    protected LanternaWrapper tw = null;
 
     /**
      * Фабрика ботов.
@@ -47,11 +44,6 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
     public SimpleMinMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
             throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
-    }
-
-    @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        super.tw = tw;
     }
 
     /**
