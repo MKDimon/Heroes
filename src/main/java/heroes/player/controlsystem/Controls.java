@@ -19,7 +19,7 @@ public class Controls {
     public KeyType update() {
         KeyStroke ks = null;
         try {
-            ks = gui.getScreen().pollInput();
+            ks = gui.pollInput();
         } catch (IOException e) {
             logger.error("Error in getting pressed button procedure in Controls.", e);
         }
