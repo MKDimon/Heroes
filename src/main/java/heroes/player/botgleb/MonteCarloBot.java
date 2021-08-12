@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.*;
 import heroes.gui.Visualisable;
-import heroes.gui.heroeslanterna.LanternaWrapper;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
@@ -30,8 +29,6 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
     private static final int maxTreeHeight = 1;
 
     private static final Logger logger = LoggerFactory.getLogger(SimpleMinMaxBot.class);
-
-    protected final LanternaWrapper tw = null;
 
     /**
      * Фабрика ботов.
@@ -130,11 +127,6 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
 
     public MonteCarloBot(final Fields field) throws GameLogicException {
         super(field);
-    }
-
-    @Override
-    public void setTerminal(final LanternaWrapper tw) {
-        super.tw = tw;
     }
 
     @Override
