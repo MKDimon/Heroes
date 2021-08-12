@@ -3,6 +3,7 @@ package heroes.clientserver;
 import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.commands.CommandFactory;
+import heroes.controller.IController;
 import heroes.gamelogic.Fields;
 import heroes.gui.IGUI;
 import heroes.gui.heroeslanterna.Lanterna;
@@ -36,6 +37,7 @@ public class Client {
     private BaseBot player;
 
     private IGUI gui;
+    private IController controller;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -72,14 +74,14 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
-        final Controls controls = new Controls(gui);
+        final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);
 
         while (true) {
             gui.clear();
-            MenuBotDrawer.drawBots(tw, selector.getSelectedNumber());
+            gui.drawBots(selector);
             gui.refresh();
 
             KeyType kt = controls.update();
@@ -89,12 +91,12 @@ public class Client {
             selector.updateSelection(kt);
 
             if(kt == KeyType.Enter) {
-                try {
-                    player = botFactoryMap.get(BotMenuMap.getDrawer(selector.getSelectedNumber())).createBot(field);
+                try { //
+                    player = botFactoryMap.get(controller.getBot(selector)).createBot(field);
                     player.setTerminal(gui);
 
                     gui.clear();
-                    MenuBotDrawer.drawWait(tw);
+                    gui.drawWait();
                     gui.refresh();
                     break;
                 } catch (GameLogicException e) {
@@ -125,6 +127,10 @@ public class Client {
         return gui;
     }
 
+    public IController getController() {
+        return controller;
+    }
+
     /**
      * Первое сообщение - поле игрока
      * второе сообщение - выбери бота
@@ -133,8 +139,10 @@ public class Client {
      */
     private void start() {
         try {
-            gui = new Lanterna();
+            final Lanterna lanterna = new Lanterna();
+            gui = lanterna;
             gui.start();
+            controller = lanterna;
 
             while (!socket.isClosed()) {
                 if (in.ready()) {
@@ -144,7 +152,7 @@ public class Client {
                     final CommandFactory commandFactory = new CommandFactory();
                     commandFactory.getCommand(data, out, this).execute();
                 }
-                gui.pollInput();
+                controller.pollInput();
             }
         } catch (final IOException | NullPointerException e) {
             logger.error("Error client running", e);

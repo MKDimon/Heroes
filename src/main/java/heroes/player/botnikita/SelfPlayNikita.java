@@ -15,7 +15,7 @@ import java.util.Map;
 public class SelfPlayNikita {
     public static void main(final String[] args) throws GameLogicException, UnitException {
         final List<BaseBot.BaseBotFactory> factories = Arrays.asList(new RandomBot.RandomBotFactory(),
-                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), new PlayerGUIBot.PlayerGUIBotFactory(),
+                new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), //new PlayerGUIBot.PlayerGUIBotFactory(),
                 new NikitaBot.NikitaBotFactory());
         final BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
         final BaseBot playerTwo = factories.get(4).createBot(Fields.PLAYER_TWO);

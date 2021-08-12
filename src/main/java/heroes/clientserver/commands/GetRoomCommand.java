@@ -24,7 +24,7 @@ public class GetRoomCommand extends Command{
             int id;
             Scanner scanner = new Scanner(System.in);
             do {
-                id = getClient().getTw().updateMenu();
+                id = getClient().getController().getRoomCommand();
             } while (id > getData().info || id < 1);
             getOut().write( String.valueOf(id)+ '\n');
             getOut().flush();
