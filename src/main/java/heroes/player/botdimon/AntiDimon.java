@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
@@ -41,15 +40,8 @@ public class AntiDimon extends BaseBot implements Visualisable {
         }
     }
 
-    protected TerminalWrapper tw = null;
-
     private int getMaxHeight(final Unit[][] army) {
         return ((int) Board.activeCount(army) <= 3)? 2 : 0;
-    }
-
-    @Override
-    public void setTerminal(final TerminalWrapper tw) {
-        super.tw = tw;
     }
 
     @Override

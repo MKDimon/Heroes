@@ -76,7 +76,7 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
+        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);

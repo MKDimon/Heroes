@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
@@ -38,13 +37,6 @@ public class Dimon extends BaseBot implements Visualisable {
         }
     }
 
-    protected TerminalWrapper tw = null;
-
-    @Override
-    public void setTerminal(TerminalWrapper tw) {
-        super.tw = tw;
-    }
-
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
@@ -70,8 +62,8 @@ public class Dimon extends BaseBot implements Visualisable {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.EXPECTI_SIMULATION,
-                UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
-                getField(), 3, false
+                UtilityFuncMap.getFunc(Functions.MONTE_CARLO),
+                getField(), 1, true
         );
         final Answer answer = tree.getAnswer(board);
         final long finish = System.currentTimeMillis();

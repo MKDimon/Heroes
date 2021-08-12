@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.TerminalWrapper;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
@@ -36,13 +35,6 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
         public BaseBot createBot(final Fields fields) throws GameLogicException {
             return new MonteCarloBot(fields);
         }
-    }
-
-    protected TerminalWrapper tw = null;
-
-    @Override
-    public void setTerminal(TerminalWrapper tw) {
-        super.tw = tw;
     }
 
     @Override

@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 public class MonteCarloFunc implements IUtilityFunc {
-    private final int GAMES_COUNT = 50;
-    private final int DEPTH = 9; // на нечетных работает намного лучше
+    private final int GAMES_COUNT = 30; // 30
+    private final int DEPTH = 5; // 5
     private final IUtilityFunc func = new UtilityAnswerFuncFourV2();
 
     private double getResult(final Board board, final Fields field) {
