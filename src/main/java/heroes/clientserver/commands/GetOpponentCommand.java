@@ -19,14 +19,12 @@ public class GetOpponentCommand extends Command {
     }
 
     @Override
-    public void execute() { //TODO: говорить что надо ввести оппонента
-                            // 1 - живой игрок
-                            // 2 - бот
+    public void execute() {
         try {
             int id;
             Scanner scanner = new Scanner(System.in);
             do {
-                id = getClient().getTw().updateMenu();
+                id = getClient().getController().getOpponentCommand();
             } while (id > 2 || id < 1);
             getOut().write( Serializer.serializeData(new Data(id)) + '\n');
             getOut().flush();

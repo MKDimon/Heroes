@@ -1,3 +1,4 @@
+/*
 package heroes.player;
 
 import com.googlecode.lanterna.TerminalPosition;
@@ -35,10 +36,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+*/
 /**
  * Класс - бот, управляемый игроком.
  * Игрок через консоль задает армию и выбирает дейтсвия над юнитами.
- **/
+ **//*
+
 
 public class PlayerGUIBot extends BaseBot implements Visualisable {
     private static final Logger logger = LoggerFactory.getLogger(PlayerGUIBot.class);
@@ -51,9 +54,11 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
         this.gui = super.gui;
     }
 
-    /**
+    */
+/**
      * Фабрика ботов.
-     **/
+     **//*
+
 
     public static class PlayerGUIBotFactory extends BaseBotFactory {
 
@@ -282,3 +287,4 @@ public class PlayerGUIBot extends BaseBot implements Visualisable {
     }
 
 }
+*/
