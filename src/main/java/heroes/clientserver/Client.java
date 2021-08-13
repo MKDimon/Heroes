@@ -9,6 +9,7 @@ import heroes.gui.IGUI;
 import heroes.gui.heroeslanterna.Lanterna;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.heroeslanterna.menudrawers.botchoicedrawers.MenuBotDrawer;
+import heroes.mathutils.Pair;
 import heroes.player.*;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.botdimon.*;
@@ -30,6 +31,8 @@ public class Client {
         playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
         playerBots.put("Dimon", new Dimon.DimonFactory());
     }
+
+    private final Map<String, Pair<IGUI, IController>> clientsGui = new HashMap<>();
 
     private final String ip;
     private final int port;
@@ -58,6 +61,11 @@ public class Client {
         ip = clientsConfigs.HOST;
         port = clientsConfigs.PORT;
         this.player = player;
+        initGUIMap();
+        Pair<IGUI, IController> pair = clientsGui.get(clientsConfigs.GUI);
+        gui = pair.getX();
+        gui.start();
+        controller = pair.getY();
     }
 
     private void startClient() {
@@ -69,6 +77,11 @@ public class Client {
         } catch (IOException e) {
             logger.error("Error client starting", e);
         }
+    }
+
+    private void initGUIMap() {
+        final Lanterna lanterna = new Lanterna();
+        clientsGui.put("lanterna", new Pair<>(lanterna, lanterna));
     }
 
     public void chooseBot(final Fields field) {
@@ -141,11 +154,6 @@ public class Client {
      */
     private void start() {
         try {
-            final Lanterna lanterna = new Lanterna();
-            gui = lanterna;
-            gui.start();
-            controller = lanterna;
-
             while (!socket.isClosed()) {
                 if (in.ready()) {
                     final String message = in.readLine();
