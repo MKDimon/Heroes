@@ -46,11 +46,16 @@ public class StatisticsCollector {
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
     public static final String filenameTemplate = "statistics/gameStatistics";
+    public static final String playersStatisticsFilenameTemplate = "players_statistics";
 
     private final String filename;
 
+    private final String playersStatisticsFilename;
+
     public StatisticsCollector(final int fileID) {
         filename = new StringBuffer(filenameTemplate).
+                append(fileID).append(".csv").toString();
+        playersStatisticsFilename = new StringBuilder(playersStatisticsFilenameTemplate).
                 append(fileID).append(".csv").toString();
     }
 
@@ -63,22 +68,41 @@ public class StatisticsCollector {
     public void recordArmyToCSV(final Fields field, final Army army) {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             final StringBuffer record = new StringBuffer();
-            record.append(field).append(",");
-            final Unit[][] unitArray = army.getPlayerUnits();
-            for (Unit[] units : unitArray) {
-                for (Unit unit : units) {
-                    if (unit.equals(army.getGeneral())) {
-                        record.append(actToGeneralMap.get(unit.getActionType())).append(",");
-                    } else {
-                        record.append(actToUnitMap.get(unit.getActionType())).append(",");
-                    }
-                }
-            }
+            record.append(field).append(",").append(armyToCSVString(army));
             record.delete(record.length() - 1, record.length()).append("\n");
             writer.write(record.toString());
         } catch (final IOException e) {
             logger.error("Error army recording", e);
         }
+    }
+
+    public void recordPlayersToCSV(final String playerOneName, final Army armyOne,
+                                   final String playerTwoName, final Army armyTwo) {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(playersStatisticsFilename, true))){
+            final StringBuilder record = new StringBuilder();
+            record.append(playerOneName).append(",").append(armyToCSVString(armyOne)).append(",")
+                    .append(playerTwoName).append(",").append(armyToCSVString(armyTwo)).append(",");
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    private String armyToCSVString(final Army army) {
+        final StringBuilder record = new StringBuilder();
+        final Unit[][] unitArray = army.getPlayerUnits();
+        for (Unit[] units : unitArray) {
+            for (Unit unit : units) {
+                if (unit.equals(army.getGeneral())) {
+                    record.append(actToGeneralMap.get(unit.getActionType())).append(",");
+                } else {
+                    record.append(actToUnitMap.get(unit.getActionType())).append(",");
+                }
+            }
+        }
+        return record.toString();
     }
 
     /**
