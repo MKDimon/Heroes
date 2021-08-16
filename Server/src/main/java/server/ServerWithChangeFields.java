@@ -265,7 +265,7 @@ public class ServerWithChangeFields {
 
             final GameStatus status = gameLogic.getBoard().getStatus();
             // статистика
-            collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
+            collector.recordMessageToCSV(new StringBuilder().append("\n").append(gameLogic.getBoard().getCurNumRound()).
                     append(",").toString());
             if (status == GameStatus.PLAYER_ONE_WINS) {
                 collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
@@ -274,7 +274,7 @@ public class ServerWithChangeFields {
                 collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
                 collector.recordMessageToCSV(new StringBuilder(playerTwo.botName).append("\n").toString(), collector.getPlayersStatisticsFilename());
             } else if (status == GameStatus.NO_WINNERS) {
-                collector.recordMessageToCSV("DEAD HEAT");
+                collector.recordMessageToCSV("DRAW");
                 collector.recordMessageToCSV("DRAW\n", collector.getPlayersStatisticsFilename());
             }
             collector.recordMessageToCSV("\nGAME OVER\n");
