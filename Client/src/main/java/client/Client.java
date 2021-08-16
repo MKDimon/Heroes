@@ -61,8 +61,8 @@ public class Client {
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
 
-    private IGUI gui;
-    private IController controller;
+    private final IGUI gui;
+    private final IController controller;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -190,5 +190,9 @@ public class Client {
             logger.error("Error client running", e);
             downService();
         }
+    }
+
+    public String getBotType() {
+        return clientsConfigs.TYPE_BOT;
     }
 }
