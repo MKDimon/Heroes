@@ -45,7 +45,7 @@ public class Client {
      * @throws IOException json
      */
     public static ClientsConfigs getClientsConfig() throws IOException {
-        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/clientConfig.json");
+        final FileInputStream fileInputStream = new FileInputStream("clientConfig.json");
 
         final ClientsConfigs cc = new ObjectMapper().readValue(fileInputStream, ClientsConfigs.class);
         fileInputStream.close();

@@ -45,7 +45,7 @@ public class StatisticsCollector {
             ActionTypes.CLOSE_COMBAT, GeneralTypes.COMMANDER.toString(),
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
-    public static final String filenameTemplate = "src/main/resources/statistics/gameStatistics";
+    public static final String filenameTemplate = "statistics/gameStatistics";
 
     private final String filename;
 

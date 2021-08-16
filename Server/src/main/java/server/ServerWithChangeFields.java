@@ -64,7 +64,7 @@ public class ServerWithChangeFields {
      * @throws IOException json
      */
     public static ServersConfigs getServersConfig() throws IOException {
-        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/serverConfig.json");
+        final FileInputStream fileInputStream = new FileInputStream("serverConfig.json");
 
         final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
         fileInputStream.close();

@@ -26,11 +26,11 @@ import java.util.Map;
 public class StatisticsRecorder {
     private static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
 
-    public static final String armiesStatisticsFilename = "src/main/resources/statistics/armiesStatistics";
+    public static final String armiesStatisticsFilename = "statistics/armiesStatistics";
     public static final String gameDurationStatisticsFilename =
-            "src/main/resources/statistics/gameDurationStatistics";
+            "statistics/gameDurationStatistics";
     public static final String winnerUnitsStatisticsFilename =
-            "src/main/resources/statistics/winnerUnitsStatistics";
+            "statistics/winnerUnitsStatistics";
 
     /**
      * Парсит serverConfig.json из каталога и возвращает конфиги сервера
@@ -39,7 +39,7 @@ public class StatisticsRecorder {
      * @throws IOException json
      */
     public static ServersConfigs getServersConfig() throws IOException {
-        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/serverConfig.json");
+        final FileInputStream fileInputStream = new FileInputStream("serverConfig.json");
 
         final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
         fileInputStream.close();
