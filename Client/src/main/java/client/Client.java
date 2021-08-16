@@ -7,9 +7,11 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.clientserver.ClientsConfigs;
 import heroes.clientserver.Data;
 import heroes.clientserver.Deserializer;
+import heroes.controller.AutoController;
 import heroes.controller.IController;
 import heroes.gamelogic.Fields;
 import heroes.gui.IGUI;
+import heroes.gui.WithoutGUI;
 import heroes.gui.heroeslanterna.Lanterna;
 import heroes.mathutils.Pair;
 import heroes.player.BaseBot;
@@ -71,8 +73,8 @@ public class Client {
         try {
             client = new Client(null);
             client.startClient();
-        } catch (IOException ignore) {
-            ignore.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -102,6 +104,7 @@ public class Client {
     private void initGUIMap() {
         final Lanterna lanterna = new Lanterna();
         clientsGui.put("lanterna", new Pair<>(lanterna, lanterna));
+        clientsGui.put("withoutGUI", new Pair<>(new WithoutGUI(), new AutoController(clientsConfigs)));
     }
 
     public void chooseBot(final Fields field) {
@@ -109,7 +112,6 @@ public class Client {
         botFactoryMap.put("Test", new TestBot.TestBotFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
-        //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
 
         final Controls controls = new Controls(controller);
         final Selector selector = new Selector(1 , 4);

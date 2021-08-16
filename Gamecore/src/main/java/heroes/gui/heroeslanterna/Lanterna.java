@@ -1,6 +1,7 @@
 package heroes.gui.heroeslanterna;
 
 import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.controller.IController;
@@ -30,11 +31,6 @@ public class Lanterna implements IGUI, IController {
      **/
 
     public Lanterna() {
-        try {
-            this.lw = new LanternaWrapper();
-        } catch (final IOException e) {
-            logger.error("Error Lanterna creating", e);
-        }
     }
 
     /**
@@ -52,6 +48,11 @@ public class Lanterna implements IGUI, IController {
 
     @Override
     public void start() {
+        try {
+            this.lw = new LanternaWrapper();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         lw.start();
     }
 
