@@ -108,7 +108,6 @@ public class Client {
             if(kt == KeyType.Enter) {
                 try { //
                     player = botFactoryMap.get(controller.getBot(selector)).createBot(field);
-                    player.setTerminal(gui);
 
                     gui.clear();
                     gui.drawWait();

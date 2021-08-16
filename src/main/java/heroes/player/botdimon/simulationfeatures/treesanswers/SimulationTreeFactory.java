@@ -14,6 +14,7 @@ public class SimulationTreeFactory {
         treeMap.put(SimulationTrees.CUSTOM_STEP_SIMULATION, new SimulationCustomSteps(func, field, maxHeight, clustering));
         treeMap.put(SimulationTrees.THREAD_CUSTOM_STEP_SIMULATION, new SimulationCustomStepsWithThread(func, field, maxHeight, clustering));
         treeMap.put(SimulationTrees.EXPECTI_SIMULATION, new SimulationExpectiMax(func, field, maxHeight, clustering));
+        treeMap.put(SimulationTrees.STAT_EXPECTI_SIMULATION, new SimulationExpectiMaxStatistic(func, field, maxHeight, clustering));
         treeMap.put(SimulationTrees.THREAD_EXPECTI_SIMULATION, new SimulationExpectiMaxWithThread(func, field, maxHeight, clustering));
     }
 

@@ -4,7 +4,6 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.function.ToDoubleFunction;
  * Бот по стратегии "ExpectiMax" с использованием ForkJoinPull.
  **/
 
-public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visualisable {
+public class MultithreadedExpectiMaxBot extends ExpectiMaxBot {
     private static final Logger logger = LoggerFactory.getLogger(MultithreadedExpectiMaxBot.class);
 
     /**

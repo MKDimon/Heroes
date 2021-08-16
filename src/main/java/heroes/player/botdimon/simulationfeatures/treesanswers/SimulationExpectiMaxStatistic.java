@@ -14,8 +14,8 @@ import java.util.List;
 /**
  * Дерево симуляции заданной высоты
  */
-public class SimulationExpectiMax extends SimulationTree {
-    public SimulationExpectiMax(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
+public class SimulationExpectiMaxStatistic extends SimulationTree {
+    public SimulationExpectiMaxStatistic(final IUtilityFunc func, final Fields field, final int maxHeight, final boolean clustering) {
         super(func, field, maxHeight, clustering);
     }
 
@@ -32,6 +32,7 @@ public class SimulationExpectiMax extends SimulationTree {
             logger.error("Error change branch", e);
         }
         final Node node = getGreedyDecision(root.list, field);
+        UtilityFuncStatistic.record(node.board, node.value, field);
         final Answer answer = node.answer;
         logger.info("Attacker position = {}, defender position = {}, action type = {}",
                 answer.getAttacker(), answer.getDefender(), answer.getActionType());

@@ -1,7 +1,6 @@
 package heroes.player.botdimon.simulationfeatures.functions;
 
 import heroes.auxiliaryclasses.ActionTypes;
-import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;

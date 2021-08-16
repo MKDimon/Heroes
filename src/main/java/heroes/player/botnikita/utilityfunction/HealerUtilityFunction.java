@@ -2,7 +2,6 @@ package heroes.player.botnikita.utilityfunction;
 
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.mathutils.Pair;
 import heroes.mathutils.Position;
 import heroes.player.Answer;
 import heroes.player.botnikita.PositionUnit;

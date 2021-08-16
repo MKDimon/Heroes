@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.botdimon.simulationfeatures.functions.Functions;
@@ -23,7 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Умный бот Димон
  */
-public class MonteCarloBot extends BaseBot implements Visualisable {
+public class MonteCarloBot extends BaseBot {
     private static final Logger logger = LoggerFactory.getLogger(MonteCarloBot.class);
 
     public MonteCarloBot(final Fields field) throws GameLogicException {

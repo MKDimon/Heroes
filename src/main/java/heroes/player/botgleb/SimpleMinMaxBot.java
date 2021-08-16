@@ -7,7 +7,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.Visualisable;
 import heroes.player.Answer;
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import java.util.function.ToDoubleFunction;
  * Бот по стратегии "минимакс".
  **/
 
-public class SimpleMinMaxBot extends AIBot implements Visualisable {
+public class SimpleMinMaxBot extends AIBot {
 
     /**
      * Фабрика ботов.

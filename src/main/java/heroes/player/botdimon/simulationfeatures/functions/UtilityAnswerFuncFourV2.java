@@ -59,18 +59,18 @@ public class UtilityAnswerFuncFourV2 implements IUtilityFunc {
     private double checkGameEnding(final Board board, final Fields field) {
         if (field == Fields.PLAYER_ONE) {
             if (board.getStatus() == GameStatus.PLAYER_ONE_WINS) {
-                return Double.MAX_VALUE;
+                return 100000;
             }
         }
         if (field == Fields.PLAYER_TWO) {
             if (board.getStatus() == GameStatus.PLAYER_TWO_WINS) {
-                return Double.MAX_VALUE;
+                return 100000;
             }
         }
-        if (board.getStatus() == GameStatus.NO_WINNERS) {
+        if (board.getStatus() == GameStatus.NO_WINNERS || board.getStatus() == GameStatus.GAME_PROCESS) {
             return 0;
         }
-        return Double.MIN_VALUE;
+        return -100000;
     }
 
     private double getModify(final Unit unit, final boolean isGeneral) throws UnitException {

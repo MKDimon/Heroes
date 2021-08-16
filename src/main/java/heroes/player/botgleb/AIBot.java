@@ -6,11 +6,10 @@ import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
-import heroes.gui.Visualisable;
 import heroes.player.BaseBot;
 import heroes.player.TestBot;
 
-public abstract class AIBot extends BaseBot implements Visualisable {
+public abstract class AIBot extends BaseBot {
     public static final UtilityFunction baseUtilityFunction = UtilityFunctions.HPUtilityFunction;
     public static final int baseMaxRecLevel = 3;
     private final UtilityFunction utilityFunction;

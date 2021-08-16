@@ -3,24 +3,22 @@ package heroes.player.botdimon.simulationfeatures.functions;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameLogic;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
-import heroes.player.RandomBot;
 import heroes.player.botdimon.MonteCarloBot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MonteCarloFunc implements IUtilityFunc {
     private final int GAMES_COUNT = 30; // 30
-    private final int DEPTH = 5; // 5
+    private final int DEPTH = 9; // 5
     private final IUtilityFunc func = new UtilityAnswerFuncFourV2();
 
     private double getResult(final Board board, final Fields field) {
@@ -61,6 +59,6 @@ public class MonteCarloFunc implements IUtilityFunc {
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-        return result;
+        return result / GAMES_COUNT;
     }
 }

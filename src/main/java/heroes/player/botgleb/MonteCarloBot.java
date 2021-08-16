@@ -5,7 +5,6 @@ import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.*;
-import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
@@ -24,7 +23,7 @@ import java.util.concurrent.RecursiveTask;
  * Бот по стратегии "Монте-Карло".
  **/
 
-public class MonteCarloBot extends BaseBot implements Visualisable {
+public class MonteCarloBot extends BaseBot {
     private static final int iterations = 50;
     private static final int maxTreeHeight = 1;
 

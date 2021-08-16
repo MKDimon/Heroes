@@ -36,9 +36,7 @@ public class SelfPlay {
                 new TestBot.TestBotFactory(), new PlayerBot.PlayerBotFactory(), //new PlayerGUIBot.PlayerGUIBotFactory(),
                 new NikitaBot.NikitaBotFactory());
         BaseBot playerOne = factories.get(1).createBot(Fields.PLAYER_ONE);
-        playerOne.setTerminal(gui);
         BaseBot playerTWO = factories.get(4).createBot(Fields.PLAYER_TWO);
-        playerTWO.setTerminal(gui);
         Map<Fields, BaseBot> getPlayer = new HashMap<>();
         getPlayer.put(Fields.PLAYER_ONE, playerOne);
         getPlayer.put(Fields.PLAYER_TWO, playerTWO);

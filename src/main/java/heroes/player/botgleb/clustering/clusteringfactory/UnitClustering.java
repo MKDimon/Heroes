@@ -1,6 +1,5 @@
 package heroes.player.botgleb.clustering.clusteringfactory;
 
-import heroes.player.botgleb.clustering.ClusteringData;
 import heroes.player.botgleb.clustering.UnitDecomposition;
 import heroes.units.Unit;
 

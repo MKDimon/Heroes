@@ -6,7 +6,6 @@ import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
-import heroes.gui.Visualisable;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.botdimon.simulationfeatures.functions.Functions;
@@ -23,7 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Умный бот Димон
  */
-public class Dimon extends BaseBot implements Visualisable {
+public class Dimon extends BaseBot {
     private static final Logger logger = LoggerFactory.getLogger(Dimon.class);
 
     public Dimon(final Fields field) throws GameLogicException {
@@ -62,8 +61,8 @@ public class Dimon extends BaseBot implements Visualisable {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.EXPECTI_SIMULATION,
-                UtilityFuncMap.getFunc(Functions.MONTE_CARLO),
-                getField(), 1, true
+                UtilityFuncMap.getFunc(Functions.NEURON),
+                getField(), 3, true
         );
         final Answer answer = tree.getAnswer(board);
         final long finish = System.currentTimeMillis();

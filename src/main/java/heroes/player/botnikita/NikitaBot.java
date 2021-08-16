@@ -4,9 +4,9 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.gamelogic.*;
-import heroes.gui.heroeslanterna.LanternaWrapper;
-import heroes.gui.Visualisable;
-import heroes.player.*;
+import heroes.player.Answer;
+import heroes.player.BaseBot;
+import heroes.player.TestBot;
 import heroes.player.botnikita.simulation.BoardSimulation;
 import heroes.player.botnikita.simulation.FieldsWrapper;
 import heroes.player.botnikita.utilityfunction.HealerUtilityFunction;
@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NikitaBot extends BaseBot implements Visualisable {
+public class NikitaBot extends BaseBot {
     private static int getRecLevel(final Board board) {
         return 3;
     }

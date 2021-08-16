@@ -3,11 +3,8 @@ package heroes.player.controlsystem;
 import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import heroes.controller.IController;
-import heroes.gui.IGUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class Controls {
     private final IController controller;
