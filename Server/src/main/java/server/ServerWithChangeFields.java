@@ -83,11 +83,22 @@ public class ServerWithChangeFields {
         public boolean withBot = false;
         public boolean isBot = false;
 
+        private String botName;
+
         private RoomsClient(final ServerWithChangeFields server, final Socket socket) throws IOException {
             this.server = server;
             this.socket = socket;
             this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        }
+
+        private void setBotName() throws IOException {
+            final Data data = new Data(CommonCommands.GET_BOT_NAME);
+            socket.setSoTimeout(CommandsTime.getTime(data.command));
+            out.write(Serializer.serializeData(data) + '\n');
+            out.flush();
+
+            botName = Deserializer.deserializeData(in.readLine()).botName;
         }
 
         private void setOpponent() throws IOException {
@@ -120,6 +131,7 @@ public class ServerWithChangeFields {
         public void run() {
             while (true) {
                 try {
+                    setBotName();
                     setOpponent();
                     setField();
                     break;
@@ -209,6 +221,8 @@ public class ServerWithChangeFields {
             collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
             collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
 
+            collector.recordPlayersToCSV(playerOne.getName(), one, playerTwo.getName(), two);
+
             // Отрисовка
             final Data drawingData = new Data(CommonCommands.DRAW, gameLogic.getBoard());
             sendDraw(drawingData, playerOne);
@@ -255,10 +269,13 @@ public class ServerWithChangeFields {
                     append(",").toString());
             if (status == GameStatus.PLAYER_ONE_WINS) {
                 collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+                collector.recordMessageToCSV(new StringBuilder(playerOne.botName).append("\n").toString(), collector.getPlayersStatisticsFilename());
             } else if (status == GameStatus.PLAYER_TWO_WINS) {
                 collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+                collector.recordMessageToCSV(new StringBuilder(playerTwo.botName).append("\n").toString(), collector.getPlayersStatisticsFilename());
             } else if (status == GameStatus.NO_WINNERS) {
                 collector.recordMessageToCSV("DEAD HEAT");
+                collector.recordMessageToCSV("DRAW\n", collector.getPlayersStatisticsFilename());
             }
             collector.recordMessageToCSV("\nGAME OVER\n");
         }
