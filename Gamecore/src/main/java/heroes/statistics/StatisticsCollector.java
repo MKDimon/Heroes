@@ -53,7 +53,7 @@ public class StatisticsCollector {
     private final String playersStatisticsFilename;
 
     public StatisticsCollector(final int fileID) {
-        filename = new StringBuffer(filenameTemplate).
+        filename = new StringBuilder(filenameTemplate).
                 append(fileID).append(".csv").toString();
         playersStatisticsFilename = new StringBuilder(playersStatisticsFilenameTemplate).
                 append(fileID).append(".csv").toString();
@@ -123,7 +123,7 @@ public class StatisticsCollector {
         if (actType == ActionTypes.DEFENSE) {
             actPower = defender.getArmor();
         }
-        final StringBuffer record = new StringBuffer();
+        final StringBuilder record = new StringBuilder();
         record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
                 append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
                 append(defPos.X()).append(",").append(defPos.Y()).append(",").append(actType.toString()).append(",").
