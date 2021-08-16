@@ -2,5 +2,7 @@
   "PORT": 8081,
   "HOST": "127.0.0.1",
   "GUI": "lanterna",
-  "TYPE_BOT": "Nikita"
+  "TYPE_BOT": "Nikita",
+  "WITH_BOT": "true",
+  "TYPE_OPPONENT": "Dimon"
 }
