@@ -135,15 +135,27 @@ public class StatisticsCollector {
     }
 
     /**
-     * Записывает сообщение в файл
+     * Записывает сообщение в файл filename. Нужно для записи CSV-логов.
      **/
 
     public void recordMessageToCSV(final String message) {
-        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+        recordMessageToCSV(message, filename);
+    }
+
+    /**
+     * Записывает сообщение в файл outputFilename. Нужно в общем случае.
+     **/
+
+    public void recordMessageToCSV(final String message, final String outputFilename) {
+        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename, true))) {
             writer.write(message);
         } catch (final IOException e) {
             logger.error("Error action recording", e);
         }
+    }
+
+    public String getPlayersStatisticsFilename() {
+        return playersStatisticsFilename;
     }
 
 }
