@@ -1,5 +1,6 @@
 package server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.serverexcetions.ServerException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
@@ -54,6 +55,20 @@ public class ServerWithChangeFields {
     private final ConcurrentLinkedQueue<RoomsClient> fieldOne = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldTwo = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> bots = new ConcurrentLinkedQueue<>();
+
+    /**
+     * Парсит serverConfig.json из каталога и возвращает конфиги сервера
+     *
+     * @return все нужные конфиги
+     * @throws IOException json
+     */
+    public static ServersConfigs getServersConfig() throws IOException {
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/serverConfig.json");
+
+        final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+        fileInputStream.close();
+        return sc;
+    }
 
     /**
      * Клиент комнаты
@@ -237,10 +252,12 @@ public class ServerWithChangeFields {
             // статистика
             collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
                     append(",").toString());
-            switch (status) {
-                case GameStatus.PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
-                case GameStatus.PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
-                case GameStatus.NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+            if (status == GameStatus.PLAYER_ONE_WINS) {
+                collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+            } else if (status == GameStatus.PLAYER_TWO_WINS) {
+                collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+            } else if (status == GameStatus.NO_WINNERS) {
+                collector.recordMessageToCSV("DEAD HEAT");
             }
             collector.recordMessageToCSV("\nGAME OVER\n");
         }
@@ -355,7 +372,7 @@ public class ServerWithChangeFields {
     }
 
     public static void main(final String[] args) throws IOException {
-        final ServersConfigs sc = Deserializer.getServersConfig();
+        final ServersConfigs sc = getServersConfig();
         final ServerWithChangeFields server = new ServerWithChangeFields(sc);
         server.startServer();
     }

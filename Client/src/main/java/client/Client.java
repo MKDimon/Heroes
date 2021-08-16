@@ -1,7 +1,23 @@
 package client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.lanterna.input.KeyType;
 import client.commands.CommandFactory;
+import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.Data;
+import heroes.clientserver.Deserializer;
+import heroes.controller.IController;
+import heroes.gamelogic.Fields;
+import heroes.gui.IGUI;
+import heroes.gui.heroeslanterna.Lanterna;
+import heroes.mathutils.Pair;
+import heroes.player.BaseBot;
+import heroes.player.RandomBot;
+import heroes.player.TestBot;
+import heroes.player.botdimon.Dimon;
+import heroes.player.botnikita.NikitaBot;
+import heroes.player.controlsystem.Controls;
+import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +33,20 @@ public class Client {
     static {
         playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
         playerBots.put("Dimon", new Dimon.DimonFactory());
+    }
+
+    /**
+     * Парсит serverConfig.json из каталога и возвращает конфиги клиента
+     *
+     * @return все нужные конфиги
+     * @throws IOException json
+     */
+    public static ClientsConfigs getClientsConfig() throws IOException {
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/clientConfig.json");
+
+        final ClientsConfigs cc = new ObjectMapper().readValue(fileInputStream, ClientsConfigs.class);
+        fileInputStream.close();
+        return cc;
     }
 
     private final Map<String, Pair<IGUI, IController>> clientsGui = new HashMap<>();
@@ -44,7 +74,7 @@ public class Client {
     }
 
     private Client(final BaseBot player) throws IOException {
-        this.clientsConfigs = Deserializer.getClientsConfig();
+        this.clientsConfigs = getClientsConfig();
         ip = clientsConfigs.HOST;
         port = clientsConfigs.PORT;
         this.player = player;

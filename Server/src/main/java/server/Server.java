@@ -1,11 +1,15 @@
 package server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.serverexcetions.ServerException;
 import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
-import client.commands.CommandsTime;
-import client.commands.CommonCommands;
+import heroes.clientserver.Data;
+import heroes.clientserver.Deserializer;
+import heroes.clientserver.Serializer;
+import heroes.commands.CommandsTime;
+import heroes.commands.CommonCommands;
 import heroes.gamelogic.*;
 import heroes.player.Answer;
 import heroes.statistics.StatisticsCollector;
@@ -38,6 +42,20 @@ public class Server {
         this.PORT = PORT;
         this.delay = delay;
         getRoom = new Hashtable<>();
+    }
+
+    /**
+     * Парсит serverConfig.json из каталога и возвращает конфиги сервера
+     *
+     * @return все нужные конфиги
+     * @throws IOException json
+     */
+    public static ServersConfigs getServersConfig() throws IOException {
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/serverConfig.json");
+
+        final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+        fileInputStream.close();
+        return sc;
     }
 
     private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
@@ -196,10 +214,12 @@ public class Server {
             // статистика
             collector.recordMessageToCSV(new StringBuffer().append("\n").append(gameLogic.getBoard().getCurNumRound()).
                     append(",").toString());
-            switch (status) {
-                case GameStatus.PLAYER_ONE_WINS -> collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
-                case GameStatus.PLAYER_TWO_WINS -> collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
-                case GameStatus.NO_WINNERS -> collector.recordMessageToCSV("DEAD HEAT");
+            if (status == GameStatus.PLAYER_ONE_WINS) {
+                collector.recordMessageToCSV(Fields.PLAYER_ONE.toString());
+            } else if (status == GameStatus.PLAYER_TWO_WINS) {
+                collector.recordMessageToCSV(Fields.PLAYER_TWO.toString());
+            } else if (status == GameStatus.NO_WINNERS) {
+                collector.recordMessageToCSV("DEAD HEAT");
             }
             collector.recordMessageToCSV("\nGAME OVER\n");
 
@@ -310,7 +330,7 @@ public class Server {
     }
 
     public static void main(final String[] args) throws IOException {
-        final ServersConfigs sc = Deserializer.getServersConfig();
+        final ServersConfigs sc = getServersConfig();
         final Server server = new Server(sc.PORT, sc.MAX_ROOMS, sc.DELAY);
         server.startServer();
     }
