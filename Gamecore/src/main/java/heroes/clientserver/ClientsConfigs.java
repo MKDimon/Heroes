@@ -1,4 +1,4 @@
-package client;
+package heroes.clientserver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +14,7 @@ public class ClientsConfigs {
     public final String GUI;
     @JsonProperty
     public final String TYPE_BOT;
+
     @JsonCreator
     public ClientsConfigs(@JsonProperty("PORT") final int port,
                           @JsonProperty("HOST") final String host,

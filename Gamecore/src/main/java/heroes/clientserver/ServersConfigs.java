@@ -1,4 +1,4 @@
-package server;
+package heroes.clientserver;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -20,6 +20,7 @@ public class ServersConfigs {
     public final String PATH_LOG;
     @JsonProperty
     public final String LOGBACK;
+
     @JsonCreator
     public ServersConfigs(@JsonProperty("PORT") final int port,
                           @JsonProperty("MAX_ROOMS") final int max_rooms,

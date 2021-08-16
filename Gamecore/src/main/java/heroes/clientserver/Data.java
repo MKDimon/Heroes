@@ -24,7 +24,7 @@ public class Data {
     public final int info;
 
     @JsonCreator
-    public Data(@JsonProperty("command") final CommonCommands command,@JsonProperty("oneArmy") final Army army,
+    public Data(@JsonProperty("command") final CommonCommands command, @JsonProperty("oneArmy") final Army army,
                 @JsonProperty("board") final Board board, @JsonProperty("answer") final Answer answer,
                 @JsonProperty("info") final int info) {
         this.command = command;
@@ -44,13 +44,14 @@ public class Data {
 
     /**
      * Вспомогательный для снятия команды
+     *
      * @param data - данные
      */
     public Data(final Data data) throws UnitException, BoardException {
         command = null;
-        army = (data.army != null)? new Army(data.army): null;
-        board = (data.board != null)? new Board(data.board): null;
-        answer = (data.answer != null)? new Answer(data.answer): null;
+        army = (data.army != null) ? new Army(data.army) : null;
+        board = (data.board != null) ? new Board(data.board) : null;
+        answer = (data.answer != null) ? new Answer(data.answer) : null;
         this.info = 0;
     }
 

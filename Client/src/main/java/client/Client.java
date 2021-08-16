@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.lanterna.input.KeyType;
 import client.commands.CommandFactory;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.clientserver.Data;
 import heroes.clientserver.Deserializer;
 import heroes.controller.IController;
@@ -70,7 +71,9 @@ public class Client {
         try {
             client = new Client(null);
             client.startClient();
-        } catch (IOException ignore) {}
+        } catch (IOException ignore) {
+            ignore.printStackTrace();
+        }
     }
 
     private Client(final BaseBot player) throws IOException {

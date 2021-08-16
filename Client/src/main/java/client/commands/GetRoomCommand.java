@@ -1,8 +1,8 @@
 package client.commands;
 
-import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
 import client.Client;
 import heroes.clientserver.Data;
+import heroes.clientserver.serverexcetions.ServerExceptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

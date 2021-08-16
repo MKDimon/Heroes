@@ -1,8 +1,8 @@
 package heroes.statistics;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.statisticsexception.StatisticsException;
-import heroes.clientserver.Deserializer;
 import heroes.clientserver.ServersConfigs;
 import heroes.gamelogic.Army;
 import heroes.units.GeneralTypes;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -31,18 +32,27 @@ public class StatisticsRecorder {
     public static final String winnerUnitsStatisticsFilename =
             "src/main/resources/statistics/winnerUnitsStatistics";
 
-    public static void main(String[] args) {
-        recordStatistics();
+    /**
+     * Парсит serverConfig.json из каталога и возвращает конфиги сервера
+     *
+     * @return все нужные конфиги
+     * @throws IOException json
+     */
+    public static ServersConfigs getServersConfig() throws IOException {
+        final FileInputStream fileInputStream = new FileInputStream("src/main/resources/serverConfig.json");
+
+        final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+        fileInputStream.close();
+        return sc;
     }
 
     /**
      * Основной метод.
      * Обрабатывает и записывает всю имеющуюся статистику.
      **/
-
     public static void recordStatistics() {
         try {
-            final ServersConfigs sc = Deserializer.getServersConfig();
+            final ServersConfigs sc = getServersConfig();
             final List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
             for (int id = 1; id <= sc.MAX_ROOMS; id++) {

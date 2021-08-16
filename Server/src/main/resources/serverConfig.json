@@ -1,0 +1,9 @@
+{
+  "PORT": 8082,
+  "MAX_ROOMS": 2,
+  "DELAY": 1,
+  "THREADS": 1,
+  "PATH_LOG": "",
+  "LOGBACK": "",
+  "GAMES_COUNT": 3
+}

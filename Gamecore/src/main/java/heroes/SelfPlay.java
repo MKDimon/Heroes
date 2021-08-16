@@ -3,7 +3,7 @@ package heroes;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
-import client.commands.CommonCommands;
+import heroes.commands.CommonCommands;
 import heroes.controller.IController;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;

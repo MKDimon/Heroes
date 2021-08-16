@@ -5,7 +5,7 @@ import com.googlecode.lanterna.input.KeyStroke;
 import com.googlecode.lanterna.input.KeyType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
-import client.commands.CommonCommands;
+import heroes.commands.CommonCommands;
 import heroes.gamelogic.GameStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
