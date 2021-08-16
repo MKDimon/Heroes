@@ -153,7 +153,7 @@ public class StatisticsParser {
         try {
             final String[] logString = reader.readLine().split(",");
             final int countOfRounds = Integer.parseInt(logString[0]);
-            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")) {
+            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DRAW")) {
                 throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             return new Pair<>(logString[1], countOfRounds);
