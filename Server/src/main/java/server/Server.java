@@ -2,8 +2,8 @@ package server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.boardexception.BoardException;
-import heroes.auxiliaryclasses.serverexcetions.ServerException;
-import heroes.auxiliaryclasses.serverexcetions.ServerExceptionType;
+import server.serverexcetions.ServerException;
+import server.serverexcetions.ServerExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.Data;
 import heroes.clientserver.Deserializer;

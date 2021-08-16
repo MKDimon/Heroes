@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses.serverexcetions;
+package server.serverexcetions;
 
 public class ServerException extends Exception {
 

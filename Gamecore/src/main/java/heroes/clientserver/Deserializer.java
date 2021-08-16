@@ -2,7 +2,6 @@ package heroes.clientserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 public class Deserializer {

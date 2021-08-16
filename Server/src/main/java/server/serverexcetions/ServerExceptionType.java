@@ -1,4 +1,4 @@
-package heroes.auxiliaryclasses.serverexcetions;
+package server.serverexcetions;
 
 public enum ServerExceptionType {
     ERROR_SERVER_ROOM_CHANGED("Error server room changed"),

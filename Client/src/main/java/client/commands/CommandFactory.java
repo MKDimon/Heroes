@@ -2,6 +2,7 @@ package client.commands;
 
 import client.Client;
 import heroes.clientserver.Data;
+import heroes.commands.CommonCommands;
 
 import java.io.BufferedWriter;
 import java.util.HashMap;
