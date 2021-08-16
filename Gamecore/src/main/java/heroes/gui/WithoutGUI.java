@@ -18,12 +18,12 @@ public class WithoutGUI implements IGUI{
     }
 
     @Override
-    public void printPlayer(Fields field) {
+    public void printPlayer(final Fields field) {
 
     }
 
     @Override
-    public void drawBots(Selector selector) {
+    public void drawBots(final Selector selector) {
 
     }
 
@@ -33,7 +33,7 @@ public class WithoutGUI implements IGUI{
     }
 
     @Override
-    public void update(Answer answer, Board board) {
+    public void update(final Answer answer, final Board board) {
 
     }
 
@@ -48,12 +48,12 @@ public class WithoutGUI implements IGUI{
     }
 
     @Override
-    public void endGame(Data data) {
+    public void endGame(final Data data) {
 
     }
 
     @Override
-    public void continueGame(Data data) {
+    public void continueGame(final Data data) {
 
     }
 }

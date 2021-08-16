@@ -28,7 +28,7 @@ public class AutoController implements IController{
     }
 
     @Override
-    public String getBot(Selector selector) {
+    public String getBot(final Selector selector) {
         return "Player";
     }
 
