@@ -71,14 +71,14 @@ public class StatisticsAnalyzer {
                 switch (game.getWinner()) {
                     case "PLAYER_ONE" -> statistics[0]++;
                     case "PLAYER_TWO" -> statistics[1]++;
-                    case "DEAD HEAT" -> statistics[2]++;
+                    case "DRAW" -> statistics[2]++;
                 }
             }
             if (isArmyTwo) {
                 switch (game.getWinner()) {
                     case "PLAYER_ONE" -> statistics[1]++;
                     case "PLAYER_TWO" -> statistics[0]++;
-                    case "DEAD HEAT" -> statistics[2]++;
+                    case "DRAW" -> statistics[2]++;
                 }
             }
         }
@@ -126,7 +126,7 @@ public class StatisticsAnalyzer {
                 Arrays.fill(result.get(unitType), 0.0);
             }
             for (GameLogInformation game : games) {
-                if (!game.getWinner().equals("DEAD HEAT")) {
+                if (!game.getWinner().equals("DRAW")) {
                     final Map<UnitTypes, Double[]> temp = analyzeGameLogsOfOnePlayer(game.getLogList(),
                             Fields.valueOf(game.getWinner()));
                     for (UnitTypes unit : temp.keySet()) {
