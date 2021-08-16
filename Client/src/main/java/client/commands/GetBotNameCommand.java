@@ -11,7 +11,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class GetBotNameCommand extends Command {
-    private final Logger logger = LoggerFactory.getLogger(GetAnswerCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(GetAnswerCommand.class);
 
     public GetBotNameCommand(final Data data, final BufferedWriter out, final Client client) {
         super(data, out, client);
