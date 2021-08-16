@@ -29,7 +29,7 @@ public class AutoController implements IController{
 
     @Override
     public String getBot(Selector selector) {
-        return cc.TYPE_BOT;
+        return "Player";
     }
 
     @Override
