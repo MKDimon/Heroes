@@ -87,7 +87,7 @@ public class Server {
                     out.write(Serializer.serializeData(data) + '\n');
                     out.flush();
 
-                    id = Integer.parseInt(in.readLine());
+                    id = Deserializer.deserializeData(in.readLine()).info;
                     break;
                 } catch (final SocketTimeoutException e) {
                     server.clients.remove(this);
@@ -127,9 +127,11 @@ public class Server {
                 for (final RoomsClient rc : server.clients) {
                     if (rc.id == id) {
                         server.clients.remove(rc);
-                        if (playerOne == null || playerOne.socket.isClosed()) {
+                        if ((playerOne == null || playerOne.socket.isClosed()) && (
+                                rc.id == id || rc.id == 0)) {
                             playerOne = rc;
-                        } else if (playerTwo == null || playerTwo.socket.isClosed()) {
+                        } else if ((playerTwo == null || playerTwo.socket.isClosed()) && (
+                                rc.id == id || rc.id == 0)) {
                             playerTwo = rc;
                         }
                         if (playerOne != null && playerTwo != null &&

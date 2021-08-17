@@ -75,6 +75,7 @@ public class ServerWithChangeFields {
      * Клиент комнаты
      */
     private class RoomsClient extends Thread {
+        public int id;
         public boolean isUse = false;
         public final ServerWithChangeFields server;
         public final Socket socket;
@@ -116,11 +117,21 @@ public class ServerWithChangeFields {
             }
         }
 
+        private void setRoom() throws IOException {
+            final Data data = new Data(CommonCommands.GET_ROOM, server.maxRooms);
+            socket.setSoTimeout(CommandsTime.getTime(data.command));
+            out.write(Serializer.serializeData(data) + '\n');
+            out.flush();
+
+            id = Deserializer.deserializeData(in.readLine()).info;
+        }
+
         @Override
         public void run() {
             while (true) {
                 try {
                     setOpponent();
+                    setRoom();
                     setField();
                     break;
                 } catch (final SocketTimeoutException e) {
@@ -159,7 +170,8 @@ public class ServerWithChangeFields {
             boolean playersReady = false;
             while (!playersReady) {
                 for (final RoomsClient rc : server.fieldOne) {
-                    if ((playerOne == null || playerOne.socket.isClosed()) && !rc.isUse) {
+                    if ((playerOne == null || playerOne.socket.isClosed()) && !rc.isUse && (
+                            rc.id == id || rc.id == 0)) {
                         playerOne = rc;
                         playerOne.isUse = true;
                         server.fieldOne.remove(rc);
@@ -168,7 +180,8 @@ public class ServerWithChangeFields {
                     }
                 }
                 for (final RoomsClient rc : server.fieldTwo) {
-                    if ((playerTwo == null || playerTwo.socket.isClosed()) && !rc.isUse) {
+                    if ((playerTwo == null || playerTwo.socket.isClosed()) && !rc.isUse && (
+                            rc.id == id || rc.id == 0)) {
                         playerTwo = rc;
                         playerTwo.isUse = true;
                         server.fieldOne.remove(rc);

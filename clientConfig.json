@@ -1,10 +1,10 @@
 {
   "PORT": 8081,
   "HOST": "127.0.0.1",
-  "GUI": "withoutGUI",
+  "GUI": "lanterna",
   "TYPE_BOT": "Nikita",
   "WITH_BOT": "true",
-  "TYPE_OPPONENT": "Dimon",
+  "TYPE_OPPONENT": "isBot",
   "ROOM": 2,
-  "FIELD": 1
+  "FIELD": 2
 }
