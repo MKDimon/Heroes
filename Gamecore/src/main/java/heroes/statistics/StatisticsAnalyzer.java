@@ -12,10 +12,7 @@ import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -234,5 +231,31 @@ public class StatisticsAnalyzer {
 
     public static double getAverageGameDuration() {
         return StatisticsParser.parseGameDurationStatisticsFile();
+    }
+
+    public static List<TwoPlayersStatistics> countPlayersStatistics(final List<BotsLogInformation> list) {
+        final List<TwoPlayersStatistics> result = new LinkedList<>();
+        for (final BotsLogInformation log : list) {
+            if (containsPlayers(result, log)) {
+                for (final TwoPlayersStatistics playersStats : result) {
+                    playersStats.changeStatistics(log);
+                }
+            } else {
+                final TwoPlayersStatistics playersStats = new TwoPlayersStatistics(log.getBotOne(),
+                        log.getBotTwo());
+                playersStats.changeStatistics(log);
+                result.add(playersStats);
+            }
+        }
+        return result;
+    }
+
+    private static boolean containsPlayers(final List<TwoPlayersStatistics> resultList ,final BotsLogInformation log) {
+        for (final TwoPlayersStatistics players : resultList) {
+            if (players.hasPlayer(log.getBotOne()) && players.hasPlayer(log.getBotTwo())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
