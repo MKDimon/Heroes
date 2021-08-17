@@ -56,9 +56,9 @@ public abstract class SimulationTreeArmy {
      * @throws BoardException ошибка
      */
     public Army getArmyConst(final int ID) throws UnitException, BoardException {
-        //if (ID >= armies.size() || ID < 0) throw new IllegalArgumentException("ID of army is invalid");
-        //return new Army(armies.get(ID));
-        try {
+        if (ID >= armies.size() || ID < 0) throw new IllegalArgumentException("ID of army is invalid");
+        return new Army(armies.get(ID));
+        /*try {
             final Random r = new Random();
             final Unit[][] armyArr = new Unit[2][3];
             final UnitTypes[] unitTypes = UnitTypes.values();
@@ -78,7 +78,7 @@ public abstract class SimulationTreeArmy {
             return new Army(armyArr, general);
         } catch (final BoardException | UnitException e) {
             return null;
-        }
+        }*/
     }
 
     public abstract Army getArmyByArmy(final Army army);

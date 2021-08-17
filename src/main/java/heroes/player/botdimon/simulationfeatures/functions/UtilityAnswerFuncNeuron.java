@@ -5,7 +5,12 @@ import heroes.gamelogic.Fields;
 import heroes.mathutils.Pair;
 import heroes.units.General;
 import heroes.units.Unit;
+import weka.classifiers.AbstractClassifier;
+import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.SMOreg;
+import weka.classifiers.lazy.KStar;
+import weka.classifiers.meta.AdditiveRegression;
+import weka.classifiers.trees.RandomForest;
 import weka.core.*;
 
 import java.util.ArrayList;
@@ -19,8 +24,16 @@ import static heroes.auxiliaryclasses.ActionTypes.*;
  * Нейронка
  */
 public class UtilityAnswerFuncNeuron implements IUtilityFunc {
+    private static KStar smo;
     private static final ArrayList<Attribute> attributes = new ArrayList<>();
     static {
+        try {
+            smo = (KStar) SerializationHelper.read
+                    ("src/main/java/heroes/player/botdimon/simulationfeatures/functions/utilitymodel.model");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         ArrayList<String> list = new ArrayList<>();
         list.add(AREA_DAMAGE.name()); list.add(CLOSE_COMBAT.name()); list.add(HEALING.name());
         list.add(RANGE_COMBAT.name()); list.add(DEFENSE.name());
@@ -92,7 +105,8 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
     }
 
     private Instances b2i(final Board board, final Fields field) {
-        Instances data = new Instances("NAME", attributes, 60);
+        Instances data = new Instances("NAME", attributes, 58);
+        data.setClassIndex(data.numAttributes()-1);
         final Fields enemyField = (field == Fields.PLAYER_ONE) ? Fields.PLAYER_TWO : Fields.PLAYER_ONE;
 
         final Map<Fields, Pair<Unit[][], General>> getArmy = new HashMap<>();
@@ -127,7 +141,7 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
         inst.setValue(attributes.get(54), board.getCurNumRound());
         inst.setValue(attributes.get(55), field.name());
         inst.setValue(attributes.get(56), board.getStatus().name());
-        inst.setValue(attributes.get(57), board.getStatus().name());
+        inst.setValue(attributes.get(57), 0);
         data.add(inst);
         return data;
     }
@@ -135,8 +149,6 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
     @Override
     public double getValue(final Board board, final Fields field) {
         try {
-            SMOreg smo = (SMOreg) SerializationHelper.read("src/main/java/heroes/player/botdimon/simulationfeatures/functions/utilitymodel.model");
-
             double result = smo.classifyInstance(b2i(board, field).get(0));
             return result;
         } catch (Exception e) {
