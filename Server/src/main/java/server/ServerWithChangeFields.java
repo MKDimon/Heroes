@@ -221,7 +221,7 @@ public class ServerWithChangeFields {
             collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
             collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
 
-            collector.recordPlayersToCSV(playerOne.getName(), one, playerTwo.getName(), two);
+            collector.recordPlayersToCSV(playerOne.botName, one, playerTwo.botName, two);
 
             // Отрисовка
             final Data drawingData = new Data(CommonCommands.DRAW, gameLogic.getBoard());
