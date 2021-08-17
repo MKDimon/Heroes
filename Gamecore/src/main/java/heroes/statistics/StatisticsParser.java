@@ -192,4 +192,23 @@ public class StatisticsParser {
             return 0;
         }
     }
+
+    /**
+     * Метод для парсинга логов игр ботов.
+     **/
+
+    public static List<BotsLogInformation> parseBotsStatisticsFile(final String filename) {
+        try (final BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            final List<BotsLogInformation> result = new LinkedList<>();
+            while (reader.ready()) {
+               final String[] log = reader.readLine().split(",");
+               final BotsLogInformation gameInfo = new BotsLogInformation(log[0], log[2], log[4]);
+               result.add(gameInfo);
+            }
+            return result;
+        } catch (final IOException e) {
+            logger.error("Error bot statistics file parsing");
+            return null;
+        }
+    }
 }
