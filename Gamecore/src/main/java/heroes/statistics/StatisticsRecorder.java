@@ -26,13 +26,18 @@ import java.util.Map;
 public class StatisticsRecorder {
     private static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
 
-    public static final String armiesStatisticsFilename = "statistics/armiesStatistics";
+    public static final String armiesStatisticsFilename = "game_statistics/armiesStatistics";
     public static final String gameDurationStatisticsFilename =
-            "statistics/gameDurationStatistics";
+            "game_statistics/gameDurationStatistics";
     public static final String winnerUnitsStatisticsFilename =
-            "statistics/winnerUnitsStatistics";
+            "game_statistics/winnerUnitsStatistics";
     public static final String botsStatisticsFilename =
-            "statistics/BotsStatistics.csv";
+            "bots_statistics/botsStatistics.csv";
+
+
+    public static void main(final String[] args) {
+        recordStatistics();
+    }
 
     /**
      * Парсит serverConfig.json из каталога и возвращает конфиги сервера
@@ -210,13 +215,13 @@ public class StatisticsRecorder {
     public static void recordBotsStatisticsToCSV(final List<TwoPlayersStatistics> list,
                                                  final String filename) {
         try (final BufferedWriter writer = new BufferedWriter(
-                new FileWriter(filename, true))) {
+                new FileWriter(filename))) {
             for (final TwoPlayersStatistics playersStats : list) {
                 final StringBuilder record = new StringBuilder();
                 record.append(playersStats.getPlayerOne()).append(",")
                         .append(playersStats.getPlayerOneWins()).append(",")
                         .append(playersStats.getPlayerTwo()).append(",").append(playersStats.getPlayerTwoWins())
-                        .append(",").append(playersStats.getDraws());
+                        .append(",").append(playersStats.getDraws()).append("\n");
                 writer.write(record.toString());
             }
             writer.flush();
