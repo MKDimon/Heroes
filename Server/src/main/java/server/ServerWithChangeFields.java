@@ -221,6 +221,11 @@ public class ServerWithChangeFields {
             collector.recordArmyToCSV(Fields.PLAYER_ONE, one);
             collector.recordArmyToCSV(Fields.PLAYER_TWO, two);
 
+            //Если играют 2 одинаковых бота, добавим им номера, чтобы их различать
+            if (playerOne.botName.equals(playerTwo.botName)) {
+                playerOne.botName = new StringBuilder(playerOne.botName).append(1).toString();
+                playerTwo.botName = new StringBuilder(playerTwo.botName).append(2).toString();
+            }
             collector.recordPlayersToCSV(playerOne.botName, one, playerTwo.botName, two);
 
             // Отрисовка
