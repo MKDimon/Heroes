@@ -27,6 +27,7 @@ public class CommandFactory {
         commandMap.put(CommonCommands.FIELD_ONE, new FieldOneCommand(data, out, client));
         commandMap.put(CommonCommands.FIELD_TWO, new FieldTwoCommand(data, out, client));
         commandMap.put(CommonCommands.MAX_ROOMS, new MaxRoomsCommand(data, out, client));
+        commandMap.put(CommonCommands.GET_BOT_NAME, new GetBotNameCommand(data, out, client));
     }
 
     public Command getCommand(final Data data, final BufferedWriter out, final Client client) {

@@ -12,10 +12,7 @@ import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -71,14 +68,14 @@ public class StatisticsAnalyzer {
                 switch (game.getWinner()) {
                     case "PLAYER_ONE" -> statistics[0]++;
                     case "PLAYER_TWO" -> statistics[1]++;
-                    case "DEAD HEAT" -> statistics[2]++;
+                    case "DRAW" -> statistics[2]++;
                 }
             }
             if (isArmyTwo) {
                 switch (game.getWinner()) {
                     case "PLAYER_ONE" -> statistics[1]++;
                     case "PLAYER_TWO" -> statistics[0]++;
-                    case "DEAD HEAT" -> statistics[2]++;
+                    case "DRAW" -> statistics[2]++;
                 }
             }
         }
@@ -126,7 +123,7 @@ public class StatisticsAnalyzer {
                 Arrays.fill(result.get(unitType), 0.0);
             }
             for (GameLogInformation game : games) {
-                if (!game.getWinner().equals("DEAD HEAT")) {
+                if (!game.getWinner().equals("DRAW")) {
                     final Map<UnitTypes, Double[]> temp = analyzeGameLogsOfOnePlayer(game.getLogList(),
                             Fields.valueOf(game.getWinner()));
                     for (UnitTypes unit : temp.keySet()) {
@@ -234,5 +231,32 @@ public class StatisticsAnalyzer {
 
     public static double getAverageGameDuration() {
         return StatisticsParser.parseGameDurationStatisticsFile();
+    }
+
+    public static List<TwoPlayersStatistics> countPlayersStatistics(final List<BotsLogInformation> list) {
+        final List<TwoPlayersStatistics> result = new LinkedList<>();
+        for (final BotsLogInformation log : list) {
+            if (containsPlayers(result, log)) {
+                for (final TwoPlayersStatistics playersStats : result) {
+                    playersStats.changeStatistics(log);
+                }
+            } else {
+                final TwoPlayersStatistics playersStats = new TwoPlayersStatistics(log.getBotOne(),
+                        log.getBotTwo());
+                playersStats.changeStatistics(log);
+                result.add(playersStats);
+            }
+        }
+        return result;
+    }
+
+    private static boolean containsPlayers(final List<TwoPlayersStatistics> resultList ,final BotsLogInformation log) {
+        for (final TwoPlayersStatistics players : resultList) {
+            if (players.isPlayerOne(log.getBotOne()) && players.isPlayerTwo(log.getBotTwo()) ||
+                    players.isPlayerOne(log.getBotTwo()) && players.isPlayerTwo(log.getBotOne())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

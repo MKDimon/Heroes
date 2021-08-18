@@ -45,12 +45,17 @@ public class StatisticsCollector {
             ActionTypes.CLOSE_COMBAT, GeneralTypes.COMMANDER.toString(),
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
-    public static final String filenameTemplate = "statistics/gameStatistics";
+    public static final String filenameTemplate = "game_statistics/gameStatistics";
+    public static final String playersStatisticsFilenameTemplate = "bots_statistics/players_statistics";
 
     private final String filename;
 
+    private final String playersStatisticsFilename;
+
     public StatisticsCollector(final int fileID) {
-        filename = new StringBuffer(filenameTemplate).
+        filename = new StringBuilder(filenameTemplate).
+                append(fileID).append(".csv").toString();
+        playersStatisticsFilename = new StringBuilder(playersStatisticsFilenameTemplate).
                 append(fileID).append(".csv").toString();
     }
 
@@ -63,22 +68,41 @@ public class StatisticsCollector {
     public void recordArmyToCSV(final Fields field, final Army army) {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             final StringBuffer record = new StringBuffer();
-            record.append(field).append(",");
-            final Unit[][] unitArray = army.getPlayerUnits();
-            for (Unit[] units : unitArray) {
-                for (Unit unit : units) {
-                    if (unit.equals(army.getGeneral())) {
-                        record.append(actToGeneralMap.get(unit.getActionType())).append(",");
-                    } else {
-                        record.append(actToUnitMap.get(unit.getActionType())).append(",");
-                    }
-                }
-            }
+            record.append(field).append(",").append(armyToCSVString(army));
             record.delete(record.length() - 1, record.length()).append("\n");
             writer.write(record.toString());
         } catch (final IOException e) {
             logger.error("Error army recording", e);
         }
+    }
+
+    public void recordPlayersToCSV(final String playerOneName, final Army armyOne,
+                                   final String playerTwoName, final Army armyTwo) {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(playersStatisticsFilename, true))){
+            final StringBuilder record = new StringBuilder();
+            record.append(playerOneName).append(",").append(armyToCSVString(armyOne))
+                    .append(playerTwoName).append(",").append(armyToCSVString(armyTwo));
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    private String armyToCSVString(final Army army) {
+        final StringBuilder record = new StringBuilder();
+        final Unit[][] unitArray = army.getPlayerUnits();
+        for (Unit[] units : unitArray) {
+            for (Unit unit : units) {
+                if (unit.equals(army.getGeneral())) {
+                    record.append(actToGeneralMap.get(unit.getActionType())).append(",");
+                } else {
+                    record.append(actToUnitMap.get(unit.getActionType())).append(",");
+                }
+            }
+        }
+        return record.toString();
     }
 
     /**
@@ -99,7 +123,7 @@ public class StatisticsCollector {
         if (actType == ActionTypes.DEFENSE) {
             actPower = defender.getArmor();
         }
-        final StringBuffer record = new StringBuffer();
+        final StringBuilder record = new StringBuilder();
         record.append(attackPos.F().toString()).append(",").append(attackPos.X()).append(",").
                 append(attackPos.Y()).append(",").append(defPos.F().toString()).append(",").
                 append(defPos.X()).append(",").append(defPos.Y()).append(",").append(actType.toString()).append(",").
@@ -111,15 +135,27 @@ public class StatisticsCollector {
     }
 
     /**
-     * Записывает сообщение в файл
+     * Записывает сообщение в файл filename. Нужно для записи CSV-логов.
      **/
 
     public void recordMessageToCSV(final String message) {
-        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
+        recordMessageToCSV(message, filename);
+    }
+
+    /**
+     * Записывает сообщение в файл outputFilename. Нужно в общем случае.
+     **/
+
+    public void recordMessageToCSV(final String message, final String outputFilename) {
+        try (final BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilename, true))) {
             writer.write(message);
         } catch (final IOException e) {
             logger.error("Error action recording", e);
         }
+    }
+
+    public String getPlayersStatisticsFilename() {
+        return playersStatisticsFilename;
     }
 
 }
