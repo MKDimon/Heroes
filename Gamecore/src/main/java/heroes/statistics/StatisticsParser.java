@@ -202,8 +202,12 @@ public class StatisticsParser {
             final List<BotsLogInformation> result = new LinkedList<>();
             while (reader.ready()) {
                final String[] log = reader.readLine().split(",");
-               final BotsLogInformation gameInfo = new BotsLogInformation(log[0], log[2], log[4]);
-               result.add(gameInfo);
+               if( (log[log.length - 1].equals(log[0]) || log[log.length - 1].equals(log[7]) ) &&
+                                                                                log.length == 15) {
+                   final BotsLogInformation gameInfo = new BotsLogInformation(log[0], log[7],
+                           log[log.length - 1]);
+                   result.add(gameInfo);
+               }
             }
             return result;
         } catch (final IOException e) {
