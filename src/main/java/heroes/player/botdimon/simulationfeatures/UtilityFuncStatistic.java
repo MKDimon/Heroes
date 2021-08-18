@@ -1,23 +1,29 @@
-package heroes.player.botdimon.simulationfeatures.treesanswers;
+package heroes.player.botdimon.simulationfeatures;
 
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Pair;
 import heroes.units.General;
 import heroes.units.Unit;
+import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.MultilayerPerceptron;
+import weka.classifiers.functions.SMO;
+import weka.classifiers.functions.SMOreg;
 import weka.core.Instances;
-import weka.core.converters.ArffSaver;
-import weka.core.converters.CSVLoader;
+import weka.core.SerializationHelper;
+import weka.core.converters.ConverterUtils.DataSource;
+import weka.core.pmml.jaxbbindings.Regression;
+import weka.core.pmml.jaxbbindings.RegressionModel;
+import weka.experiment.RegressionSplitEvaluator;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UtilityFuncStatistic {
-    private static final String path = "src/main/resources/statistics/funcStatistic.csv";
+    private static final String path = "src/main/resources/statistics/funcStatistic2.csv";
 
     private static void recordBoardInfo(final Board board, final double value, final Fields field) {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
@@ -80,16 +86,17 @@ public class UtilityFuncStatistic {
         recordBoardInfo(board, value, field);
     }
 
-    public static void main(String[] args) throws IOException {
-        // load CSV
-        CSVLoader loader = new CSVLoader();
-        loader.setSource(new File(path));
-        Instances data = loader.getDataSet();//get instances object
-        // save ARFF
-        ArffSaver saver = new ArffSaver();
-        saver.setInstances(data);//set the dataset we want to convert
-        //and save as ARFF
-        saver.setFile(new File("src/main/resources/statistics/funcStatistic.arff"));
-        saver.writeBatch();
+    public static void main(String[] args) throws Exception {
+        DataSource source = new DataSource("src/main/resources/statistics/train.arff");
+        Instances dataset = source.getDataSet();
+        //set class index to the last attribute
+        dataset.setClassIndex(dataset.numAttributes()-1);
+
+        //build model
+        LinearRegression lr = new LinearRegression();
+        lr.buildClassifier(dataset);
+        SerializationHelper.write("src/main/java/heroes/player/botdimon/simulationfeatures/functions/utilitymodelSMO.model", lr);
+        //output model
+        System.out.println(lr);
     }
 }

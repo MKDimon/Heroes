@@ -1,21 +1,21 @@
 package heroes.player.botdimon.simulationfeatures.functions;
 
+import ai.onnxruntime.OnnxTensor;
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtSession;
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameStatus;
 import heroes.mathutils.Pair;
 import heroes.units.General;
 import heroes.units.Unit;
 import weka.classifiers.AbstractClassifier;
-import weka.classifiers.functions.LinearRegression;
-import weka.classifiers.functions.SMOreg;
-import weka.classifiers.lazy.KStar;
-import weka.classifiers.meta.AdditiveRegression;
-import weka.classifiers.trees.RandomForest;
 import weka.core.*;
+import weka.core.pmml.jaxbbindings.GAP;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.DoubleBuffer;
+import java.util.*;
 
 import static heroes.auxiliaryclasses.ActionTypes.*;
 
@@ -24,11 +24,14 @@ import static heroes.auxiliaryclasses.ActionTypes.*;
  * Нейронка
  */
 public class UtilityAnswerFuncNeuron implements IUtilityFunc {
-    private static KStar smo;
+    private static AbstractClassifier smo;
     private static final ArrayList<Attribute> attributes = new ArrayList<>();
+    private static final Map<ActionTypes, Double> valueActions = new HashMap<>();
+    private static final Map<GameStatus, Double> statuses = new HashMap<>();
+
     static {
         try {
-            smo = (KStar) SerializationHelper.read
+            smo = (AbstractClassifier) SerializationHelper.read
                     ("src/main/java/heroes/player/botdimon/simulationfeatures/functions/utilitymodel.model");
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,6 +154,7 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
         try {
             double result = smo.classifyInstance(b2i(board, field).get(0));
             return result;
+
         } catch (Exception e) {
             e.printStackTrace();
         }

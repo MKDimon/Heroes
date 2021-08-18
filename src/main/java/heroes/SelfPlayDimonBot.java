@@ -24,7 +24,7 @@ public class SelfPlayDimonBot {
         int countWin = 0;
         int countDefeat = 0;
         System.out.println(LocalDateTime.now());
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 2000; i++) {
             final BaseBot bot1 = new AntiDimon.AntiDimonFactory().createBot(Fields.PLAYER_ONE);
             final BaseBot bot2 = new Dimon.DimonFactory().createBot(Fields.PLAYER_TWO);
 

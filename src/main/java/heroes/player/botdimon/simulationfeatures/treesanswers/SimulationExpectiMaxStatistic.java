@@ -7,6 +7,7 @@ import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.player.Answer;
+import heroes.player.botdimon.simulationfeatures.UtilityFuncStatistic;
 import heroes.player.botdimon.simulationfeatures.functions.IUtilityFunc;
 
 import java.util.List;
@@ -27,12 +28,12 @@ public class SimulationExpectiMaxStatistic extends SimulationTree {
             root.list.addAll(super.getAllSteps(root, board.getCurrentPlayer()));
             for (final Node item : root.list) {
                 item.value = getWinByGameTree(item.board, 1);
+                UtilityFuncStatistic.record(item.board, item.value, field);
             }
         } catch (final Exception e) {
             logger.error("Error change branch", e);
         }
         final Node node = getGreedyDecision(root.list, field);
-        UtilityFuncStatistic.record(node.board, node.value, field);
         final Answer answer = node.answer;
         logger.info("Attacker position = {}, defender position = {}, action type = {}",
                 answer.getAttacker(), answer.getDefender(), answer.getActionType());

@@ -64,6 +64,12 @@
             <version>3.8.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.onnxruntime</groupId>
+            <artifactId>onnxruntime</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+
     </dependencies>
 
 </project>

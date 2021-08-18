@@ -61,8 +61,8 @@ public class Dimon extends BaseBot {
         final long start = System.currentTimeMillis();
         final SimulationTree tree = new SimulationTreeFactory().createSimulation(
                 SimulationTrees.EXPECTI_SIMULATION,
-                UtilityFuncMap.getFunc(Functions.NEURON),
-                getField(), 1, false
+                UtilityFuncMap.getFunc(Functions.EXPONENT_FUNCTION_V2),
+                getField(), 3, false
         );
         final Answer answer = tree.getAnswer(board);
         final long finish = System.currentTimeMillis();

@@ -1,7 +1,7 @@
 {
   "PORT": 8082,
-  "MAX_ROOMS": 2,
-  "DELAY": 1,
+  "MAX_ROOMS": 1,
+  "DELAY": 1000,
   "THREADS": 1,
   "PATH_LOG": "",
   "LOGBACK": "",
