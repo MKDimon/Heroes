@@ -252,7 +252,8 @@ public class StatisticsAnalyzer {
 
     private static boolean containsPlayers(final List<TwoPlayersStatistics> resultList ,final BotsLogInformation log) {
         for (final TwoPlayersStatistics players : resultList) {
-            if (players.hasPlayer(log.getBotOne()) && players.hasPlayer(log.getBotTwo())) {
+            if (players.isPlayerOne(log.getBotOne()) && players.isPlayerTwo(log.getBotTwo()) ||
+                    players.isPlayerOne(log.getBotTwo()) && players.isPlayerTwo(log.getBotOne())) {
                 return true;
             }
         }
