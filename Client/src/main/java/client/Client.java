@@ -18,6 +18,7 @@ import heroes.player.BaseBot;
 import heroes.player.RandomBot;
 import heroes.player.TestBot;
 import heroes.player.botdimon.Dimon;
+import heroes.player.botgleb.MultithreadedExpectiMaxBot;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
@@ -36,6 +37,7 @@ public class Client {
     static {
         playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
         playerBots.put("Dimon", new Dimon.DimonFactory());
+        playerBots.put("Gleb", new MultithreadedExpectiMaxBot.MultithreadedExpectiMaxBotFactory());
     }
 
     /**
