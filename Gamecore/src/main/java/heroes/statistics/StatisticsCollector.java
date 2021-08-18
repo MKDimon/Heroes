@@ -45,8 +45,8 @@ public class StatisticsCollector {
             ActionTypes.CLOSE_COMBAT, GeneralTypes.COMMANDER.toString(),
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
-    public static final String filenameTemplate = "statistics/gameStatistics";
-    public static final String playersStatisticsFilenameTemplate = "players_statistics";
+    public static final String filenameTemplate = "game_statistics/gameStatistics";
+    public static final String playersStatisticsFilenameTemplate = "bots_statistics/players_statistics";
 
     private final String filename;
 
@@ -81,8 +81,8 @@ public class StatisticsCollector {
         try (final BufferedWriter writer = new BufferedWriter(
                 new FileWriter(playersStatisticsFilename, true))){
             final StringBuilder record = new StringBuilder();
-            record.append(playerOneName).append(",").append(armyToCSVString(armyOne)).append(",")
-                    .append(playerTwoName).append(",").append(armyToCSVString(armyTwo)).append(",");
+            record.append(playerOneName).append(",").append(armyToCSVString(armyOne))
+                    .append(playerTwoName).append(",").append(armyToCSVString(armyTwo));
             writer.write(record.toString());
             writer.flush();
         } catch (final IOException e) {
