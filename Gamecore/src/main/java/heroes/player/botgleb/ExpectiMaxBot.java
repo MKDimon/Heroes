@@ -9,6 +9,7 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
+import heroes.player.botgleb.fann.BoardToCSVRecorder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
                 final Board implBoard = board.copy(answer);
                 final double win = getWinByGameTree(implBoard, 1);
                 awList.add(new AnswerAndWin(answer, win));
+                //Сбор данных для нейросети
+                BoardToCSVRecorder.boardToCSV(implBoard, getField(), (float) win);
             }
             System.out.println("ExpectiMax bot time: " + (System.currentTimeMillis() - startTime));
             return getMaxAW(awList).answer();
