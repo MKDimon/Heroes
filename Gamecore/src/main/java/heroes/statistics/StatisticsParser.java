@@ -200,9 +200,11 @@ public class StatisticsParser {
     public static List<BotsLogInformation> parseBotsStatisticsFile(final String filename) {
         try (final BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             final List<BotsLogInformation> result = new LinkedList<>();
-            while (reader.ready()) {
-               final String[] log = reader.readLine().split(",");
-               if( (log[log.length - 1].equals(log[0]) || log[log.length - 1].equals(log[7]) ) &&
+            String line;
+            while ( (line = reader.readLine()) != null) {
+               final String[] log = line.split(",");
+               if( (log[log.length - 1].equals(log[0]) || log[log.length - 1].equals(log[7]) ||
+                       log[log.length - 1].equals("DRAW") ) &&
                                                                                 log.length == 15) {
                    final BotsLogInformation gameInfo = new BotsLogInformation(log[0], log[7],
                            log[log.length - 1]);
