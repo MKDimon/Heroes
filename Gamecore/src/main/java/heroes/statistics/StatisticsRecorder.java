@@ -26,11 +26,18 @@ import java.util.Map;
 public class StatisticsRecorder {
     private static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
 
-    public static final String armiesStatisticsFilename = "statistics/armiesStatistics";
+    public static final String armiesStatisticsFilename = "game_statistics/armiesStatistics";
     public static final String gameDurationStatisticsFilename =
-            "statistics/gameDurationStatistics";
+            "game_statistics/gameDurationStatistics";
     public static final String winnerUnitsStatisticsFilename =
-            "statistics/winnerUnitsStatistics";
+            "game_statistics/winnerUnitsStatistics";
+    public static final String botsStatisticsFilename =
+            "bots_statistics/botsStatistics.csv";
+
+
+    public static void main(final String[] args) {
+        recordStatistics();
+    }
 
     /**
      * Парсит serverConfig.json из каталога и возвращает конфиги сервера
@@ -72,6 +79,10 @@ public class StatisticsRecorder {
             recordGameDurationStatisticsToCSV(games, gameDurationStatisticsFilename);
             //Записываем статистику о юнитах победителей
             recordWinnerUnitsStatisticsToCSV(games, winnerUnitsStatisticsFilename);
+
+            //Записываем статистику по ботам
+            recordBotsStatistics();
+
             //Далее при появлении новых методов в аналитике статистики просто допишем их сюда.
             //Таким образом, при вызове этого метода будет собираться и анализироваться вся имеющаяся статистика.
         } catch (IOException e) {
@@ -165,6 +176,57 @@ public class StatisticsRecorder {
 
         } catch (IOException | StatisticsException e) {
             logger.error("Error game duration statistics recording", e);
+        }
+    }
+
+    /**
+     * Основной метод для сичтывания и обработки статистики по ботам. Выводит сводные данные в файл
+     * botsStatisticsFilename.
+     **/
+
+    public static void recordBotsStatistics() {
+        try {
+            final ServersConfigs sc = getServersConfig();
+            final List<BotsLogInformation> logs = new LinkedList<>();
+            //Собираем данные со всех файлов в список games
+            for (int id = 1; id <= sc.MAX_ROOMS; id++) {
+                final String filename = new StringBuilder(StatisticsCollector.playersStatisticsFilenameTemplate)
+                        .append(id).append(".csv").toString();
+                final List<BotsLogInformation> oneFileLogs = StatisticsParser.parseBotsStatisticsFile(filename);
+                if (oneFileLogs != null) {
+                    logs.addAll(oneFileLogs);
+                }
+            }
+            if (logs.isEmpty()) {
+                return;
+            }
+
+            recordBotsStatisticsToCSV(StatisticsAnalyzer.countPlayersStatistics(logs), botsStatisticsFilename);
+        } catch (final IOException e) {
+            logger.error("Error bots statistics recording", e);
+        }
+    }
+
+    /**
+     * Мето записывает подсчитанную статистику по играм ботов в формате
+     * bot1name,bot1wins,bot2name,bot2wins,draws
+     **/
+
+    public static void recordBotsStatisticsToCSV(final List<TwoPlayersStatistics> list,
+                                                 final String filename) {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(filename))) {
+            for (final TwoPlayersStatistics playersStats : list) {
+                final StringBuilder record = new StringBuilder();
+                record.append(playersStats.getPlayerOne()).append(",")
+                        .append(playersStats.getPlayerOneWins()).append(",")
+                        .append(playersStats.getPlayerTwo()).append(",").append(playersStats.getPlayerTwoWins())
+                        .append(",").append(playersStats.getDraws()).append("\n");
+                writer.write(record.toString());
+            }
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error bots statistics recording", e);
         }
     }
 }

@@ -18,6 +18,7 @@ import heroes.player.BaseBot;
 import heroes.player.RandomBot;
 import heroes.player.TestBot;
 import heroes.player.botdimon.Dimon;
+import heroes.player.botgleb.MultithreadedExpectiMaxBot;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
@@ -36,6 +37,7 @@ public class Client {
     static {
         playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
         playerBots.put("Dimon", new Dimon.DimonFactory());
+        playerBots.put("Gleb", new MultithreadedExpectiMaxBot.MultithreadedExpectiMaxBotFactory());
     }
 
     /**
@@ -61,8 +63,8 @@ public class Client {
     //Клиент хранит ссылку на своего бота, чтобы вызывать у него ответы
     private BaseBot player;
 
-    private IGUI gui;
-    private IController controller;
+    private final IGUI gui;
+    private final IController controller;
 
     private Socket socket = null;
     private BufferedReader in = null; // поток чтения из сокета
@@ -190,5 +192,9 @@ public class Client {
             logger.error("Error client running", e);
             downService();
         }
+    }
+
+    public String getBotType() {
+        return clientsConfigs.TYPE_BOT;
     }
 }

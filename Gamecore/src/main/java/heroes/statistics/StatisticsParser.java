@@ -153,7 +153,7 @@ public class StatisticsParser {
         try {
             final String[] logString = reader.readLine().split(",");
             final int countOfRounds = Integer.parseInt(logString[0]);
-            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DEAD HEAT")) {
+            if (!logString[1].startsWith("PLAYER_") && !logString[1].equals("DRAW")) {
                 throw new StatisticsException(StatisticsExceptionTypes.INCORRECT_PARAMS);
             }
             return new Pair<>(logString[1], countOfRounds);
@@ -190,6 +190,29 @@ public class StatisticsParser {
         } catch (IOException | NumberFormatException e) {
             logger.error("Error gameDurationStatistics file parsing", e);
             return 0;
+        }
+    }
+
+    /**
+     * Метод для парсинга логов игр ботов.
+     **/
+
+    public static List<BotsLogInformation> parseBotsStatisticsFile(final String filename) {
+        try (final BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            final List<BotsLogInformation> result = new LinkedList<>();
+            while (reader.ready()) {
+               final String[] log = reader.readLine().split(",");
+               if( (log[log.length - 1].equals(log[0]) || log[log.length - 1].equals(log[7]) ) &&
+                                                                                log.length == 15) {
+                   final BotsLogInformation gameInfo = new BotsLogInformation(log[0], log[7],
+                           log[log.length - 1]);
+                   result.add(gameInfo);
+               }
+            }
+            return result;
+        } catch (final IOException e) {
+            logger.error("Error bot statistics file parsing");
+            return null;
         }
     }
 }

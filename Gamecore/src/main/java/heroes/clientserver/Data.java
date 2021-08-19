@@ -22,16 +22,19 @@ public class Data {
     public final Answer answer;
     @JsonProperty
     public final int info;
+    @JsonProperty
+    public final String botName;
 
     @JsonCreator
     public Data(@JsonProperty("command") final CommonCommands command, @JsonProperty("oneArmy") final Army army,
                 @JsonProperty("board") final Board board, @JsonProperty("answer") final Answer answer,
-                @JsonProperty("info") final int info) {
+                @JsonProperty("info") final int info, @JsonProperty("botName") final String botName) {
         this.command = command;
         this.army = army;
         this.board = board;
         this.answer = answer;
         this.info = info;
+        this.botName = botName;
     }
 
     public Data(final CommonCommands command, final Board board, final Answer answer) {
@@ -40,6 +43,7 @@ public class Data {
         this.board = board;
         this.answer = answer;
         this.info = 0;
+        botName = null;
     }
 
     /**
@@ -53,6 +57,7 @@ public class Data {
         board = (data.board != null) ? new Board(data.board) : null;
         answer = (data.answer != null) ? new Answer(data.answer) : null;
         this.info = 0;
+        botName = null;
     }
 
     public Data(final CommonCommands command) {
@@ -61,6 +66,7 @@ public class Data {
         this.board = null;
         this.answer = null;
         this.info = 0;
+        botName = null;
     }
 
     public Data(final CommonCommands command, final int info) {
@@ -69,6 +75,7 @@ public class Data {
         this.board = null;
         this.answer = null;
         this.info = info;
+        botName = null;
     }
 
     public Data(final CommonCommands command, final Board board) {
@@ -77,6 +84,7 @@ public class Data {
         this.board = board;
         this.answer = null;
         this.info = 0;
+        botName = null;
     }
 
     public Data(final Answer answer) {
@@ -85,6 +93,7 @@ public class Data {
         this.board = null;
         this.answer = answer;
         this.info = 0;
+        botName = null;
     }
 
     public Data(final CommonCommands command, Army one) {
@@ -93,6 +102,7 @@ public class Data {
         this.board = null;
         this.answer = null;
         this.info = 0;
+        botName = null;
     }
 
     public Data() {
@@ -101,6 +111,7 @@ public class Data {
         this.board = null;
         this.answer = null;
         this.info = 0;
+        botName = null;
     }
 
     public Data(final int info) {
@@ -109,5 +120,16 @@ public class Data {
         this.board = null;
         this.answer = null;
         this.info = info;
+        botName = null;
+    }
+
+    public Data(final String botName) {
+        command = null;
+        army = null;
+        board = null;
+        answer = null;
+        info = 0;
+        this.botName = botName;
+
     }
 }

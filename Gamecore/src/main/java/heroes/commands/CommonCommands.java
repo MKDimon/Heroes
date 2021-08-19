@@ -14,6 +14,7 @@ public enum CommonCommands {
     DRAW_UNSUCCESSFUL("DRAW_UNSUCCESSFUL"),
     FIELD_ONE("PLAYER_ONE"),
     FIELD_TWO("PLAYER_TWO"),
+    GET_BOT_NAME("GET_BOT_NAME"),
     ;
     public final String command;
 
