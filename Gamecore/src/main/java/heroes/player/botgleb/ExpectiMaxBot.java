@@ -10,7 +10,6 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
-import heroes.player.BaseBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +32,14 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
         }
 
         @Override
-        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
-            return new ExpectiMaxBot(fields);
+        public ExpectiMaxBot createBotWithConfigs(final Fields fields,
+                                                  final ClientsConfigs clientsConfigs)
+                                                        throws GameLogicException {
+            return new ExpectiMaxBot(fields, clientsConfigs);
         }
 
         @Override
-        public AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
+        public ExpectiMaxBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
                                  final int maxRecLevel) throws GameLogicException {
             return new ExpectiMaxBot(fields, utilityFunction, maxRecLevel);
         }
@@ -51,6 +52,11 @@ public class ExpectiMaxBot extends AIBot implements Visualisable {
     public ExpectiMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
             throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
+    }
+
+    public ExpectiMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
+            throws GameLogicException {
+        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
     }
 
     /**
