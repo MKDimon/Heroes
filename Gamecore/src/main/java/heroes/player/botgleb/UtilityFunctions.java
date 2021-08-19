@@ -11,6 +11,8 @@ import heroes.gamelogic.GameStatus;
 import heroes.player.Answer;
 import heroes.player.BaseBot;
 import heroes.player.RandomBot;
+import heroes.player.botgleb.fann.BoardToCSVRecorder;
+import heroes.player.botgleb.fann.FANN;
 import heroes.units.General;
 import heroes.units.Unit;
 
@@ -100,4 +102,8 @@ public class UtilityFunctions {
             return 0;
         }
     };
+
+    public static final UtilityFunction FANN_UtilityFunction = (board, player) ->
+        FANN.getPred(BoardToCSVRecorder.boardToVector(board,player))[0];
+
 }
