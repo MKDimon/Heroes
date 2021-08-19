@@ -14,6 +14,7 @@ public class UtilityFuncMap {
         funcMap.put(Functions.EXPONENT_FUNCTION_V2, new UtilityAnswerFuncFourV2());
         funcMap.put(Functions.MONTE_CARLO, new MonteCarloFunc());
         funcMap.put(Functions.NEURON, new UtilityAnswerFuncNeuron());
+        funcMap.put(Functions.NEURON_ONNX, new UtilityAnswerFuncNeuronOnnx());
     }
 
     public static IUtilityFunc getFunc(Functions function) {

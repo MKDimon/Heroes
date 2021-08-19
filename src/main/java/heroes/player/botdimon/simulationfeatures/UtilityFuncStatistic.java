@@ -1,7 +1,9 @@
 package heroes.player.botdimon.simulationfeatures;
 
+import heroes.auxiliaryclasses.ActionTypes;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
+import heroes.gamelogic.GameStatus;
 import heroes.mathutils.Pair;
 import heroes.units.General;
 import heroes.units.Unit;
@@ -25,12 +27,29 @@ import java.util.Map;
 public class UtilityFuncStatistic {
     private static final String path = "src/main/resources/statistics/funcStatistic2.csv";
 
+    public static final Map<ActionTypes, Double> valueActions = new HashMap<>();
+
+    static {
+        valueActions.put(ActionTypes.HEALING, 2.0);
+        valueActions.put(ActionTypes.CLOSE_COMBAT, 1.2);
+        valueActions.put(ActionTypes.RANGE_COMBAT, 1.5);
+        valueActions.put(ActionTypes.AREA_DAMAGE, 3.3);
+    }
+
+
     private static void recordBoardInfo(final Board board, final double value, final Fields field) {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             StringBuilder info = new StringBuilder();
             info.append(board.getCurNumRound()).append(',');
-            info.append(field.name()).append(',');
-            info.append(board.getStatus()).append(',');
+
+            double status = 0; // WIN : 1 ; NO WINNERS / GAME_PROCESS : 0 ; DEFEAT : -1
+            if (board.getStatus() != GameStatus.GAME_PROCESS) {
+                status = (board.getStatus() == GameStatus.PLAYER_ONE_WINS && field == Fields.PLAYER_ONE ||
+                        board.getStatus() == GameStatus.PLAYER_TWO_WINS && field == Fields.PLAYER_TWO)?
+                        1 : -1;
+            }
+
+            info.append(status).append(',');
             info.append(String.format("%.2f",value).replace(',','.')).append('\n');
 
             writer.write(info.toString());
@@ -45,7 +64,7 @@ public class UtilityFuncStatistic {
             StringBuilder info = new StringBuilder();
             info.append((double) unit.getCurrentHP() / unit.getMaxHP()).append(',');
             info.append(unit.getPower()).append(',');
-            info.append(unit.getActionType().name()).append(',');
+            info.append(valueActions.get(unit.getActionType())).append(',');
             info.append(unit.isActive()).append(',');
 
             writer.write(info.toString());
@@ -63,9 +82,9 @@ public class UtilityFuncStatistic {
         }
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             StringBuilder info = new StringBuilder();
-            info.append(general.inspirationDamageBonus).append(',');
-            info.append(general.inspirationArmorBonus).append(',');
-            info.append(general.inspirationAccuracyBonus).append(',');
+            info.append((double) general.getCurrentHP() / general.getMaxHP()).append(',');
+            info.append(valueActions.get(general.getActionType())).append(',');
+
             writer.write(info.toString());
             writer.flush();
         } catch (IOException e) {

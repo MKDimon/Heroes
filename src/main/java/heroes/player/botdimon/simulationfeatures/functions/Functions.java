@@ -8,4 +8,5 @@ public enum Functions {
     EXPONENT_FUNCTION_V2,
     MONTE_CARLO,
     NEURON,
+    NEURON_ONNX,
 }

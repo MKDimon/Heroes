@@ -86,7 +86,7 @@ public class Client {
 
     public void chooseBot(final Fields field) {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
-        botFactoryMap.put("Test", new TestBot.TestBotFactory());
+        botFactoryMap.put("Test", new AntiDimon.AntiDimonFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
         //botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
