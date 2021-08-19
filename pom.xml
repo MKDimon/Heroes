@@ -70,6 +70,12 @@
             <version>3.8.5</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.googlecode.fannj</groupId>
+            <artifactId>fannj</artifactId>
+            <version>0.6</version>
+        </dependency>
+
     </dependencies>
 
 </project>
