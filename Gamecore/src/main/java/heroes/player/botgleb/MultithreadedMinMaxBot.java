@@ -36,8 +36,10 @@ public class MultithreadedMinMaxBot extends SimpleMinMaxBot implements Visualisa
         }
 
         @Override
-        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
-            return null;
+        public MultithreadedMinMaxBot createBotWithConfigs(final Fields fields,
+                                                               final ClientsConfigs clientsConfigs)
+                                                            throws GameLogicException {
+            return new MultithreadedMinMaxBot(fields, clientsConfigs);
         }
 
         @Override
@@ -120,6 +122,11 @@ public class MultithreadedMinMaxBot extends SimpleMinMaxBot implements Visualisa
     public MultithreadedMinMaxBot(final Fields fields, final UtilityFunction utilityFunction,
                                   final int maxRecLevel) throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
+    }
+
+    public MultithreadedMinMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
+            throws GameLogicException {
+        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
     }
 
     /**
