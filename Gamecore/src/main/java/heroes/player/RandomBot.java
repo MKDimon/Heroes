@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -35,6 +36,11 @@ public class RandomBot extends BaseBot implements Visualisable {
     public static class RandomBotFactory extends BaseBotFactory {
         @Override
         public RandomBot createBot(final Fields fields) throws GameLogicException {
+            return new RandomBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new RandomBot(fields);
         }
     }

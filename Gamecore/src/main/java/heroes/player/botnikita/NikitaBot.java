@@ -3,6 +3,7 @@ package heroes.player.botnikita;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.*;
 import heroes.gui.Visualisable;
 import heroes.player.*;
@@ -29,6 +30,11 @@ public class NikitaBot extends BaseBot implements Visualisable {
     public static class NikitaBotFactory extends BaseBotFactory {
         @Override
         public NikitaBot createBot(final Fields fields) throws GameLogicException {
+            return new NikitaBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new NikitaBot(fields);
         }
     }

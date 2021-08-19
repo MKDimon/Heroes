@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.ActionTypes;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -35,6 +36,11 @@ public class TestBot extends BaseBot implements Visualisable {
 
         @Override
         public TestBot createBot(final Fields fields) throws GameLogicException {
+            return new TestBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new TestBot(fields);
         }
     }

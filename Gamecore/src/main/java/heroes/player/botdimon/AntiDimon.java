@@ -3,6 +3,7 @@ package heroes.player.botdimon;
 import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -36,6 +37,11 @@ public class AntiDimon extends BaseBot implements Visualisable {
     public static class AntiDimonFactory extends BaseBotFactory {
         @Override
         public BaseBot createBot(final Fields fields) throws GameLogicException {
+            return new AntiDimon(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new AntiDimon(fields);
         }
     }

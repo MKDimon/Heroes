@@ -1,11 +1,13 @@
 package heroes.player.botgleb;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
+import heroes.player.BaseBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +33,11 @@ public class MultithreadedMinMaxBot extends SimpleMinMaxBot implements Visualisa
         @Override
         public MultithreadedMinMaxBot createBot(final Fields fields) throws GameLogicException {
             return new MultithreadedMinMaxBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
+            return null;
         }
 
         @Override

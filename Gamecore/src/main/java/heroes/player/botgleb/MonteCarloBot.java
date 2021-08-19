@@ -4,6 +4,7 @@ import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
 import heroes.auxiliaryclasses.unitexception.UnitException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.*;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
@@ -37,6 +38,11 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
     public static class MonteCarloBotFactory extends BaseBotFactory {
         @Override
         public MonteCarloBot createBot(final Fields fields) throws GameLogicException {
+            return new MonteCarloBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new MonteCarloBot(fields);
         }
     }

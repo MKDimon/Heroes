@@ -3,7 +3,10 @@
   "HOST": "127.0.0.1",
   "GUI": "lanterna",
   "TYPE_BOT": "Nikita",
-  "WITH_BOT": "true",
+  "UTILITY_FUNC": "",
+  "HEIGHT" : 3,
+  "CLUSTERING" : "false",
+  "WITH_BOT": "false",
   "TYPE_OPPONENT": "isBot",
   "ROOM": 2,
   "FIELD": 2

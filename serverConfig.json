@@ -1,6 +1,6 @@
 {
   "PORT": 8081,
-  "MAX_ROOMS": 2,
+  "MAX_ROOMS": 3,
   "DELAY": 1,
   "THREADS": 1,
   "PATH_LOG": "",

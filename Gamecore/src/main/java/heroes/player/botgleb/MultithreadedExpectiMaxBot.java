@@ -1,11 +1,13 @@
 package heroes.player.botgleb;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
+import heroes.player.BaseBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,11 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
     public static class MultithreadedExpectiMaxBotFactory extends AIBotFactory {
         @Override
         public MultithreadedExpectiMaxBot createBot(final Fields fields) throws GameLogicException {
+            return new MultithreadedExpectiMaxBot(fields);
+        }
+
+        @Override
+        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
             return new MultithreadedExpectiMaxBot(fields);
         }
 
