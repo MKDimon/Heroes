@@ -7,7 +7,6 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
-import heroes.player.BaseBot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +35,10 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
         }
 
         @Override
-        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
-            return new MultithreadedExpectiMaxBot(fields);
+        public MultithreadedExpectiMaxBot createBotWithConfigs(final Fields fields,
+                                                               final ClientsConfigs clientsConfigs)
+                                                                        throws GameLogicException {
+            return new MultithreadedExpectiMaxBot(fields, clientsConfigs);
         }
 
         @Override
@@ -115,6 +116,11 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
     public MultithreadedExpectiMaxBot(final Fields fields, final UtilityFunction utilityFunction,
                                       final int maxRecLevel) throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
+    }
+
+    public MultithreadedExpectiMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
+            throws GameLogicException {
+        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
     }
 
     /**
