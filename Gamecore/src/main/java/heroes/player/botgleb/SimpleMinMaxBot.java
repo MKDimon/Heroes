@@ -10,7 +10,6 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
-import heroes.player.BaseBot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +32,10 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
         }
 
         @Override
-        public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
-            return new SimpleMinMaxBot(fields);
+        public SimpleMinMaxBot createBotWithConfigs(final Fields fields,
+                                                    final ClientsConfigs clientsConfigs)
+                                                            throws GameLogicException {
+            return new SimpleMinMaxBot(fields, clientsConfigs);
         }
 
         @Override
@@ -51,6 +52,11 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
     public SimpleMinMaxBot(final Fields fields, final UtilityFunction utilityFunction, final int maxRecLevel)
             throws GameLogicException {
         super(fields, utilityFunction, maxRecLevel);
+    }
+
+    public SimpleMinMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
+            throws GameLogicException {
+        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
     }
 
     /**
