@@ -2,6 +2,7 @@ package heroes.player.botgleb;
 
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
+import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
 import heroes.gamelogic.Fields;
@@ -23,6 +24,9 @@ public abstract class AIBot extends BaseBot implements Visualisable {
 
         public abstract AIBot createAIBot(final Fields fields, final UtilityFunction utilityFunction,
                                           int maxRecLevel) throws GameLogicException;
+        @Override
+        public abstract AIBot createBotWithConfigs(final Fields field, final ClientsConfigs configs)
+                throws GameLogicException;
     }
 
     public AIBot(final Fields field, final UtilityFunction utilityFunction, final int maxRecLevel)
@@ -34,6 +38,11 @@ public abstract class AIBot extends BaseBot implements Visualisable {
 
     public AIBot(final Fields field) throws GameLogicException {
         this(field, baseUtilityFunction, baseMaxRecLevel);
+    }
+
+    public AIBot(final Fields field, final ClientsConfigs clientsConfigs)
+            throws GameLogicException {
+        this(field, baseUtilityFunction, clientsConfigs.HEIGHT);
     }
 
     public int getMaxRecLevel() {
