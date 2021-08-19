@@ -9,6 +9,7 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.Answer;
+import heroes.player.botgleb.fann.BoardToCSVRecorder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,8 @@ public class SimpleMinMaxBot extends AIBot implements Visualisable {
                 final double win = getWinByGameTree(implBoard, 1, UtilityFunctions.MIN_VALUE,
                         UtilityFunctions.MAX_VALUE);
                 awList.add(new AnswerAndWin(answer, win));
+                //Сбор данных для нейросети
+                BoardToCSVRecorder.boardToCSV(implBoard, getField(), (float) win);
             }
             System.out.println("SimpleMinMax time: " + (System.currentTimeMillis() - startTime));
             return getGreedyDecision(awList, AnswerAndWin::win).answer();
