@@ -126,7 +126,7 @@ public class MultithreadedMinMaxBot extends SimpleMinMaxBot implements Visualisa
 
     public MultithreadedMinMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
             throws GameLogicException {
-        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
+        super(field, clientsConfigs);
     }
 
     /**
