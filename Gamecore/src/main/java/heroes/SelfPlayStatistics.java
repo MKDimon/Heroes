@@ -36,8 +36,9 @@ public class SelfPlayStatistics {
             gl.gameStart(firstPlayerArmy, secondPlayerArmy);
             final StatisticsCollector collector = new StatisticsCollector(0);
             collector.recordMessageToCSV("GAME START\n");
-            collector.recordArmyToCSV(Fields.PLAYER_ONE, firstPlayerArmy);
-            collector.recordArmyToCSV(Fields.PLAYER_TWO, secondPlayerArmy);
+            collector.recordPlayerToCSVForDB("Gibbs", "RANDOM", firstPlayerArmy);
+            collector.recordPlayerToCSVForDB("Weber", "RANDOM", secondPlayerArmy);
+            collector.recordDateToCSV();
 
             while (gl.isGameBegun()) {
                 final Answer answer = getPlayer.get(gl.getBoard().getCurrentPlayer()).getAnswer(gl.getBoard());
@@ -59,8 +60,10 @@ public class SelfPlayStatistics {
             switch (status) {
                 case PLAYER_ONE_WINS -> {collector.recordMessageToCSV(Fields.PLAYER_ONE.toString()); playerOneCount++;}
                 case PLAYER_TWO_WINS -> {collector.recordMessageToCSV(Fields.PLAYER_TWO.toString()); playerTwoCount++;}
-                case NO_WINNERS -> {collector.recordMessageToCSV("DEAD HEAT"); drawCount++;}
+                case NO_WINNERS -> {collector.recordMessageToCSV("DRAW"); drawCount++;}
             }
+            collector.recordMessageToCSV("\n");
+            collector.recordDateToCSV();
             collector.recordMessageToCSV("\nGAME OVER\n");
 
 
