@@ -3,14 +3,12 @@
   "HOST": "127.0.0.1",
   "ROOM": 1,
   "FIELD": 2,
-  "GUI": "lanterna",
+  "GUI": "withoutGUI",
   "TYPE_BOT": "Dimon",
   "SIMULATION_TREE" : "EXPECTI_SIMULATION",
   "UTILITY_FUNC": "EXPONENT_FUNCTION_V2",
   "HEIGHT" : 3,
   "CLUSTERING" : "false",
-  "ARMY" : "const 1",
-  "NEURON" : "utilitymodel.model",
-  "WITH_BOT": "false",
-  "TYPE_OPPONENT": "isBot"
+  "ARMY" : "const 0",
+  "NEURON" : "utilitymodel.model"
 }
