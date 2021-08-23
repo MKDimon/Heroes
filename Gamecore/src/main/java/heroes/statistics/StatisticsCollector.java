@@ -1,6 +1,10 @@
 package heroes.statistics;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.clientserver.ServersConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
@@ -10,9 +14,10 @@ import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -45,17 +50,30 @@ public class StatisticsCollector {
             ActionTypes.CLOSE_COMBAT, GeneralTypes.COMMANDER.toString(),
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
-    public static final String filenameTemplate = "game_statistics/gameStatistics";
-    public static final String playersStatisticsFilenameTemplate = "bots_statistics/players_statistics";
+    public static final String filenameTemplate = "gameStatistics";
+    public static final String playersStatisticsFilenameTemplate = "players_statistics";
 
     private final String filename;
 
     private final String playersStatisticsFilename;
 
+    public static ServersConfigs getServersConfig() {
+        final FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream("serverConfig.json");
+            final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+            fileInputStream.close();
+            return sc;
+        } catch (IOException e) {
+            logger.error("Cannot open configs in StatisticsCollector", e);
+            return null;
+        }
+    }
     public StatisticsCollector(final int fileID) {
-        filename = new StringBuilder(filenameTemplate).
+        filename = new StringBuilder(getServersConfig().LOGBACK).append("/").append(filenameTemplate).
                 append(fileID).append(".csv").toString();
-        playersStatisticsFilename = new StringBuilder(playersStatisticsFilenameTemplate).
+        playersStatisticsFilename = new StringBuilder(getServersConfig().PATH_LOG).append("/").
+                append(playersStatisticsFilenameTemplate).
                 append(fileID).append(".csv").toString();
     }
 
@@ -83,6 +101,35 @@ public class StatisticsCollector {
             final StringBuilder record = new StringBuilder();
             record.append(playerOneName).append(",").append(armyToCSVString(armyOne))
                     .append(playerTwoName).append(",").append(armyToCSVString(armyTwo));
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    public void recordPlayerToCSVForDB(final String playerName, final String playerBotType,
+                                       final Army army) {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(filename, true))){
+            final StringBuilder record = new StringBuilder();
+            record.append(playerName).append(",")
+                    .append(playerBotType).append(",")
+                    .append(armyToCSVString(army)).append("\n");
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    public void recordDateToCSV() {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(filename, true))){
+            final StringBuilder record = new StringBuilder();
+            final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            record.append(dateFormat.format(date)).append("\n");
             writer.write(record.toString());
             writer.flush();
         } catch (final IOException e) {

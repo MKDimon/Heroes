@@ -19,8 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class NikitaBot extends BaseBot implements Visualisable {
-    private static int getRecLevel(final Board board) {
-        return 3;
+    private final int maxRecLevel;
+    private int getRecLevel(final Board board) {
+        return maxRecLevel;
     }
 
     private final IUtilityFunction utilityFunction = new HealerUtilityFunction();
@@ -35,12 +36,18 @@ public class NikitaBot extends BaseBot implements Visualisable {
 
         @Override
         public BaseBot createBotWithConfigs(Fields fields, ClientsConfigs clientsConfigs) throws GameLogicException {
-            return new NikitaBot(fields);
+            return new NikitaBot(fields, clientsConfigs);
         }
     }
 
     public NikitaBot(final Fields field) throws GameLogicException {
         super(field);
+        this.maxRecLevel = 3;
+    }
+
+    public NikitaBot(final Fields field, final ClientsConfigs clientsConfigs) throws GameLogicException {
+        super(field);
+        this.maxRecLevel = clientsConfigs.HEIGHT;
     }
 
     @Override

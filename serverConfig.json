@@ -3,7 +3,7 @@
   "MAX_ROOMS": 3,
   "DELAY": 1,
   "THREADS": 1,
-  "PATH_LOG": "",
-  "LOGBACK": "",
+  "PATH_LOG": "bots_statistics",
+  "LOGBACK": "game_statistics",
   "GAMES_COUNT": 3
 }
