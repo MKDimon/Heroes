@@ -15,7 +15,13 @@ public class ClientsConfigs {
     @JsonProperty
     public final String TYPE_BOT;
     @JsonProperty
+    public final String SIMULATION_TREE;
+    @JsonProperty
     public final String UTILITY_FUNC;
+    @JsonProperty
+    public final String NEURON;
+    @JsonProperty
+    public final String ARMY;
     @JsonProperty
     public final int HEIGHT;
     @JsonProperty
@@ -40,7 +46,10 @@ public class ClientsConfigs {
                           @JsonProperty("WITH_BOT") final boolean with_bot,
                           @JsonProperty("TYPE_OPPONENT") final String type_opponent,
                           @JsonProperty("ROOM") final int room,
-                          @JsonProperty("FIELD") final int field) {
+                          @JsonProperty("FIELD") final int field,
+                          @JsonProperty("NEURON") final String neuron,
+                          @JsonProperty("ARMY") final String army,
+                          @JsonProperty("SIMULATION_TREE") final String tree) {
         HOST = host;
         TYPE_BOT = type_bot;
         PORT = port;
@@ -52,5 +61,8 @@ public class ClientsConfigs {
         TYPE_OPPONENT = type_opponent;
         ROOM = room;
         FIELD = field;
+        ARMY = army;
+        NEURON = neuron;
+        SIMULATION_TREE = tree;
     }
 }

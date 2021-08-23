@@ -7,4 +7,5 @@ public enum Functions {
     EXPONENT_FUNCTION_V1,
     EXPONENT_FUNCTION_V2,
     MONTE_CARLO,
+    NEURON,
 }

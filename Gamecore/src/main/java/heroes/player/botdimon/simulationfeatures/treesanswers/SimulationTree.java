@@ -30,7 +30,6 @@ public abstract class SimulationTree {
     protected final Logger logger = LoggerFactory.getLogger(SimulationTree.class);
 
     protected final IUtilityFunc func;
-    private static final IUtilityFunc nodesFunc = new UtilityAnswerFuncFourV2();
     private static final int CLUSTERS = 10;
     protected final Fields field;
     protected final int maxHeight;
@@ -44,12 +43,16 @@ public abstract class SimulationTree {
         attributes.add(new Attribute("A_10"));
         attributes.add(new Attribute("A_11"));
         attributes.add(new Attribute("A_12"));
+        attributes.add(new Attribute("A_ALL"));
+        attributes.add(new Attribute("A_ALIVE"));
         attributes.add(new Attribute("E_00"));
         attributes.add(new Attribute("E_01"));
         attributes.add(new Attribute("E_02"));
         attributes.add(new Attribute("E_10"));
         attributes.add(new Attribute("E_11"));
         attributes.add(new Attribute("E_12"));
+        attributes.add(new Attribute("E_ALL"));
+        attributes.add(new Attribute("E_ALIVE"));
     }
 
     protected class Node {
@@ -98,7 +101,7 @@ public abstract class SimulationTree {
         final GameLogic gameLogic = new GameLogic(board);
         if (gameLogic.action(answer.getAttacker(), answer.getDefender(), answer.getActionType())) {
             final Board newBoard = gameLogic.getBoard();
-            result.add(new Node(newBoard, answer, nodesFunc.getValue(board, field)));
+            result.add(new Node(newBoard, answer, func.getValue(board, field)));
             if (answer.getActionType() == ActionTypes.AREA_DAMAGE) { returns = true; }
         }
         return returns;
@@ -117,14 +120,28 @@ public abstract class SimulationTree {
             final Unit[][] enemy = (field != Fields.PLAYER_ONE) ? board.getFieldPlayerOne() : board.getFieldPlayerTwo();
             final Instance inst = new DenseInstance(attributes.size());
             inst.setValue(attributes.get(0), new UtilityAnswerFuncFourV2().getValue(item.board, field));
+            double allyAll = 0, allyMax = 0;
+            double enemyAll = 0, enemyMax = 0;
+            int countAlly = 0;
+            int countEnemy = 0;
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < 3; k++) {
                     inst.setValue(attributes.get(j * 3 + k + 1),
                             (double) ally[j][k].getCurrentHP() / ally[j][k].getMaxHP() * 10);
-                    inst.setValue(attributes.get(j * 3 + k + 7),
+                    allyAll += ally[j][k].getCurrentHP();
+                    allyMax += ally[j][k].getMaxHP();
+                    countAlly += ally[j][k].isAlive()? 1 : 0;
+                    inst.setValue(attributes.get(j * 3 + k + 8),
                             (double) enemy[j][k].getCurrentHP() / enemy[j][k].getMaxHP() * 10);
+                    enemyAll += enemy[j][k].getCurrentHP();
+                    enemyMax += enemy[j][k].getMaxHP();
+                    countEnemy += enemy[j][k].isAlive()? 1 : 0;
                 }
             }
+            inst.setValue(attributes.get(7), allyAll / allyMax);
+            inst.setValue(attributes.get(8), countAlly);
+            inst.setValue(attributes.get(15), enemyAll / enemyMax);
+            inst.setValue(attributes.get(16), countEnemy);
             final Answer answer = item.answer;
             dataset.add(inst);
         }

@@ -45,22 +45,7 @@ public class MonteCarloBot extends BaseBot implements Visualisable {
 
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
-        try {
-            final SimulationTreeArmy tree = new SimulationTreesArmyMap().getTree(
-                    SimulationTreesArmy.SIMPLE_SIMULATION
-            );
-
-            if (getField() == Fields.PLAYER_ONE) {
-                return tree.getArmyConst(0);
-            }
-            else {
-                return tree.getArmyConst(0);
-            }
-
-        } catch (BoardException | UnitException e) {
-            logger.error("Error creating army in bot", e);
             return null;
-        }
     }
 
     @Override

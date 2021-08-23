@@ -8,8 +8,10 @@ import heroes.units.GeneralTypes;
 import heroes.units.Unit;
 import heroes.units.UnitTypes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public abstract class SimulationTreeArmy {
     private static final List<Army> armies = new ArrayList<>();
@@ -47,6 +49,20 @@ public abstract class SimulationTreeArmy {
         }
     }
 
+    public Army getArmy(final String params) {
+        try {
+            if (params.toLowerCase(Locale.ROOT).startsWith("const")) {
+                final int army = Integer.parseInt(params.split(" ")[1]);
+                    return (getArmyConst(army));
+            } else {
+                    return getArmyByArmy(params);
+            }
+        } catch (final IOException | UnitException | BoardException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      *
      * @param ID - номер армии
@@ -54,10 +70,10 @@ public abstract class SimulationTreeArmy {
      * @throws UnitException ошибка
      * @throws BoardException ошибка
      */
-    public Army getArmyConst(final int ID) throws UnitException, BoardException {
+    private Army getArmyConst(final int ID) throws UnitException, BoardException {
         if (ID >= armies.size() || ID < 0) throw new IllegalArgumentException("ID of army is invalid");
         return new Army(armies.get(ID));
     }
 
-    public abstract Army getArmyByArmy(final Army army);
+    protected abstract Army getArmyByArmy(final String army) throws IOException, UnitException, BoardException;
 }
