@@ -10,7 +10,7 @@ public class ClassifyResultCommand implements ICommand {
 
     @Override
     public boolean isClassified(final String inputString) {
-        if (inputString.indexOf(",") < 2) {
+        if (StringUtils.calcOccurences(inputString, ",") == 1) {
             token = new Token(st, inputString);
             return true;
         } else {

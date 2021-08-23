@@ -13,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -83,6 +86,35 @@ public class StatisticsCollector {
             final StringBuilder record = new StringBuilder();
             record.append(playerOneName).append(",").append(armyToCSVString(armyOne))
                     .append(playerTwoName).append(",").append(armyToCSVString(armyTwo));
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    public void recordPlayerToCSVForDB(final String playerName, final String playerBotType,
+                                       final Army army) {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(filename, true))){
+            final StringBuilder record = new StringBuilder();
+            record.append(playerName).append(",")
+                    .append(playerBotType).append(",")
+                    .append(armyToCSVString(army)).append("\n");
+            writer.write(record.toString());
+            writer.flush();
+        } catch (final IOException e) {
+            logger.error("Error recording players to CSV", e);
+        }
+    }
+
+    public void recordDateToCSV() {
+        try (final BufferedWriter writer = new BufferedWriter(
+                new FileWriter(filename, true))){
+            final StringBuilder record = new StringBuilder();
+            final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            record.append(dateFormat.format(date)).append("\n");
             writer.write(record.toString());
             writer.flush();
         } catch (final IOException e) {

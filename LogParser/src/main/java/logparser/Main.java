@@ -13,9 +13,8 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) {
         final Classifier classifier = new Classifier();
-            try (FileReader fr = new FileReader(new FileInputStream("src/main/resources/gameStatistics0.csv"),
+            try (FileReader fr = new FileReader(new FileInputStream("game_statistics/gameStatistics0.csv"),
                     StandardCharsets.UTF_8)) {
-                System.out.println("File opened");
                 do {
                     System.out.println(classifier.classify(fr.readLine()).toString());
                 } while (fr.hasNext());

@@ -10,7 +10,7 @@ public class ClassifyArmyCommand implements ICommand {
 
     @Override
     public boolean isClassified(final String inputString) {
-        if (StringUtils.calcOccurences(inputString, ",") == 7) {
+        if (StringUtils.calcOccurences(inputString, ",") == 8) {
             token = new Token(st, inputString);
             return true;
         } else {
