@@ -34,7 +34,6 @@ public class ServerWithChangeFields {
     private final int maxRooms;
     private final int delay;
     private final int gamesCount;
-    private final int treads;
 
     private final String pathLog;
     private final String logBack;
@@ -46,7 +45,6 @@ public class ServerWithChangeFields {
         PORT = serversConfigs.PORT;
         delay = serversConfigs.DELAY;
         gamesCount = serversConfigs.GAMES_COUNT;
-        treads = serversConfigs.THREADS;
         pathLog = serversConfigs.PATH_LOG;
         logBack = serversConfigs.LOGBACK;
         getRoom = new Hashtable<>();
@@ -102,15 +100,6 @@ public class ServerWithChangeFields {
             botName = Deserializer.deserializeData(in.readLine()).botName;
         }
 
-        private void setOpponent() throws IOException {
-            final Data opponent = new Data(CommonCommands.GET_OPPONENT);
-            socket.setSoTimeout(CommandsTime.getTime(opponent.command));
-            out.write(Serializer.serializeData(opponent) + '\n');
-            out.flush();
-
-            withBot = Deserializer.deserializeData(in.readLine()).info == 2;
-        }
-
         private void setField() throws IOException {
             final Data data = new Data(CommonCommands.GET_FIELD);
             socket.setSoTimeout(CommandsTime.getTime(data.command));
@@ -142,7 +131,6 @@ public class ServerWithChangeFields {
             while (true) {
                 try {
                     setBotName();
-                    setOpponent();
                     setRoom();
                     setField();
                     break;
