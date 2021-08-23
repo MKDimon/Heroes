@@ -120,7 +120,7 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
 
     public MultithreadedExpectiMaxBot(final Fields field, final ClientsConfigs clientsConfigs)
             throws GameLogicException {
-        super(field, baseUtilityFunction, clientsConfigs.HEIGHT);
+        super(field, clientsConfigs);
     }
 
     /**
