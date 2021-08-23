@@ -26,13 +26,10 @@ import java.util.Map;
 public class StatisticsRecorder {
     private static final Logger logger = LoggerFactory.getLogger(StatisticsRecorder.class);
 
-    public static final String armiesStatisticsFilename = "game_statistics/armiesStatistics";
-    public static final String gameDurationStatisticsFilename =
-            "game_statistics/gameDurationStatistics";
-    public static final String winnerUnitsStatisticsFilename =
-            "game_statistics/winnerUnitsStatistics";
-    public static final String botsStatisticsFilename =
-            "bots_statistics/botsStatistics.csv";
+    public static final String armiesStatisticsFilename = "armiesStatistics";
+    public static final String gameDurationStatisticsFilename = "gameDurationStatistics";
+    public static final String winnerUnitsStatisticsFilename = "winnerUnitsStatistics";
+    public static final String botsStatisticsFilename = "botsStatistics.csv";
 
 
     public static void main(final String[] args) {
@@ -63,7 +60,8 @@ public class StatisticsRecorder {
             final List<GameLogInformation> games = new LinkedList<>();
             //Собираем данные со всех файлов в список games
             for (int id = 1; id <= sc.MAX_ROOMS; id++) {
-                final String filename = new StringBuilder(StatisticsCollector.filenameTemplate).append(id).
+                final String filename = new StringBuilder(sc.LOGBACK).append("/").
+                        append(StatisticsCollector.filenameTemplate).append(id).
                         append(".csv").toString();
                 final List<GameLogInformation> oneFileLogs = StatisticsParser.parseLogFile(filename);
                 if (oneFileLogs != null) {
@@ -74,11 +72,14 @@ public class StatisticsRecorder {
                 return;
             }
             //Записывем статистку о  составах армии, количестве их побед, поражений, ничьих
-            recordArmiesStatisticsToCSV(games, armiesStatisticsFilename);
+            recordArmiesStatisticsToCSV(games, new StringBuilder(sc.LOGBACK).append("/").
+                    append(armiesStatisticsFilename).toString());
             //Записываем статистику о характеристиках юнитов и продолжительности игры
-            recordGameDurationStatisticsToCSV(games, gameDurationStatisticsFilename);
+            recordGameDurationStatisticsToCSV(games, new StringBuilder(sc.LOGBACK).append("/").
+                    append(gameDurationStatisticsFilename).toString());
             //Записываем статистику о юнитах победителей
-            recordWinnerUnitsStatisticsToCSV(games, winnerUnitsStatisticsFilename);
+            recordWinnerUnitsStatisticsToCSV(games, new StringBuilder(sc.LOGBACK).append("/").
+                    append(winnerUnitsStatisticsFilename).toString());
 
             //Записываем статистику по ботам
             recordBotsStatistics();
@@ -190,8 +191,9 @@ public class StatisticsRecorder {
             final List<BotsLogInformation> logs = new LinkedList<>();
             //Собираем данные со всех файлов в список games
             for (int id = 1; id <= sc.MAX_ROOMS; id++) {
-                final String filename = new StringBuilder(StatisticsCollector.playersStatisticsFilenameTemplate)
-                        .append(id).append(".csv").toString();
+                final String filename = new StringBuilder(sc.PATH_LOG).append("/").
+                        append(StatisticsCollector.playersStatisticsFilenameTemplate).append(id).
+                        append(".csv").toString();
                 final List<BotsLogInformation> oneFileLogs = StatisticsParser.parseBotsStatisticsFile(filename);
                 if (oneFileLogs != null) {
                     logs.addAll(oneFileLogs);
@@ -201,7 +203,8 @@ public class StatisticsRecorder {
                 return;
             }
 
-            recordBotsStatisticsToCSV(StatisticsAnalyzer.countPlayersStatistics(logs), botsStatisticsFilename);
+            recordBotsStatisticsToCSV(StatisticsAnalyzer.countPlayersStatistics(logs),
+                    new StringBuilder(sc.PATH_LOG).append("/").append(botsStatisticsFilename).toString());
         } catch (final IOException e) {
             logger.error("Error bots statistics recording", e);
         }

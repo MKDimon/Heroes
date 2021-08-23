@@ -1,6 +1,10 @@
 package heroes.statistics;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import heroes.auxiliaryclasses.ActionTypes;
+import heroes.clientserver.ServersConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Fields;
 import heroes.mathutils.Position;
@@ -10,9 +14,7 @@ import heroes.units.UnitTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,17 +50,30 @@ public class StatisticsCollector {
             ActionTypes.CLOSE_COMBAT, GeneralTypes.COMMANDER.toString(),
             ActionTypes.RANGE_COMBAT, GeneralTypes.SNIPER.toString(),
             ActionTypes.AREA_DAMAGE, GeneralTypes.ARCHMAGE.toString());
-    public static final String filenameTemplate = "game_statistics/gameStatistics";
-    public static final String playersStatisticsFilenameTemplate = "bots_statistics/players_statistics";
+    public static final String filenameTemplate = "gameStatistics";
+    public static final String playersStatisticsFilenameTemplate = "players_statistics";
 
     private final String filename;
 
     private final String playersStatisticsFilename;
 
+    public static ServersConfigs getServersConfig() {
+        final FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream("serverConfig.json");
+            final ServersConfigs sc = new ObjectMapper().readValue(fileInputStream, ServersConfigs.class);
+            fileInputStream.close();
+            return sc;
+        } catch (IOException e) {
+            logger.error("Cannot open configs in StatisticsCollector", e);
+            return null;
+        }
+    }
     public StatisticsCollector(final int fileID) {
-        filename = new StringBuilder(filenameTemplate).
+        filename = new StringBuilder(getServersConfig().LOGBACK).append("/").append(filenameTemplate).
                 append(fileID).append(".csv").toString();
-        playersStatisticsFilename = new StringBuilder(playersStatisticsFilenameTemplate).
+        playersStatisticsFilename = new StringBuilder(getServersConfig().PATH_LOG).append("/").
+                append(playersStatisticsFilenameTemplate).
                 append(fileID).append(".csv").toString();
     }
 
