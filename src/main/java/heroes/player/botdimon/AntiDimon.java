@@ -51,10 +51,10 @@ public class AntiDimon extends BaseBot {
             );
 
             if (getField() == Fields.PLAYER_ONE) {
-                return tree.getArmyConst(1);
+                return tree.getArmyConst(0);
             }
             else {
-                return tree.getArmyConst(1);
+                return tree.getArmyConst(0);
             }
         } catch (BoardException | UnitException e) {
             logger.error("Error creating army in bot", e);

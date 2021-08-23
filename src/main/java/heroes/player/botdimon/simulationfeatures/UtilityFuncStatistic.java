@@ -9,23 +9,19 @@ import heroes.units.General;
 import heroes.units.Unit;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.functions.MultilayerPerceptron;
-import weka.classifiers.functions.SMO;
-import weka.classifiers.functions.SMOreg;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
-import weka.core.converters.ConverterUtils.DataSource;
-import weka.core.pmml.jaxbbindings.Regression;
-import weka.core.pmml.jaxbbindings.RegressionModel;
-import weka.experiment.RegressionSplitEvaluator;
+import weka.core.converters.ConverterUtils.*;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UtilityFuncStatistic {
-    private static final String path = "src/main/resources/statistics/funcStatistic2.csv";
+    private static final String path = "src/main/resources/statistics/funcStatistic.arff";
 
     public static final Map<ActionTypes, Double> valueActions = new HashMap<>();
 
@@ -66,6 +62,7 @@ public class UtilityFuncStatistic {
             info.append(unit.getPower()).append(',');
             info.append(valueActions.get(unit.getActionType())).append(',');
             info.append(unit.isActive()).append(',');
+            info.append(unit.isAlive()).append(',');
 
             writer.write(info.toString());
             writer.flush();
@@ -84,6 +81,7 @@ public class UtilityFuncStatistic {
             StringBuilder info = new StringBuilder();
             info.append((double) general.getCurrentHP() / general.getMaxHP()).append(',');
             info.append(valueActions.get(general.getActionType())).append(',');
+            info.append(general.isAlive()).append(',');
 
             writer.write(info.toString());
             writer.flush();
@@ -106,15 +104,16 @@ public class UtilityFuncStatistic {
     }
 
     public static void main(String[] args) throws Exception {
-        DataSource source = new DataSource("src/main/resources/statistics/train.arff");
+        DataSource source = new DataSource("funcStatistic.arff");
         Instances dataset = source.getDataSet();
         //set class index to the last attribute
         dataset.setClassIndex(dataset.numAttributes()-1);
 
         //build model
-        LinearRegression lr = new LinearRegression();
+        MultilayerPerceptron lr = new MultilayerPerceptron();
+        lr.setOptions(args);
         lr.buildClassifier(dataset);
-        SerializationHelper.write("src/main/java/heroes/player/botdimon/simulationfeatures/functions/utilitymodelSMO.model", lr);
+        SerializationHelper.write("utilitymodel.model", lr);
         //output model
         System.out.println(lr);
     }

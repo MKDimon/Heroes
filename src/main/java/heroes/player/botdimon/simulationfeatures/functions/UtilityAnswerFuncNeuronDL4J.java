@@ -11,12 +11,14 @@ import heroes.units.Unit;
 import weka.classifiers.AbstractClassifier;
 import weka.core.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Нейронка
  */
-public class UtilityAnswerFuncNeuron implements IUtilityFunc {
+public class UtilityAnswerFuncNeuronDL4J implements IUtilityFunc {
     private static AbstractClassifier smo;
     private static final ArrayList<Attribute> attributes = new ArrayList<>();
     private static final Map<ActionTypes, Double> valueActions = new HashMap<>();
@@ -24,7 +26,7 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
     static {
         try {
             smo = (AbstractClassifier) SerializationHelper.read
-                    ("statistics/utilitymodel3.model");
+                    ("statistics/utilitymodel.model");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,28 +117,28 @@ public class UtilityAnswerFuncNeuron implements IUtilityFunc {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 15; j += 5) {
                 final Unit unit = getArmy.get(field).getX()[i][j/5];
-                inst.setValue(attributes.get(i * 15 + j), (double) unit.getCurrentHP() / unit.getMaxHP());
-                inst.setValue(attributes.get(i * 15 + j + 1), unit.getPower());
-                inst.setValue(attributes.get(i * 15 + j + 2), UtilityFuncStatistic.valueActions.get(unit.getActionType()));
-                inst.setValue(attributes.get(i * 15 + j + 3), unit.isActive()? "false" : "true");
-                inst.setValue(attributes.get(i * 15 + j + 4), unit.isAlive()? "false" : "true");
+                inst.setValue(attributes.get(i * 12 + j), (double) unit.getCurrentHP() / unit.getMaxHP());
+                inst.setValue(attributes.get(i * 12 + j + 1), unit.getPower());
+                inst.setValue(attributes.get(i * 12 + j + 2), UtilityFuncStatistic.valueActions.get(unit.getActionType()));
+                inst.setValue(attributes.get(i * 12 + j + 3), unit.isActive()? "false" : "true");
+                inst.setValue(attributes.get(i * 12 + j + 4), unit.isActive()? "false" : "true");
                 final Unit enemyUnit = getArmy.get(enemyField).getX()[i][j/5];
-                inst.setValue(attributes.get(i * 15 + j + 33), (double) enemyUnit.getCurrentHP() / enemyUnit.getMaxHP());
-                inst.setValue(attributes.get(i * 15 + j + 34), enemyUnit.getPower());
-                inst.setValue(attributes.get(i * 15 + j + 35), UtilityFuncStatistic.valueActions.get(enemyUnit.getActionType()));
-                inst.setValue(attributes.get(i * 15 + j + 36), enemyUnit.isActive()? "false" : "true");
-                inst.setValue(attributes.get(i * 15 + j + 37), enemyUnit.isAlive()? "false" : "true");
+                inst.setValue(attributes.get(i * 12 + j + 33), (double) enemyUnit.getCurrentHP() / enemyUnit.getMaxHP());
+                inst.setValue(attributes.get(i * 12 + j + 34), enemyUnit.getPower());
+                inst.setValue(attributes.get(i * 12 + j + 35), UtilityFuncStatistic.valueActions.get(enemyUnit.getActionType()));
+                inst.setValue(attributes.get(i * 12 + j + 36), enemyUnit.isActive()? "false" : "true");
+                inst.setValue(attributes.get(i * 12 + j + 37), enemyUnit.isActive()? "false" : "true");
             }
         }
         final General general = getArmy.get(field).getY();
         inst.setValue(attributes.get(30), (double) general.getCurrentHP() / general.getMaxHP());
         inst.setValue(attributes.get(31), UtilityFuncStatistic.valueActions.get(general.getActionType()));
-        inst.setValue(attributes.get(32), general.isAlive()? "false" : "true");
+        inst.setValue(attributes.get(32), general.isActive()? "false" : "true");
 
         final General enemyGeneral = getArmy.get(enemyField).getY();
         inst.setValue(attributes.get(63), (double) enemyGeneral.getCurrentHP() / enemyGeneral.getMaxHP());
         inst.setValue(attributes.get(64), UtilityFuncStatistic.valueActions.get(enemyGeneral.getActionType()));
-        inst.setValue(attributes.get(65), enemyGeneral.isAlive()? "false" : "true");
+        inst.setValue(attributes.get(65), enemyGeneral.isActive()? "false" : "true");
 
         inst.setValue(attributes.get(66), board.getCurNumRound());
         float status = 0; // WIN : 1 ; NO WINNERS / GAME_PROCESS : 0 ; DEFEAT : -1
