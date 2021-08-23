@@ -27,10 +27,6 @@ public class ClientsConfigs {
     @JsonProperty
     public final boolean CLUSTERING;
     @JsonProperty
-    public final boolean WITH_BOT;
-    @JsonProperty
-    public final String TYPE_OPPONENT;
-    @JsonProperty
     public final int ROOM;
     @JsonProperty
     public final int FIELD;
