@@ -33,9 +33,6 @@ public class PriestDrawer implements IGeneralDrawer {
         tg.putString(x_start, y_start++, "    |  | | | |  |  ||");
         tg.putString(x_start, y_start++, "    |  \"\"\" \"\"\"  |  ||");
         tg.putString(x_start, y_start++, "    |_ _ _ _ _ _|  ||");
-        tg.putString(x_start, y_start++, "     |,;,;,;,;,;,|  ||");
-        tg.putString(x_start, y_start++, "    `|||||||||||`  ||");
-        tg.putString(x_start, y_start++, "      |||||||||||   ||");
-        tg.putString(x_start, y_start, "     `\"\"\"\"\"\"\"\"\"`   \"\"");
+        tg.putString(x_start, y_start, "     |,;,;,;,;,;,|  ||");
     }
 }
