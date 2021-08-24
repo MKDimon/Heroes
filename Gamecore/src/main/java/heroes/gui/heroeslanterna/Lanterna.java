@@ -127,11 +127,6 @@ public class Lanterna implements IGUI, IController {
     }
 
     @Override
-    public int getOpponentCommand() {
-        return lw.updateMenu("Choose your opponent (1 - live, 2 - bot):");
-    }
-
-    @Override
     public String getBot(final Selector selector) {
         return BotMenuMap.getDrawer(selector.getSelectedNumber());
     }

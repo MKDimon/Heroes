@@ -18,6 +18,8 @@ import heroes.player.BaseBot;
 import heroes.player.RandomBot;
 import heroes.player.TestBot;
 import heroes.player.botdimon.Dimon;
+import heroes.player.botgleb.BotGlebAbstractFactory;
+import heroes.player.botgleb.ExpectiMaxBot;
 import heroes.player.botgleb.MultithreadedExpectiMaxBot;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
@@ -35,9 +37,15 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
+        try {
         playerBots.put("Nikita", new NikitaBot.NikitaBotFactory());
         playerBots.put("Dimon", new Dimon.DimonFactory());
-        playerBots.put("Gleb", new MultithreadedExpectiMaxBot.MultithreadedExpectiMaxBotFactory());
+        playerBots.put("Gleb", BotGlebAbstractFactory.botFactoryMap.getOrDefault(
+                getClientsConfig().SIMULATION_TREE, new ExpectiMaxBot.ExpectiMaxBotFactory()
+        ));
+        } catch (final IOException e) {
+            logger.error("Error create bot factory", e);
+        }
     }
 
     /**

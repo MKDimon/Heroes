@@ -12,7 +12,7 @@
         <param name="maxFileSize" value="20KB"/>
         <param name="maxBackupIndex" value="2"/>
         <param name="file" value="src/main/resources/error/logfile_error.log"/>
-        <param name="Threshold" value="warn"/>
+        <param name="Threshold" value="error"/>
         <param name="Append" value="true" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{HH:mm:ss} %-5p [%c] %m%n"/>

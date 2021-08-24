@@ -23,11 +23,6 @@ public class AutoController implements IController{
     }
 
     @Override
-    public int getOpponentCommand() {
-        return cc.WITH_BOT? 2 : 1;
-    }
-
-    @Override
     public String getBot(final Selector selector) {
         return "Player";
     }

@@ -39,8 +39,6 @@ public class ClientsConfigs {
                           @JsonProperty("HEIGHT") final int height,
                           @JsonProperty("CLUSTERING") final boolean clustering,
                           @JsonProperty("TYPE_BOT") final String type_bot,
-                          @JsonProperty("WITH_BOT") final boolean with_bot,
-                          @JsonProperty("TYPE_OPPONENT") final String type_opponent,
                           @JsonProperty("ROOM") final int room,
                           @JsonProperty("FIELD") final int field,
                           @JsonProperty("NEURON") final String neuron,
@@ -53,8 +51,6 @@ public class ClientsConfigs {
         HEIGHT = height;
         CLUSTERING = clustering;
         GUI = gui;
-        WITH_BOT = with_bot;
-        TYPE_OPPONENT = type_opponent;
         ROOM = room;
         FIELD = field;
         ARMY = army;
