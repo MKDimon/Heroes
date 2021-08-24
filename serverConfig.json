@@ -4,5 +4,5 @@
   "DELAY": 1,
   "PATH_LOG": "bots_statistics",
   "LOGBACK": "game_statistics",
-  "GAMES_COUNT": 3
+  "GAMES_COUNT": 10
 }

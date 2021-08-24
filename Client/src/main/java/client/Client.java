@@ -20,7 +20,6 @@ import heroes.player.TestBot;
 import heroes.player.botdimon.Dimon;
 import heroes.player.botgleb.BotGlebAbstractFactory;
 import heroes.player.botgleb.ExpectiMaxBot;
-import heroes.player.botgleb.MultithreadedExpectiMaxBot;
 import heroes.player.botnikita.NikitaBot;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
@@ -30,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Client {
@@ -94,7 +94,7 @@ public class Client {
         port = clientsConfigs.PORT;
         this.player = player;
         initGUIMap();
-        Pair<IGUI, IController> pair = clientsGui.get(clientsConfigs.GUI);
+        Pair<IGUI, IController> pair = clientsGui.get(clientsConfigs.GUI.toLowerCase(Locale.ROOT));
         gui = pair.getX();
         gui.start();
         controller = pair.getY();
@@ -114,7 +114,7 @@ public class Client {
     private void initGUIMap() {
         final Lanterna lanterna = new Lanterna();
         clientsGui.put("lanterna", new Pair<>(lanterna, lanterna));
-        clientsGui.put("withoutGUI", new Pair<>(new WithoutGUI(), new AutoController(clientsConfigs)));
+        clientsGui.put("withoutgui", new Pair<>(new WithoutGUI(), new AutoController(clientsConfigs)));
     }
 
     public void chooseBot(final Fields field) {
