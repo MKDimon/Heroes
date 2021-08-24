@@ -9,7 +9,7 @@ import java.io.IOException;
 public class SniperDrawer implements IGeneralDrawer {
     @Override
     public void draw(final LanternaWrapper tw, final Side s) throws IOException {
-        int y_start = - 1;
+        int y_start = 1;
         final int x_start = (s == Side.RHS) ? tw.getTerminal().getTerminalSize().getColumns() - 34 : 2;
 
         final TextGraphics tg = tw.getScreen().newTextGraphics();
