@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.*;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -35,25 +34,16 @@ public class ServerWithChangeFields {
     private final int delay;
     private final int gamesCount;
 
-    private final String pathLog;
-    private final String logBack;
-
-    private final Map<Integer, Rooms> getRoom;
-
     public ServerWithChangeFields(final ServersConfigs serversConfigs) {
         maxRooms = serversConfigs.MAX_ROOMS;
         PORT = serversConfigs.PORT;
         delay = serversConfigs.DELAY;
         gamesCount = serversConfigs.GAMES_COUNT;
-        pathLog = serversConfigs.PATH_LOG;
-        logBack = serversConfigs.LOGBACK;
-        getRoom = new Hashtable<>();
     }
 
     private final ConcurrentLinkedQueue<RoomsClient> clients = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldOne = new ConcurrentLinkedQueue<>();
     private final ConcurrentLinkedQueue<RoomsClient> fieldTwo = new ConcurrentLinkedQueue<>();
-    private final ConcurrentLinkedQueue<RoomsClient> bots = new ConcurrentLinkedQueue<>();
 
     /**
      * Парсит serverConfig.json из каталога и возвращает конфиги сервера
@@ -79,8 +69,6 @@ public class ServerWithChangeFields {
         public final Socket socket;
         public final BufferedWriter out;
         public final BufferedReader in;
-        public boolean withBot = false;
-        public boolean isBot = false;
 
         private String botName;
 
@@ -377,7 +365,6 @@ public class ServerWithChangeFields {
             serverSocket.setSoTimeout(1000);
             for (int i = 1; i <= maxRooms; i++) {
                 final Rooms room = new Rooms(this, i);
-                getRoom.put(i, room);
                 room.start();
             }
             while (true) {

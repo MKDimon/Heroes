@@ -43,7 +43,7 @@ public class StatisticsParser {
                 result.add(parseGameLogInformation(reader));
             }
             //Возвращаем отчищенный от null`ов список распарсенных логов.
-            return result.stream().filter(item -> item != null).collect(Collectors.toList());
+            return result.stream().filter(Objects::nonNull).collect(Collectors.toList());
         } catch (final IOException e) {
             logger.error("Error statistics file parsing", e);
             //Если файл с логами пуст, то вернется null => в рекордере
@@ -213,7 +213,6 @@ public class StatisticsParser {
             }
             return result;
         } catch (final IOException e) {
-            logger.error("Error bot statistics file parsing");
             return null;
         }
     }

@@ -3,11 +3,11 @@
   "HOST": "127.0.0.1",
   "ROOM": 1,
   "FIELD": 2,
-  "GUI": "withoutgui",
+  "GUI": "lanterna",
   "TYPE_BOT": "Dimon",
   "SIMULATION_TREE" : "EXPECTI_SIMULATION",
   "UTILITY_FUNC": "NEURON",
-  "HEIGHT" : 5,
+  "HEIGHT" : 3,
   "CLUSTERING" : "true",
   "ARMY" : "const 1",
   "NEURON" : "utilitymodel.model"

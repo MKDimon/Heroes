@@ -13,6 +13,7 @@
         <module>Server</module>
         <module>Client</module>
         <module>LogParser</module>
+        <module>StatisticsParser</module>
     </modules>
 
     <properties>

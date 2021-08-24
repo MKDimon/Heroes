@@ -1,4 +1,4 @@
-package heroes.statistics;
+import heroes.statistics.StatisticsRecorder;
 
 /**
  * Класс, в котором происходит обработка и запись результатов обработки статистики по ботам отдельно от
