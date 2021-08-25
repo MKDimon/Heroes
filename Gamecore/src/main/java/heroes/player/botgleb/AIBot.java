@@ -61,14 +61,14 @@ public abstract class AIBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            final General general = new General(GeneralTypes.SNIPER);
+            final General general = new General(GeneralTypes.ARCHMAGE);
             final Unit[][] army = new Unit[2][3];
             army[0][0] = new Unit(UnitTypes.SWORDSMAN);
             army[1][0] = new Unit(UnitTypes.BOWMAN);
             army[0][1] = new Unit(UnitTypes.SWORDSMAN);
             army[1][1] = general;
-            army[0][2] = new Unit(UnitTypes.SWORDSMAN);
-            army[1][2] = new Unit(UnitTypes.HEALER);
+            army[0][2] = new Unit(UnitTypes.BOWMAN);
+            army[1][2] = new Unit(UnitTypes.MAGE);
             return new Army(army, general);
         } catch (UnitException | BoardException e) {
             e.printStackTrace();

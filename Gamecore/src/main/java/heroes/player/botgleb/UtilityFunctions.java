@@ -60,6 +60,9 @@ public class UtilityFunctions {
                     if (unit.getActionType() == ActionTypes.RANGE_COMBAT) {
                         result += 300;
                     }
+                    if (unit.getActionType() == ActionTypes.AREA_DAMAGE) {
+                        result += 250;
+                    }
                 } else {
                     result -= 1000;
                 }
