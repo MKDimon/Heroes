@@ -1,7 +1,9 @@
 package heroes.player.botgleb;
 
+import heroes.auxiliaryclasses.boardexception.BoardException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicException;
 import heroes.auxiliaryclasses.gamelogicexception.GameLogicExceptionType;
+import heroes.auxiliaryclasses.unitexception.UnitException;
 import heroes.clientserver.ClientsConfigs;
 import heroes.gamelogic.Army;
 import heroes.gamelogic.Board;
@@ -9,7 +11,10 @@ import heroes.gamelogic.Fields;
 import heroes.gamelogic.GameStatus;
 import heroes.gui.Visualisable;
 import heroes.player.BaseBot;
-import heroes.player.TestBot;
+import heroes.units.General;
+import heroes.units.GeneralTypes;
+import heroes.units.Unit;
+import heroes.units.UnitTypes;
 
 public abstract class AIBot extends BaseBot implements Visualisable {
     public static final UtilityFunction baseUtilityFunction = UtilityFunctions.HPUtilityFunction;
@@ -56,8 +61,16 @@ public abstract class AIBot extends BaseBot implements Visualisable {
     @Override
     public Army getArmy(final Army firstPlayerArmy) {
         try {
-            return new TestBot(getField()).getArmy(firstPlayerArmy);
-        } catch (GameLogicException e) {
+            final General general = new General(GeneralTypes.SNIPER);
+            final Unit[][] army = new Unit[2][3];
+            army[0][0] = new Unit(UnitTypes.SWORDSMAN);
+            army[1][0] = new Unit(UnitTypes.BOWMAN);
+            army[0][1] = new Unit(UnitTypes.SWORDSMAN);
+            army[1][1] = general;
+            army[0][2] = new Unit(UnitTypes.SWORDSMAN);
+            army[1][2] = new Unit(UnitTypes.HEALER);
+            return new Army(army, general);
+        } catch (UnitException | BoardException e) {
             e.printStackTrace();
             return null;
         }
