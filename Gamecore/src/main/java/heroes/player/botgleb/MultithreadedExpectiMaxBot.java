@@ -49,15 +49,7 @@ public class MultithreadedExpectiMaxBot extends ExpectiMaxBot implements Visuali
     }
 
     /**
-     * Класс "распараллеливв
-  "GUI": "withoutGUI",
-  "TYPE_BOT": "Dimon",
-  "SIMULATION_TREE" : "EXPECTI_SIMULATION",
-  "UTILITY_FUNC": "EXPONENT_FUNCTION_V2",
-  "HEIGHT" : 3,
-  "CLUSTERING" : "false",
-  "ARMY" : "const 0",
-  "NEURON" : "utilitymodel.model"тель" задач. Метод compute() строит дерево игры.
+     * Класс "распараллеливатель" задач. Метод compute() строит дерево игры.
      **/
 
     private final class ExpectiMaxWinCounter extends RecursiveTask<AnswerAndWin> {
