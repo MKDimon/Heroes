@@ -4,13 +4,13 @@ import logparser.lineclassificator.StringType;
 import logparser.lineclassificator.Token;
 import logparser.utils.StringUtils;
 
-public class ClassifyResultCommand implements ICommand {
-    private final StringType st = StringType.RESULT;
+public class ClassifyArmyClassifyCommand implements IClassifyCommand {
+    private final StringType st = StringType.ARMY;
     private Token token;
 
     @Override
     public boolean isClassified(final String inputString) {
-        if (StringUtils.calcOccurences(inputString, ",") == 1) {
+        if (StringUtils.calcOccurences(inputString, ",") == 8) {
             token = new Token(st, inputString);
             return true;
         } else {

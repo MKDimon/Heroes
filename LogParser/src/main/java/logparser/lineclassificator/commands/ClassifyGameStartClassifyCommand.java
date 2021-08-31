@@ -3,13 +3,13 @@ package logparser.lineclassificator.commands;
 import logparser.lineclassificator.StringType;
 import logparser.lineclassificator.Token;
 
-public class ClassifyGameEndCommand implements ICommand {
-    private final StringType st = StringType.GAME_END;
+public class ClassifyGameStartClassifyCommand implements IClassifyCommand {
+    private final StringType st = StringType.GAME_START;
     private Token token;
 
     @Override
     public boolean isClassified(final String inputString) {
-        if (inputString.equals("GAME OVER")) {
+        if (inputString.equals("GAME START")) {
             token = new Token(st, inputString);
             return true;
         } else {
