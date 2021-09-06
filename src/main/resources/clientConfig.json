@@ -1,0 +1,10 @@
+{
+  "PORT": 8083,
+  "HOST": "127.0.0.1",
+  "GUI": "withoutGUI",
+  "TYPE_BOT": "Nikita",
+  "WITH_BOT": "true",
+  "TYPE_OPPONENT": "Dimon",
+  "ROOM": 2,
+  "FIELD": 1
+}
