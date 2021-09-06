@@ -122,20 +122,23 @@ public class ServerWithChangeFields {
         private void waitPlayers() {
             boolean playersReady = false;
             while (!playersReady) {
-                for (final RoomsClient rc : server.fieldOne) {
-                    if ((playerOne == null || playerOne.socket.isClosed()) && !rc.isUse) {
-                        playerOne = rc;
-                        playerOne.isUse = true;
-                        server.fieldOne.remove(rc);
-                        break;
+                if ((playerOne == null || playerOne.socket.isClosed())) {
+                    for (final RoomsClient rc : server.fieldOne) {
+                        if (!rc.isUse) {
+                            playerOne = rc;
+                            playerOne.isUse = true;
+                            server.fieldOne.remove(rc);
+                            break;
+                        }
                     }
-                }
-                for (final RoomsClient rc : server.fieldTwo) {
-                    if ((playerTwo == null || playerTwo.socket.isClosed()) && !rc.isUse) {
-                        playerTwo = rc;
-                        playerTwo.isUse = true;
-                        server.fieldTwo.remove(rc);
-                        break;
+                } else if (playerTwo == null || playerTwo.socket.isClosed()) {
+                    for (final RoomsClient rc : server.fieldTwo) {
+                        if (!rc.isUse) {
+                            playerTwo = rc;
+                            playerTwo.isUse = true;
+                            server.fieldTwo.remove(rc);
+                            break;
+                        }
                     }
                 }
                 playersReady = playerOne != null && playerTwo != null &&

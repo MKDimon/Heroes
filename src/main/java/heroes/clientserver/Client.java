@@ -8,6 +8,7 @@ import heroes.gui.TerminalWrapper;
 import heroes.gui.menudrawers.botchoicedrawers.BotMenuMap;
 import heroes.gui.menudrawers.botchoicedrawers.MenuBotDrawer;
 import heroes.player.*;
+import heroes.player.botdimon.*;
 import heroes.player.controlsystem.Controls;
 import heroes.player.controlsystem.Selector;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class Client {
 
     private static final Map<String, BaseBot.BaseBotFactory> playerBots = new HashMap<>();
     static {
-        playerBots.put("Dimon", new TestBot.TestBotFactory());
+        playerBots.put("Dimon", new Dimon.DimonFactory());
     }
 
     private final String ip;
@@ -67,7 +68,7 @@ public class Client {
 
     public void chooseBot(final Fields field) {
         final Map<String, BaseBot.BaseBotFactory> botFactoryMap = new HashMap<>();
-        botFactoryMap.put("Test", new TestBot.TestBotFactory());
+        botFactoryMap.put("Test", new AntiDimon.AntiDimonFactory());
         botFactoryMap.put("Random", new RandomBot.RandomBotFactory());
         botFactoryMap.put("Player", playerBots.getOrDefault(clientsConfigs.TYPE_BOT, new RandomBot.RandomBotFactory()));
         botFactoryMap.put("PlayerGUI", new PlayerGUIBot.PlayerGUIBotFactory());
