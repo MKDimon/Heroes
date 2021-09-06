@@ -1,0 +1,9 @@
+{
+  "PORT": 8081,
+  "MAX_ROOMS": 2,
+  "DELAY": 1,
+  "THREADS": 1,
+  "PATH_LOG": "game_statistics",
+  "LOGBACK": "bots_statistics",
+  "GAMES_COUNT": 3
+}
