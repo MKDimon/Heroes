@@ -2,15 +2,14 @@ package logparser.lineclassificator.commands;
 
 import logparser.lineclassificator.StringType;
 import logparser.lineclassificator.Token;
-import logparser.utils.StringUtils;
 
-public class ClassifyArmyCommand implements ICommand {
-    private final StringType st = StringType.ARMY;
+public class ClassifyGameEndClassifyCommand implements IClassifyCommand {
+    private final StringType st = StringType.GAME_END;
     private Token token;
 
     @Override
     public boolean isClassified(final String inputString) {
-        if (StringUtils.calcOccurences(inputString, ",") == 8) {
+        if (inputString.equals("GAME OVER")) {
             token = new Token(st, inputString);
             return true;
         } else {
